@@ -1,0 +1,3 @@
+[submodule "LocoMotor"]
+	path = LocoMotor
+	url = https://github.com/UCM-FDI-DISIA/LocoMotor.git

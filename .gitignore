@@ -1,3 +1,19 @@
+[Tt]emp/
+[Bb]in/*.exe
+[Bb]in/*.exp
+[Bb]in/*.pdb
+[Bb]in/*.dll
+[Bb]in/*.log
+[Bb]in/*.lib
+[Ll]ib/
+[Oo]bj/
+
+.vs/
+
+*.user
+*.obj
+*.tlog
+
 # Prerequisites
 *.d
 
