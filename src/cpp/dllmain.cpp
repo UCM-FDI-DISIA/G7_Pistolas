@@ -1,5 +1,12 @@
 // dllmain.cpp : Define el punto de entrada de la aplicación DLL.
 #include "pch.h"
+#include <iostream>
+#include "Engine.h"
+#include "SceneManager.h"
+#include "ComponentsFactory.h"
+#include "PlayerController.h"
+using namespace LocoMotor;
+using namespace JuegoDePistolas;
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -17,3 +24,16 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
+extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
+{
+    LocoMotor::ComponentsFactory::GetInstance()->registerComponent<PlayerController>("PlayerController");
+
+    motor->StartGameWindow("Juego de pistolas");
+
+    LocoMotor::SceneManager::GetInstance()->loadScene("Assets/Scenes/Scene.lua", "scene");
+
+#ifdef _DEBUG
+    return "Juego de pistolas: Running in DEBUG";
+#endif // _DEBUG
+    return "Juego de pistolas: Running in RELEASE";
+}

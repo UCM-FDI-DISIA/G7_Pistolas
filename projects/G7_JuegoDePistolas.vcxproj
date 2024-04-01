@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
+    <ClCompile Include="..\src\cpp\PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\framework.h" />
     <ClInclude Include="..\src\include\pch.h" />
+    <ClInclude Include="..\src\include\PlayerController.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -79,13 +81,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>$(SolutionDir)temp\</IntDir>
+    <OutDir>$(SolutionDir)LocoMotor\bin\</OutDir>
+    <IntDir>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>$(SolutionDir)temp\</IntDir>
+    <OutDir>$(SolutionDir)LocoMotor\bin\</OutDir>
+    <IntDir>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -129,12 +131,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\include;$(SolutionDir)LocoMotor\src\LocoMotor_Audio\include;$(SolutionDir)LocoMotor\src\LocoMotor_Core\include;$(SolutionDir)LocoMotor\src\LocoMotor_Graphics\include;$(SolutionDir)LocoMotor\src\LocoMotor_Input\include;$(SolutionDir)LocoMotor\src\LocoMotor_Main\include;$(SolutionDir)LocoMotor\src\LocoMotor_Physics\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)LocoMotor\bin;$(SolutionDir)LocoMotor\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LocoMotor_Audio_d.lib;LocoMotor_Core_d.lib;LocoMotor_Input_d.lib;LocoMotor_Graphics_d.lib;LocoMotor_Physics_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,7 +151,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\include;$(SolutionDir)LocoMotor\src\LocoMotor_Audio\include;$(SolutionDir)LocoMotor\src\LocoMotor_Core\include;$(SolutionDir)LocoMotor\src\LocoMotor_Graphics\include;$(SolutionDir)LocoMotor\src\LocoMotor_Input\include;$(SolutionDir)LocoMotor\src\LocoMotor_Main\include;$(SolutionDir)LocoMotor\src\LocoMotor_Physics\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +159,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)LocoMotor\bin;$(SolutionDir)LocoMotor\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LocoMotor_Audio.lib;LocoMotor_Core.lib;LocoMotor_Graphics.lib;LocoMotor_Physics.lib;LocoMotor_Input.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
