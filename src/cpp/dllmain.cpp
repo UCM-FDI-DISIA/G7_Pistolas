@@ -28,7 +28,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
 {
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<PlayerController>("PlayerController");
 
-    motor->StartGameWindow("Juego de pistolas");
+    motor->setWindowName("Juego de pistolas");
 
     LocoMotor::SceneManager::GetInstance()->loadScene("Assets/Scenes/Scene.lua", "scene");
 
