@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "LMVector.h"
+#include "ParticleSystem.h"
 
 #include <iostream>
 
@@ -37,6 +38,11 @@ void PlayerController::update(float dT)
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_9)) {
 		SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
 		SceneManager::GetInstance()->changeScene("Game");
+	}
+
+	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
+		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
+			_gameObject->getComponent<ParticleSystem>()->play();
 	}
 
 }
