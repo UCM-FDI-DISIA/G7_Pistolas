@@ -12,11 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
+    <ClCompile Include="..\src\cpp\LocalMultiplayerManager.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\framework.h" />
+    <ClInclude Include="..\src\include\LocalMultiplayerManager.h" />
     <ClInclude Include="..\src\include\pch.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
   </ItemGroup>
