@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Engine.h"
 #include "SceneManager.h"
+#include "AudioManager.h"
 #include "ComponentsFactory.h"
 
 // Componentes
@@ -33,9 +34,11 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<PlayerController>("PlayerController");
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<LocalMultiplayerManager>("LocalMultiplayerManager");
 
+    LocoMotor::Audio::AudioManager::GetInstance()->loadFMODBuild("Assets/Sounds/StudioBuild");
+
     motor->setWindowName("Juego de pistolas");
 
-    LocoMotor::SceneManager::GetInstance()->loadScene("Assets/Scenes/Scene.lua", "scene");
+    motor->setStartingScene("Assets/Scenes/Scene.lua", "Scene");
 
 #ifdef _DEBUG
     return "Juego de pistolas: Running in DEBUG";
