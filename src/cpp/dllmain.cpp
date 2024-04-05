@@ -4,7 +4,11 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "ComponentsFactory.h"
+
+// Componentes
 #include "PlayerController.h"
+#include "LocalMultiplayerManager.h"
+
 using namespace LocoMotor;
 using namespace JuegoDePistolas;
 
@@ -27,6 +31,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
 {
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<PlayerController>("PlayerController");
+    LocoMotor::ComponentsFactory::GetInstance()->registerComponent<LocalMultiplayerManager>("LocalMultiplayerManager");
 
     motor->setWindowName("Juego de pistolas");
 
