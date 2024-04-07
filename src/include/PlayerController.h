@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "InputManager.h"
+#include "LMVector.h"
 
 using namespace LocoMotor;
 
@@ -20,6 +21,8 @@ namespace JuegoDePistolas {
 
 	private:
 		Input::InputManager::ControllerId controllerId;
+
+		LMVector3 direction;
 	};
 }
 

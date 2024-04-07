@@ -11,6 +11,8 @@
 #include "MeshRenderer.h"
 #include "LMInputs.h"
 #include "SceneManager.h"
+#include "Scene.h"
+#include <Bullet.h>
 
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
@@ -54,6 +56,10 @@ void PlayerController::update(float dT)
 		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
 		tr->SetPosition(tr->GetPosition() + currentDirection * velocity * dT / 1000);
 
+		if (currentDirection.Magnitude() > .1f) {
+			direction = currentDirection;
+			direction.Normalize();
+		}
 
 		// Rotacion
 		//LMVector3 upVector = LMVector3(0, 1, 0);
@@ -124,6 +130,39 @@ void PlayerController::update(float dT)
 			mesh->playAnimation("Run", true);
 		else
 			mesh->playAnimation("Idle", true);
+
+
+		// Disparo
+
+		if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
+
+			//std::cout << "Shoot" << std::endl;
+
+			//GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->addGameobject("bullet");
+
+			//Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
+			//bulletTr->SetPosition(tr->GetPosition() + currentDirection);
+			//if (bulletTr == nullptr)
+			//	std::cout << "bulletTr NULL" << std::endl;
+
+			//MeshRenderer* meshRenderer = (MeshRenderer*) bullet->addComponent("MeshRenderer");
+			//if (meshRenderer == nullptr)
+			//	std::cout << "meshRenderer NULL" << std::endl;
+
+			//meshRenderer->setMesh("Revolver.mesh");
+			//meshRenderer->setMaterial("Revolver");
+
+
+			GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Bullet");
+
+			Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
+			bulletTr->SetPosition(tr->GetPosition() + direction * 30);
+			if (bulletTr == nullptr)
+				std::cout << "bulletTr NULL" << std::endl;
+
+			bulletTr->SetRotation(tr->GetRotation());
+			bullet->getComponent<Bullet>()->setDirection(direction);
+		}
 	}
 
 	mesh->updateAnimation(dT / 1000);

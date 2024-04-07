@@ -9,6 +9,7 @@
 // Componentes
 #include "PlayerController.h"
 #include "LocalMultiplayerManager.h"
+#include "Bullet.h"
 
 using namespace LocoMotor;
 using namespace JuegoDePistolas;
@@ -33,6 +34,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
 {
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<PlayerController>("PlayerController");
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<LocalMultiplayerManager>("LocalMultiplayerManager");
+    LocoMotor::ComponentsFactory::GetInstance()->registerComponent<Bullet>("Bullet");
 
     LocoMotor::Audio::AudioManager::GetInstance()->loadFMODBuild("Assets/Sounds/StudioBuild");
 
