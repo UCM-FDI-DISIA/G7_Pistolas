@@ -74,10 +74,10 @@ void PlayerController::update(float dT)
 	//	SceneManager::GetInstance()->changeScene("Game");
 	//}
 
-	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
-	//	if (_gameObject->getComponent<ParticleSystem>() != nullptr)
-	//		_gameObject->getComponent<ParticleSystem>()->play();
-	//}
+	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
+		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
+			_gameObject->getComponent<ParticleSystem>()->play();
+	}
 
 }
 
