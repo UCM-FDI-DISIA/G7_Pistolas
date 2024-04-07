@@ -2,6 +2,7 @@
 #include "Component.h"
 #include <unordered_map>
 #include "InputManager.h"
+#include "LMVector.h"
 #include "PlayerController.h"
 #include <utility>
 
@@ -27,6 +28,8 @@ namespace JuegoDePistolas {
 			PlayerController* playerController;
 			GameObject* gameObject;
 		};
+
+		std::array<LMVector3, 4> spawnPoints;
 
 		// Stores all the player references by their controllerId
 		std::array<PlayerData, 4> allPlayers;

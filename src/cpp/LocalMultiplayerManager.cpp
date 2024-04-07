@@ -22,6 +22,24 @@ LocalMultiplayerManager::~LocalMultiplayerManager()
 
 void LocalMultiplayerManager::start()
 {
+	int distance = 80;
+
+	// Definir spawn points para los jugadores
+	//spawnPoints = spawnPoints = {
+	//	LMVector3{distance, 0, distance},
+	//	LMVector3{-distance, 0, distance},
+	//	LMVector3{distance, 0, -distance},
+	//	LMVector3{-distance, 0, -distance}
+	//};
+	spawnPoints = spawnPoints = {
+	LMVector3{80, 0, 80},
+	LMVector3{-80, 0, 80},
+	LMVector3{80, 0, -80},
+	LMVector3{-80, 0, -80}
+	};
+
+	// Asignar referencias de jugadores
+
 	allPlayers[0].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("cube");
 	allPlayers[1].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_2");
 	allPlayers[2].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_3");
@@ -46,9 +64,7 @@ void LocalMultiplayerManager::start()
 
 void LocalMultiplayerManager::update(float dT)
 {
-
 	// Check connections
-
 	std::list<Input::InputManager::ControllerId> controllersAdded = Input::InputManager::GetInstance()->getOnConnectControllers();
 	std::list<Input::InputManager::ControllerId> controllersRemoved = Input::InputManager::GetInstance()->getOnDisconnectControllers();
 
@@ -80,8 +96,10 @@ void LocalMultiplayerManager::update(float dT)
 		allPlayers[playerIndex].gameObject->setActive(true);
 		allPlayers[playerIndex].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
 
+		allPlayers[playerIndex].gameObject->getComponent<Transform>()->SetPosition(spawnPoints[playerIndex]);
+
 		// Asignar a la clase PlayerController, el controllerId necesario para vincularlo con el mando
-		//allPlayers[playerIndex].playerController
+		allPlayers[playerIndex].playerController->setControllerId(controllerId);
 	}
 
 	// Desconexion de usuarios
@@ -110,7 +128,7 @@ void LocalMultiplayerManager::update(float dT)
 		allPlayers[playerIndex].gameObject->getComponent<MeshRenderer>()->setEnabled(false);
 
 		// Borrar la referencia a la clase PlayerController
-		//allPlayers[playerIndex].playerController
+		allPlayers[playerIndex].playerController->setControllerId(Input::InputManager::invalidControllerId());
 	}
 }
 
