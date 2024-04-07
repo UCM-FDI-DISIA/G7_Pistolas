@@ -22,8 +22,26 @@ LocalMultiplayerManager::~LocalMultiplayerManager()
 
 void LocalMultiplayerManager::start()
 {
-	//for (int i = 0; i < allPlayers.size(); i++)
-	//	allPlayers[i] = nullptr;
+	allPlayers[0].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("cube");
+	allPlayers[1].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_2");
+	allPlayers[2].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_3");
+	allPlayers[3].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_4");
+
+	for (PlayerData& playerData : allPlayers) {
+		
+		// Marcar el id del controlador como invalido
+		playerData.controllerId = Input::InputManager::invalidControllerId();
+
+		// Asignar referenciar de la clase PlayerController
+		playerData.playerController = playerData.gameObject->getComponent<PlayerController>();
+
+		// Desactivar el objeto
+		playerData.gameObject->setActive(false);
+		playerData.gameObject->getComponent<MeshRenderer>()->setEnabled(false);
+	}
+
+	Transform* tr = allPlayers[3].gameObject->getComponent<Transform>();
+	tr->SetPosition(tr->GetPosition() + LMVector3(0, 50, 0));
 }
 
 void LocalMultiplayerManager::update(float dT)
@@ -37,53 +55,63 @@ void LocalMultiplayerManager::update(float dT)
 	// Conexion de usuarios
 	for (const Input::InputManager::ControllerId& controllerId : controllersAdded) {
 
+		std::cout << "controllerAdded" << std::endl;
+
 		int playerIndex = -1;
 
 		// Calcular el index de jugador que tendra este mando
 		for (int i = 0; i < allPlayers.size(); i++)
-			if (allPlayers[0].playerController == nullptr) {
+			if (allPlayers[i].controllerId == Input::InputManager::invalidControllerId()) {
 				playerIndex = i;
 				break;
 			}
 
+		std::cout << "playerIndex" << playerIndex << std::endl;
 
-		//// Crear el objeto jugador dependiendo del index del jugador
-		//GameObject* newPlayer = SceneManager::GetInstance()->getActiveScene()->addGameobject("Player_" + playerIndex);
-		//Transform* playerTransform = (Transform*)newPlayer->addComponent("Transform");
+		// Comprobar si el index es valido
+		// No se permitiran mas de 4 mandos conectados al mismo tiempo
+		if (playerIndex < 0 || playerIndex > 4)
+			break;
 
-		//MeshRenderer* playerMeshRenderer = (MeshRenderer*)newPlayer->addComponent("MeshRenderer");
+		// Asignar nuevo controllerId
+		allPlayers[playerIndex].controllerId = controllerId;
 
-		//playerMeshRenderer->init("cubeMesh", "", false);
-		//playerMeshRenderer->setMesh("CubemanMesh.mesh");
+		// Activar el objeto jugador dependiendo del index del jugador
+		allPlayers[playerIndex].gameObject->setActive(true);
+		allPlayers[playerIndex].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
 
-
-
-		//if (firstController == Input::InputManager::invalidControllerId())
-		//	firstController = controllerId;
-
-		//else if (secondController == Input::InputManager::invalidControllerId())
-		//	secondController = controllerId;
-
-		//else if (thirdController == Input::InputManager::invalidControllerId())
-		//	thirdController = controllerId;
+		// Asignar a la clase PlayerController, el controllerId necesario para vincularlo con el mando
+		//allPlayers[playerIndex].playerController
 	}
 
 	// Desconexion de usuarios
 	for (const Input::InputManager::ControllerId& controllerId : controllersRemoved) {
 
-		//// Si se ha desconectado el primer usuario
-		//if (firstController == controllerId)
-		//	firstController = Input::InputManager::invalidControllerId();
+		int playerIndex = -1;
 
-		//else if (secondController == controllerId)
-		//	secondController = Input::InputManager::invalidControllerId();
+		// Calcular el index de jugador que ha dejado este mando
+		for (int i = 0; i < allPlayers.size(); i++)
+			if (allPlayers[i].controllerId == controllerId) {
+				playerIndex = i;
+				break;
+			}
 
-		//else if (thirdController == controllerId)
-		//	thirdController = Input::InputManager::invalidControllerId();
+		std::cout << "playerIndex" << playerIndex << std::endl;
+
+		// Comprobar si el playerIndex es valido
+		if (playerIndex < 0 || playerIndex > 4)
+			break;
+
+		// Invalidar el controllerId
+		allPlayers[playerIndex].controllerId = Input::InputManager::invalidControllerId();
+
+		// Desactivar el objeto jugador dependiendo del index del jugador
+		allPlayers[playerIndex].gameObject->setActive(false);
+		allPlayers[playerIndex].gameObject->getComponent<MeshRenderer>()->setEnabled(false);
+
+		// Borrar la referencia a la clase PlayerController
+		//allPlayers[playerIndex].playerController
 	}
-
-
-	std::cout << "LocalMultiplayerUpdate" << std::endl;
 }
 
 void LocalMultiplayerManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)

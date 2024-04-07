@@ -25,6 +25,7 @@ namespace JuegoDePistolas {
 		struct PlayerData {
 			Input::InputManager::ControllerId controllerId;
 			PlayerController* playerController;
+			GameObject* gameObject;
 		};
 
 		// Stores all the player references by their controllerId

@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "InputManager.h"
+#include "MeshRenderer.h"
 #include "LMInputs.h"
 #include "SceneManager.h"
 
@@ -35,15 +36,22 @@ void PlayerController::update(float dT)
 	if (cubeTrnsf != nullptr)
 		cubeTrnsf->SetRotation(LMVector3(cubeTrnsf->GetRotation().GetX(),
 			cubeTrnsf->GetRotation().GetY() - 60 * dT / 1000, cubeTrnsf->GetRotation().GetZ()));
-	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_9)) {
-		SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
-		SceneManager::GetInstance()->changeScene("Game");
-	}
 
-	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
-		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
-			_gameObject->getComponent<ParticleSystem>()->play();
-	}
+
+
+	//_gameObject->getComponent<MeshRenderer>()->updateAnimation(dT / 1000);
+	//_gameObject->getComponent<MeshRenderer>()->playAnimation("Idle", true);
+
+
+	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_9)) {
+	//	SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
+	//	SceneManager::GetInstance()->changeScene("Game");
+	//}
+
+	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
+	//	if (_gameObject->getComponent<ParticleSystem>() != nullptr)
+	//		_gameObject->getComponent<ParticleSystem>()->play();
+	//}
 
 }
 
