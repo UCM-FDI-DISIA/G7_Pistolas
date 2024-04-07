@@ -5,6 +5,7 @@
 #include "ParticleSystem.h"
 
 #include <iostream>
+#include <cmath>
 
 #include "InputManager.h"
 #include "MeshRenderer.h"
@@ -48,16 +49,84 @@ void PlayerController::update(float dT)
 		float joystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 0, Input::InputManager::Axis::Horizontal);
 		float joystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 0, Input::InputManager::Axis::Vertical);
 
+		// Movimiento horizontal
 
-		tr->SetPosition(tr->GetPosition() + LMVector3(joystickValue_x, 0, joystickValue_y) * velocity * dT/1000);
+		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
+		tr->SetPosition(tr->GetPosition() + currentDirection * velocity * dT / 1000);
 
+
+		// Rotacion
+		//LMVector3 upVector = LMVector3(0, 1, 0);
+
+		//float length = std::sqrt(currentDirection.GetX() * currentDirection.GetX() 
+		//	+ currentDirection.GetY() * currentDirection.GetY() + currentDirection.GetZ() * currentDirection.GetZ());
+		//currentDirection.SetX(currentDirection.GetX() / length);
+		//currentDirection.SetY(currentDirection.GetY() / length);
+		//currentDirection.SetZ(currentDirection.GetZ() / length);
+
+		//float dotProduct = currentDirection.GetX() * upVector.GetX() + currentDirection.GetY() * upVector.GetY() + currentDirection.GetZ() * upVector.GetZ();
+		//float angle = std::acos(dotProduct);
+
+
+		//std::cout << "--------------------------------------------------" << std::endl;
+		//std::cout << "currentDirection X = " << currentDirection.GetX() << " , Y = " << currentDirection.GetY() << " , Z = " << currentDirection.GetZ() << std::endl;
+		//currentDirection.Normalize();
+		//std::cout << "currentDirection X = " << currentDirection.GetX() << " , Y = " << currentDirection.GetY() << " , Z = " << currentDirection.GetZ() << std::endl;
+		//std::cout << "--------------------------------------------------" << std::endl;
+
+		//float angleY = atan2(currentDirection.GetZ(), currentDirection.GetX());
+		////float angleX = 0.0f; // En este caso, no estamos interesados en rotar en los ejes X y Z
+
+		////float angleY = math.acos(dy)
+
+		//float halfAngleY = angleY * 0.5f;
+		//float cosHalfAngleY = cos(halfAngleY);
+		//float sinHalfAngleY = sin(halfAngleY);
+
+		//LMQuaternion quaternion;
+		//quaternion.SetW(cosHalfAngleY);
+		//quaternion.SetX(0.0f);
+		//quaternion.SetY(sinHalfAngleY);
+		//quaternion.SetZ(0.0f);
+
+		//angle = 180;
+		//float angle = currentDirection.Angle(LMVector3(1, 0, 0));
+		//tr->SetRotation(LMVector3(0, angleY, 0));
+
+
+		if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_A)) {
+			tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
+				tr->GetRotation().GetY() - 150 * dT / 1000, tr->GetRotation().GetZ()));
+		}
+		else if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_B)) {
+			tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
+				tr->GetRotation().GetY() + 150 * dT / 1000, tr->GetRotation().GetZ()));
+		}
+
+		//currentDirection.Normalize();
+
+
+		//// Calcular el eje de rotación
+		//LMVector3 axisVector = LMVector3(currentDirection.GetY() * upVector.GetZ()  - currentDirection.GetZ() * upVector.GetY(),
+		//	currentDirection.GetZ() * upVector.GetX() - currentDirection.GetX() * upVector.GetZ(),
+		//	currentDirection.GetX() * upVector.GetY() - currentDirection.GetY() * upVector.GetX());
+		//axisVector.Normalize();
+		//float half_angle = angle / 2;
+		//float cos_half_angle = std::cos(half_angle);
+		//float sin_half_angle = std::sin(half_angle);
+		//LMQuaternion finalQuaternion = LMQuaternion(cos_half_angle, axisVector.GetX() * sin_half_angle,
+		//	axisVector.GetY() * sin_half_angle, axisVector.GetZ() * sin_half_angle);
+		//tr->SetRotation(finalQuaternion);
+
+
+		// Cambiar la animacion si es necesario
 		if (joystickValue_x != 0 || joystickValue_y != 0)
 			mesh->playAnimation("Run", true);
 		else
 			mesh->playAnimation("Idle", true);
 	}
 
-	mesh->updateAnimation(dT/1000);
+	mesh->updateAnimation(dT / 1000);
 
 	//if (cubeTrnsf != nullptr)
 	//	cubeTrnsf->SetRotation(LMVector3(cubeTrnsf->GetRotation().GetX(),

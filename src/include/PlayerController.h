@@ -11,7 +11,7 @@ namespace JuegoDePistolas {
 		PlayerController();
 		~PlayerController();
 
-		void setControllerId(Input::InputManager::ControllerId _controllerId);
+		void setControllerId(Input::InputManager::ControllerId controllerId);
 
 	protected:
 		void start() override;
