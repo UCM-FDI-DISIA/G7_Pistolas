@@ -23,6 +23,8 @@ namespace JuegoDePistolas {
 		Input::InputManager::ControllerId controllerId;
 
 		LMVector3 direction;
+
+		float bruh = 0;
 	};
 }
 

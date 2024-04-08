@@ -33,6 +33,9 @@ void PlayerController::setControllerId(Input::InputManager::ControllerId _contro
 
 void PlayerController::start()
 {
+	Transform* tr = _gameObject->getComponent<Transform>();
+
+	//tr->SetSize(LMVector3(.5f, .5f, .5f));
 }
 
 void PlayerController::update(float dT)
@@ -56,10 +59,6 @@ void PlayerController::update(float dT)
 		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
 		tr->SetPosition(tr->GetPosition() + currentDirection * velocity * dT / 1000);
 
-		if (currentDirection.Magnitude() > .1f) {
-			direction = currentDirection;
-			direction.Normalize();
-		}
 
 		// Rotacion
 		//LMVector3 upVector = LMVector3(0, 1, 0);
@@ -100,22 +99,42 @@ void PlayerController::update(float dT)
 		//tr->SetRotation(LMVector3(0, angleY, 0));
 
 
-		if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_A)) {
-			tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
-				tr->GetRotation().GetY() - 150 * dT / 1000, tr->GetRotation().GetZ()));
-		}
-		else if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_B)) {
-			tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
-				tr->GetRotation().GetY() + 150 * dT / 1000, tr->GetRotation().GetZ()));
-		}
+		//if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_A)) {
+		//	tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
+		//		tr->GetRotation().GetY() - 150 * dT / 1000, tr->GetRotation().GetZ()));
+		//}
+		//else if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_B)) {
+		//	tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
+		//		tr->GetRotation().GetY() + 150 * dT / 1000, tr->GetRotation().GetZ()));
+		//}
+
+		//currentDirection.Normalize();
+		//currentDirection.Rotate(LMVector3(0, 1, 0), 180);
+
+		//tr->SetForward(currentDirection);
+		//tr->SetUpwards(LMVector3(0, 1, 0));
+
+		//std::cout << "joystick X " << (int)(joystickValue_x*90) << std::endl;
+		//tr->SetRotation(LMVector3(0, (int)(joystickValue_x * 90), 0));
+
+		//bruh += dT/1000 * -0.005;
+		//tr->SetRotation(LMQuaternion(0, 180, 0, 1));
+
+
 
 		//currentDirection.Normalize();
 
 
+		//LMVector3 upVector = LMVector3(1, 0, 0);
+
+		//float dotProduct = currentDirection.GetX() * upVector.GetX() + currentDirection.GetY() * upVector.GetY() + currentDirection.GetZ() * upVector.GetZ();
+		//float angle = std::acos(dotProduct);
+
 		//// Calcular el eje de rotación
-		//LMVector3 axisVector = LMVector3(currentDirection.GetY() * upVector.GetZ()  - currentDirection.GetZ() * upVector.GetY(),
+		//LMVector3 axisVector = LMVector3(currentDirection.GetY() * upVector.GetZ() - currentDirection.GetZ() * upVector.GetY(),
 		//	currentDirection.GetZ() * upVector.GetX() - currentDirection.GetX() * upVector.GetZ(),
 		//	currentDirection.GetX() * upVector.GetY() - currentDirection.GetY() * upVector.GetX());
+		////LMVector3 axisVector = LMVector3(0, 1, 0);
 		//axisVector.Normalize();
 		//float half_angle = angle / 2;
 		//float cos_half_angle = std::cos(half_angle);
@@ -123,6 +142,13 @@ void PlayerController::update(float dT)
 		//LMQuaternion finalQuaternion = LMQuaternion(cos_half_angle, axisVector.GetX() * sin_half_angle,
 		//	axisVector.GetY() * sin_half_angle, axisVector.GetZ() * sin_half_angle);
 		//tr->SetRotation(finalQuaternion);
+
+
+		if (currentDirection.Magnitude() > .1f) {
+			direction = currentDirection;
+			direction.Normalize();
+		}
+
 
 
 		// Cambiar la animacion si es necesario
@@ -179,7 +205,7 @@ void PlayerController::update(float dT)
 
 	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_9)) {
 	//	SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
-	//	SceneManager::GetInstance()->changeScene("Game");
+	//	SceneManager::GetInstance()->changeScene("Game");d
 	//}
 
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
