@@ -45,6 +45,24 @@ void PlayerController::update(float dT)
 	MeshRenderer* mesh = _gameObject->getComponent<MeshRenderer>();
 	Transform* tr = _gameObject->getComponent<Transform>();
 
+	////tr = _gameObject->getComponent<Transform>();
+	//tr->SetRotation(LMVector3(0, debugParameter, 0));
+	//debugParameter += dT / 1000 * 20;
+
+	//return;
+	// Mover revolver
+
+	GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
+	revolver->getComponent<Transform>()->SetPosition(tr->GetPosition() + direction * 30);
+	
+	LMQuaternion revolverRotation = tr->GetRotation().Rotate(LMVector3(0, 1, 0), -90);
+	revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
+	//revolverRotation.SetX(0);
+	//revolverRotation.SetZ(0);
+
+	revolver->getComponent<Transform>()->SetRotation(revolverRotation);
+
+
 
 	float velocity = 130;
 
@@ -148,7 +166,17 @@ void PlayerController::update(float dT)
 			direction = currentDirection;
 			direction.Normalize();
 		}
-
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
+		tr->SetForward(currentDirection);
 
 
 		// Cambiar la animacion si es necesario
@@ -193,9 +221,6 @@ void PlayerController::update(float dT)
 
 	mesh->updateAnimation(dT / 1000);
 
-	//if (cubeTrnsf != nullptr)
-	//	cubeTrnsf->SetRotation(LMVector3(cubeTrnsf->GetRotation().GetX(),
-	//		cubeTrnsf->GetRotation().GetY() - 60 * dT / 1000, cubeTrnsf->GetRotation().GetZ()));
 
 
 

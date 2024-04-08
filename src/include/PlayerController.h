@@ -24,7 +24,7 @@ namespace JuegoDePistolas {
 
 		LMVector3 direction;
 
-		float bruh = 0;
+		float debugParameter = 0;
 	};
 }
 
