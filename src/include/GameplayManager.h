@@ -13,6 +13,8 @@ namespace JuegoDePistolas {
 		GameplayManager();
 		~GameplayManager();
 
+		void playerDied(int playerIndex);
+
 	protected:
 		void start() override;
 		void update(float dT) override;
@@ -20,6 +22,13 @@ namespace JuegoDePistolas {
 
 	private:
 
+		const int MAX_PLAYERS = 4;
+
+		// Almacena las puntuaciones actuales de todos los jugadores
+		std::array<int, 4> scores = { 0, 0, 0, 0 };
+
+		// Los jugadores que siguen vivos en esta ronda
+		std::array<bool, 4> playersAlive = { false, false, false, false };
 	};
 }
 
