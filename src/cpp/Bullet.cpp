@@ -13,6 +13,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "LocalMultiplayerManager.h"
+#include "GameplayManager.h"
 
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
@@ -59,13 +60,14 @@ void Bullet::update(float dT)
 	// Collision
 	for (int i = 0; i < 4; ++i) {
 
+		// Primero comprobar si esta vivo antes de intentar matarlo otra vez
+		if (!GameplayManager::GetInstance()->isPlayerAlive(i))
+			continue;
+
+		// Si esta vivo, comprobar si esta lo suficientemente cerca de esta bala
 		GameObject* thisPlayerObj = allPlayers[i].gameObject;
-
 		float distance = LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition());
-
-		std::cout << "distance = " << distance << std::endl;
-
-		if (LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition()) < 10) {
+		if (LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition()) < 30) {
 
 			thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}
