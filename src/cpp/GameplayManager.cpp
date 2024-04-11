@@ -53,10 +53,9 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 	// Si solo hay un jugador vivo
 	if (numPlayersAlive == 1) {
 
-		// Resetear el zoom de camara
+		// Resetear variables
 		cameraZoom = 0;
 		endRoundTime = 0;
-
 		// Activar animacion de ronda ganada del personaje
 		endRoundActive = true;
 
@@ -82,6 +81,21 @@ void GameplayManager::startRound()
 	startRoundTime = 0;
 
 	// Mover a los personajes a sus sitios de spawneo
+	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
+	for (int i = 0; i < allPlayers.size(); i++) {
+
+		LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
+
+		// Realizar cambios solo si es valido el controllerId
+		if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
+			continue;
+
+		thisPlayer.gameObject->getComponent<Transform>()->SetPosition(spawnPoints[i]);
+		thisPlayer.gameObject->getComponent<MeshRenderer>()->setVisible(true);
+
+		// Marcar a los personajes activos como vivos
+		playersAlive[i] = true;
+	}
 }
 
 void GameplayManager::start()
@@ -92,16 +106,38 @@ void GameplayManager::start()
 	camera = SceneManager::GetInstance()->getActiveScene()->
 		getObjectByName("MainCamera")->getComponent<Transform>();
 	initCameraPos = camera->GetPosition();
+
+
+	// Definir spawn points para los jugadores
+	spawnPoints = spawnPoints = {
+	LMVector3{80, 40, 80},
+	LMVector3{-80, 40, 80},
+	LMVector3{80, 40, -80},
+	LMVector3{-80, 40, -80}
+	};
 }
 
 void GameplayManager::update(float dT)
 {
+	// DEBUG
+
+	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMScanCode::LMKS_P))
+		startRound();
+
+
 	// Si se esta en la animacion de inicio de ronda
-	if (startRoundActive) {
+	//if (startRoundActive) {
 
-		// Los personajes spawnean en en el primer segundo
+	//	// Los personajes spawnean en en el primer segundo
 
-	}
+	//	if (startRoundTime < startRoundMaxTime)
+	//		startRoundTime += dT / 1000;
+	//	else
+	//		startRoundTime = startRoundMaxTime;
+
+	//	if (startRoundTime > startRoundMaxTime)
+	//		startRoundActive = false;
+	//}
 
 	// Si esta durante una animacion de ronda ganada, mover la camara
 	if (endRoundActive) {
@@ -109,8 +145,13 @@ void GameplayManager::update(float dT)
 		// Tiempo maximo de ronda
 		if (endRoundTime < endRoundMaxTime)
 			endRoundTime += dT / 1000;
-		else
+		else {
 			endRoundTime = endRoundMaxTime;
+
+			// Terminar animacion de final de ronda
+			endRoundActive = false;
+			startRound();
+		}
 
 
 		// Comprobar si el endRoundTime esta en el ultimo segundo de animacion

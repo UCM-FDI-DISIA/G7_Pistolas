@@ -41,6 +41,9 @@ namespace JuegoDePistolas {
 		// Los jugadores que siguen vivos en esta ronda
 		std::array<bool, 4> playersAlive = { true, true, false, false };
 
+		// Puntos de spawneo
+		std::array<LMVector3, 4> spawnPoints;
+
 
 		int winPlayerIndex = -1;
 
