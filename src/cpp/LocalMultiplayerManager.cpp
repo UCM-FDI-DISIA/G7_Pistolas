@@ -11,6 +11,8 @@
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
 
+LocalMultiplayerManager* LocalMultiplayerManager::_instance = nullptr;
+
 LocalMultiplayerManager::LocalMultiplayerManager()
 {
 
@@ -20,8 +22,20 @@ LocalMultiplayerManager::~LocalMultiplayerManager()
 {
 }
 
+LocalMultiplayerManager* LocalMultiplayerManager::GetInstance()
+{
+	return _instance;
+}
+
+std::array<LocalMultiplayerManager::PlayerData, 4> LocalMultiplayerManager::getPlayers()
+{
+	return allPlayers;
+}
+
 void LocalMultiplayerManager::start()
 {
+	_instance = this;
+
 	int distance = 80;
 
 	// Definir spawn points para los jugadores

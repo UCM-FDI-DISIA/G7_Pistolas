@@ -16,6 +16,17 @@ namespace JuegoDePistolas {
 	public:
 		LocalMultiplayerManager();
 		~LocalMultiplayerManager();
+
+		static LocalMultiplayerManager* GetInstance();
+
+		struct PlayerData {
+			Input::InputManager::ControllerId controllerId;
+			PlayerController* playerController;
+			GameObject* gameObject;
+		};
+
+		std::array<PlayerData, 4> getPlayers();
+
 	protected:
 		void start() override;
 		void update(float dT) override;
@@ -23,11 +34,7 @@ namespace JuegoDePistolas {
 
 	private:
 
-		struct PlayerData {
-			Input::InputManager::ControllerId controllerId;
-			PlayerController* playerController;
-			GameObject* gameObject;
-		};
+		static LocalMultiplayerManager* _instance;
 
 		std::array<LMVector3, 4> spawnPoints;
 

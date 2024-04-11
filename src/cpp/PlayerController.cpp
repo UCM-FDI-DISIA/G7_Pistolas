@@ -12,7 +12,9 @@
 #include "LMInputs.h"
 #include "SceneManager.h"
 #include "Scene.h"
-#include <Bullet.h>
+#include "Bullet.h"
+
+#include "GameplayManager.h"
 
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
@@ -26,9 +28,21 @@ PlayerController::~PlayerController()
 {
 }
 
+void JuegoDePistolas::PlayerController::setPlayerId(int _playerIndex)
+{
+	playerIndex = _playerIndex;
+}
+
 void PlayerController::setControllerId(Input::InputManager::ControllerId _controllerId)
 {
 	controllerId = _controllerId;
+}
+
+void JuegoDePistolas::PlayerController::bulletHit()
+{
+	//GameplayManager.GetInstance()
+
+	GameplayManager::GetInstance()->playerDied(playerIndex);
 }
 
 void PlayerController::start()
@@ -75,91 +89,6 @@ void PlayerController::update(float dT)
 		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
 		tr->SetPosition(tr->GetPosition() + currentDirection * velocity * dT / 1000);
 
-
-		// Rotacion
-		//LMVector3 upVector = LMVector3(0, 1, 0);
-
-		//float length = std::sqrt(currentDirection.GetX() * currentDirection.GetX() 
-		//	+ currentDirection.GetY() * currentDirection.GetY() + currentDirection.GetZ() * currentDirection.GetZ());
-		//currentDirection.SetX(currentDirection.GetX() / length);
-		//currentDirection.SetY(currentDirection.GetY() / length);
-		//currentDirection.SetZ(currentDirection.GetZ() / length);
-
-		//float dotProduct = currentDirection.GetX() * upVector.GetX() + currentDirection.GetY() * upVector.GetY() + currentDirection.GetZ() * upVector.GetZ();
-		//float angle = std::acos(dotProduct);
-
-
-		//std::cout << "--------------------------------------------------" << std::endl;
-		//std::cout << "currentDirection X = " << currentDirection.GetX() << " , Y = " << currentDirection.GetY() << " , Z = " << currentDirection.GetZ() << std::endl;
-		//currentDirection.Normalize();
-		//std::cout << "currentDirection X = " << currentDirection.GetX() << " , Y = " << currentDirection.GetY() << " , Z = " << currentDirection.GetZ() << std::endl;
-		//std::cout << "--------------------------------------------------" << std::endl;
-
-		//float angleY = atan2(currentDirection.GetZ(), currentDirection.GetX());
-		////float angleX = 0.0f; // En este caso, no estamos interesados en rotar en los ejes X y Z
-
-		////float angleY = math.acos(dy)
-
-		//float halfAngleY = angleY * 0.5f;
-		//float cosHalfAngleY = cos(halfAngleY);
-		//float sinHalfAngleY = sin(halfAngleY);
-
-		//LMQuaternion quaternion;
-		//quaternion.SetW(cosHalfAngleY);
-		//quaternion.SetX(0.0f);
-		//quaternion.SetY(sinHalfAngleY);
-		//quaternion.SetZ(0.0f);
-
-		//angle = 180;
-		//float angle = currentDirection.Angle(LMVector3(1, 0, 0));
-		//tr->SetRotation(LMVector3(0, angleY, 0));
-
-
-		//if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_A)) {
-		//	tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
-		//		tr->GetRotation().GetY() - 150 * dT / 1000, tr->GetRotation().GetZ()));
-		//}
-		//else if (Input::InputManager::GetInstance()->GetButton(controllerId, Input::LMC_B)) {
-		//	tr->SetRotation(LMVector3(tr->GetRotation().GetX(),
-		//		tr->GetRotation().GetY() + 150 * dT / 1000, tr->GetRotation().GetZ()));
-		//}
-
-		//currentDirection.Normalize();
-		//currentDirection.Rotate(LMVector3(0, 1, 0), 180);
-
-		//tr->SetForward(currentDirection);
-		//tr->SetUpwards(LMVector3(0, 1, 0));
-
-		//std::cout << "joystick X " << (int)(joystickValue_x*90) << std::endl;
-		//tr->SetRotation(LMVector3(0, (int)(joystickValue_x * 90), 0));
-
-		//bruh += dT/1000 * -0.005;
-		//tr->SetRotation(LMQuaternion(0, 180, 0, 1));
-
-
-
-		//currentDirection.Normalize();
-
-
-		//LMVector3 upVector = LMVector3(1, 0, 0);
-
-		//float dotProduct = currentDirection.GetX() * upVector.GetX() + currentDirection.GetY() * upVector.GetY() + currentDirection.GetZ() * upVector.GetZ();
-		//float angle = std::acos(dotProduct);
-
-		//// Calcular el eje de rotación
-		//LMVector3 axisVector = LMVector3(currentDirection.GetY() * upVector.GetZ() - currentDirection.GetZ() * upVector.GetY(),
-		//	currentDirection.GetZ() * upVector.GetX() - currentDirection.GetX() * upVector.GetZ(),
-		//	currentDirection.GetX() * upVector.GetY() - currentDirection.GetY() * upVector.GetX());
-		////LMVector3 axisVector = LMVector3(0, 1, 0);
-		//axisVector.Normalize();
-		//float half_angle = angle / 2;
-		//float cos_half_angle = std::cos(half_angle);
-		//float sin_half_angle = std::sin(half_angle);
-		//LMQuaternion finalQuaternion = LMQuaternion(cos_half_angle, axisVector.GetX() * sin_half_angle,
-		//	axisVector.GetY() * sin_half_angle, axisVector.GetZ() * sin_half_angle);
-		//tr->SetRotation(finalQuaternion);
-
-
 		float lookJoystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Horizontal);
 		float lookJoystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Vertical);
 
@@ -195,24 +124,8 @@ void PlayerController::update(float dT)
 
 		if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
 
-			//std::cout << "Shoot" << std::endl;
-
-			//GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->addGameobject("bullet");
-
-			//Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
-			//bulletTr->SetPosition(tr->GetPosition() + currentDirection);
-			//if (bulletTr == nullptr)
-			//	std::cout << "bulletTr NULL" << std::endl;
-
-			//MeshRenderer* meshRenderer = (MeshRenderer*) bullet->addComponent("MeshRenderer");
-			//if (meshRenderer == nullptr)
-			//	std::cout << "meshRenderer NULL" << std::endl;
-
-			//meshRenderer->setMesh("Revolver.mesh");
-			//meshRenderer->setMaterial("Revolver");
-
-
 			GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Bullet");
+			bullet->getComponent<Bullet>()->setBulletActive(true);
 
 			Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
 			bulletTr->SetPosition(tr->GetPosition() + direction * 50);

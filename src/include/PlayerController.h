@@ -12,7 +12,11 @@ namespace JuegoDePistolas {
 		PlayerController();
 		~PlayerController();
 
+		void setPlayerId(int _playerIndex);
 		void setControllerId(Input::InputManager::ControllerId controllerId);
+
+		// Se llama desde una bala cuando esta colisiona con este personaje
+		void bulletHit();
 
 	protected:
 		void start() override;
@@ -20,6 +24,10 @@ namespace JuegoDePistolas {
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
 
 	private:
+
+		// Id del jugador al que representa este personaje, es decir, al cubo, triangulo, ...
+		int playerIndex;
+
 		Input::InputManager::ControllerId controllerId;
 
 		LMVector3 direction;

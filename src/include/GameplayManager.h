@@ -13,6 +13,8 @@ namespace JuegoDePistolas {
 		GameplayManager();
 		~GameplayManager();
 
+		static GameplayManager* GetInstance();
+
 		void playerDied(int playerIndex);
 
 	protected:
@@ -21,6 +23,9 @@ namespace JuegoDePistolas {
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
 
 	private:
+
+		static GameplayManager* _instance;
+
 
 		const int MAX_PLAYERS = 4;
 

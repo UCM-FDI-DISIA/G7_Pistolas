@@ -16,6 +16,8 @@
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
 
+GameplayManager* GameplayManager::_instance = nullptr;
+
 GameplayManager::GameplayManager()
 {
 
@@ -23,6 +25,11 @@ GameplayManager::GameplayManager()
 
 GameplayManager::~GameplayManager()
 {
+}
+
+GameplayManager* JuegoDePistolas::GameplayManager::GetInstance()
+{
+	return _instance;
 }
 
 void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
@@ -47,11 +54,13 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 		// Animacion de ronda ganada del personaje
 		//onlyPlayerAliveIndex;
 	}
-}
 
+	std::cout << "Player " << playerIndex << " Died, " << numPlayersAlive << " players alive" << std::endl;
+}
 
 void GameplayManager::start()
 {
+	_instance = this;
 }
 
 void GameplayManager::update(float dT)
