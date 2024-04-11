@@ -53,6 +53,7 @@ void LocalMultiplayerManager::start()
 	allPlayers[2].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_3");
 	allPlayers[3].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_4");
 
+	int currentPlayer = 0;
 	for (PlayerData& playerData : allPlayers) {
 
 		// Marcar el id del controlador como invalido
@@ -60,10 +61,13 @@ void LocalMultiplayerManager::start()
 
 		// Asignar referenciar de la clase PlayerController
 		playerData.playerController = playerData.gameObject->getComponent<PlayerController>();
+		playerData.playerController->setPlayerId(currentPlayer);
 
 		// Desactivar el objeto
 		playerData.gameObject->setActive(false);
 		playerData.gameObject->getComponent<MeshRenderer>()->setEnabled(false);
+
+		currentPlayer++;
 	}
 
 	Transform* tr = allPlayers[3].gameObject->getComponent<Transform>();

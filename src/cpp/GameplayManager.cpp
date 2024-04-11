@@ -36,6 +36,8 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 {
 	playersAlive[playerIndex] = false;
 
+	return;
+
 	// Comprobar si la ronda ha terminado
 	// Contar el numero de jugadores que quedan vivos en la ronda
 	int numPlayersAlive = 0;

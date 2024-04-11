@@ -52,21 +52,23 @@ void Bullet::update(float dT)
 	if (direction.Magnitude() > .1f)
 		tr->SetPosition(tr->GetPosition() + direction * velocity * dT/1000);
 
-
 	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
 
+	allPlayers[0].gameObject;
+
 	// Collision
-	for (int i = 0; i < allPlayers.size(); ++i) {
+	for (int i = 0; i < 4; ++i) {
 
 		GameObject* thisPlayerObj = allPlayers[i].gameObject;
+
+		float distance = LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition());
+
+		std::cout << "distance = " << distance << std::endl;
 
 		if (LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition()) < 10) {
 
 			thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}
-
-		// Acceder a los miembros de cada jugador usando allPlayers[i]
-		// Ejemplo: std::cout << "Player " << i << ": ID - " << allPlayers[i].id << ", Score - " << allPlayers[i].score << std::endl;
 	}
 }
 
