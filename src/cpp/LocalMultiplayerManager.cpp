@@ -25,17 +25,11 @@ void LocalMultiplayerManager::start()
 	int distance = 80;
 
 	// Definir spawn points para los jugadores
-	//spawnPoints = spawnPoints = {
-	//	LMVector3{distance, 0, distance},
-	//	LMVector3{-distance, 0, distance},
-	//	LMVector3{distance, 0, -distance},
-	//	LMVector3{-distance, 0, -distance}
-	//};
 	spawnPoints = spawnPoints = {
-	LMVector3{80, 0, 80},
-	LMVector3{-80, 0, 80},
-	LMVector3{80, 0, -80},
-	LMVector3{-80, 0, -80}
+	LMVector3{80, 40, 80},
+	LMVector3{-80, 40, 80},
+	LMVector3{80, 40, -80},
+	LMVector3{-80, 40, -80}
 	};
 
 	// Asignar referencias de jugadores
@@ -46,7 +40,7 @@ void LocalMultiplayerManager::start()
 	allPlayers[3].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Player_4");
 
 	for (PlayerData& playerData : allPlayers) {
-		
+
 		// Marcar el id del controlador como invalido
 		playerData.controllerId = Input::InputManager::invalidControllerId();
 
