@@ -109,7 +109,7 @@ void GameplayManager::start()
 	initCameraPos = camera->GetPosition();
 
 	// Asignar escala inicial de los personajes
-	initCharacterScale = LocalMultiplayerManager::GetInstance()->getPlayers()[0].gameObject->getComponent<Transform>()->GetSize().GetX();
+	//initCharacterScale = LocalMultiplayerManager::GetInstance()->getPlayers()[0].gameObject->getComponent<Transform>()->GetSize().GetX();
 
 	// Definir spawn points para los jugadores
 	spawnPoints = spawnPoints = {
@@ -149,23 +149,34 @@ void GameplayManager::update(float dT)
 				spawnCharactersProgress = 1;
 
 
-			LMVector3 startScale = LMVector3(1, 1, 1);
-			LMVector3 endScale = LMVector3(initCharacterScale, initCharacterScale, initCharacterScale);
-			LMVector3 currentCharacterSize = LMVector3::Lerp(startScale, endScale, spawnCharactersProgress);
+			LMVector3 startRotation = LMVector3(0, 0, 0);
+			LMVector3 endRotation = LMVector3(0, 360, 0);
+			LMVector3 currentCharacterRotation = LMVector3::Lerp(startRotation, endRotation, spawnCharactersProgress);
+
 
 			// Mover a los personajes a sus sitios de spawneo
 			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
-			//for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++) {
 
-			//	LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
+				LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
 
-			//	if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId())
-			//		thisPlayer.gameObject->getComponent<Transform>()->SetSize(currentCharacterSize);
+				if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId()) {
+
+					thisPlayer.gameObject->getComponent<Transform>()->SetRotation(currentCharacterRotation);
+
+					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -95, 0);
+					LMVector3 endPosition = spawnPoints[i];
+					LMVector3 currentCharacterPosition = LMVector3::Lerp(startPosition, endPosition, spawnCharactersProgress);
+
+					thisPlayer.gameObject->getComponent<Transform>()->SetPosition(currentCharacterPosition);
+				}
+			}
+
+			//LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[0];
+			//if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId()) {
+
+			//	thisPlayer.gameObject->getComponent<Transform>()->SetRotation(currentCharacterRotation);
 			//}
-
-			LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[0];
-			if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId())
-				thisPlayer.gameObject->getComponent<Transform>()->SetSize(currentCharacterSize);
 		}
 		else {
 
