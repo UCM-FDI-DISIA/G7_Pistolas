@@ -29,7 +29,10 @@ LocalMultiplayerManager* LocalMultiplayerManager::GetInstance()
 
 std::array<LocalMultiplayerManager::PlayerData, 4> LocalMultiplayerManager::getPlayers()
 {
-	return allPlayers;
+	if (this == nullptr)
+		return std::array<LocalMultiplayerManager::PlayerData, 4>();
+	else
+		return allPlayers;
 }
 
 void LocalMultiplayerManager::start()

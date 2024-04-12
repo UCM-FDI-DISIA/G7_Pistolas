@@ -51,6 +51,12 @@ namespace JuegoDePistolas {
 		// Valor entre 0 y 1 que se usa para determinar como de cerca debe estar la camara del personaje ganador
 		float cameraZoom = 0;
 
+		// Valor entre 0 y 1 que se usa en la animacion de principio de ronda para las animaciones de los personajes
+		// Spawneando
+		float spawnCharactersProgress = 0;
+		// Escala inicial de los personajes
+		int initCharacterScale;
+
 		bool startRoundActive = false;
 		float startRoundTime = 0;
 		float startRoundMaxTime = 4;

@@ -79,6 +79,7 @@ void GameplayManager::startRound()
 	// Actualizar variables
 	startRoundActive = true;
 	startRoundTime = 0;
+	spawnCharactersProgress = 0;
 
 	// Mover a los personajes a sus sitios de spawneo
 	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
@@ -107,6 +108,8 @@ void GameplayManager::start()
 		getObjectByName("MainCamera")->getComponent<Transform>();
 	initCameraPos = camera->GetPosition();
 
+	// Asignar escala inicial de los personajes
+	initCharacterScale = LocalMultiplayerManager::GetInstance()->getPlayers()[0].gameObject->getComponent<Transform>()->GetSize().GetX();
 
 	// Definir spawn points para los jugadores
 	spawnPoints = spawnPoints = {
@@ -126,18 +129,54 @@ void GameplayManager::update(float dT)
 
 
 	// Si se esta en la animacion de inicio de ronda
-	//if (startRoundActive) {
+	if (startRoundActive) {
 
-	//	// Los personajes spawnean en en el primer segundo
+		// Los personajes spawnean en en el primer segundo
 
-	//	if (startRoundTime < startRoundMaxTime)
-	//		startRoundTime += dT / 1000;
-	//	else
-	//		startRoundTime = startRoundMaxTime;
+		if (startRoundTime < startRoundMaxTime)
+			startRoundTime += dT / 1000;
+		else
+			startRoundTime = startRoundMaxTime;
 
-	//	if (startRoundTime > startRoundMaxTime)
-	//		startRoundActive = false;
-	//}
+		if (startRoundTime > startRoundMaxTime)
+			startRoundActive = false;
+
+		// Si se esta en el primer segundo de animacion
+		if (startRoundTime < 1) {
+
+			spawnCharactersProgress += dT / 1000;
+			if (spawnCharactersProgress > 1)
+				spawnCharactersProgress = 1;
+
+
+			LMVector3 startScale = LMVector3(1, 1, 1);
+			LMVector3 endScale = LMVector3(initCharacterScale, initCharacterScale, initCharacterScale);
+			LMVector3 currentCharacterSize = LMVector3::Lerp(startScale, endScale, spawnCharactersProgress);
+
+			// Mover a los personajes a sus sitios de spawneo
+			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
+			//for (int i = 0; i < 4; i++) {
+
+			//	LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
+
+			//	if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId())
+			//		thisPlayer.gameObject->getComponent<Transform>()->SetSize(currentCharacterSize);
+			//}
+
+			LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[0];
+			if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId())
+				thisPlayer.gameObject->getComponent<Transform>()->SetSize(currentCharacterSize);
+		}
+		else {
+
+			// Mostrar cuenta atras de 3 a 0
+			int currentTimerState = floorf(3 - startRoundTime - 1);
+			std::cout << "TIMER = " << currentTimerState << std::endl;
+		}
+
+		std::cout << "spawnCharactersProgress = " << spawnCharactersProgress << std::endl;
+
+	}
 
 	// Si esta durante una animacion de ronda ganada, mover la camara
 	if (endRoundActive) {
