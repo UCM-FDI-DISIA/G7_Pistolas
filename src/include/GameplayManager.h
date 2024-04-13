@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "Transform.h"
 #include "LMVector.h"
+#include "UIImage.h"
 
 using namespace LocoMotor;
 
@@ -29,6 +30,13 @@ namespace JuegoDePistolas {
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
 
 	private:
+
+
+		void updateCameraAnimations(float dT);
+		void updateBackScoreAnimations();
+		void updateCrossAnimations();
+
+		float lerp(float a, float b, float t);
 
 		static GameplayManager* _instance;
 
@@ -71,6 +79,15 @@ namespace JuegoDePistolas {
 		Transform* camera;
 		// Posicion inicial de la camara
 		LMVector3 initCameraPos;
+
+
+		UIImage* backImage;
+		std::array<UIImage*, 3> crosses;
+
+		int initScoreBackWidth;
+		int initScoreBackHeight;
+
+		int initCrossSize;
 	};
 }
 
