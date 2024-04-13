@@ -50,8 +50,8 @@ void Bullet::update(float dT)
 
 	Transform* tr = _gameObject->getComponent<Transform>();
 
-	if (direction.Magnitude() > .1f)
-		tr->SetPosition(tr->GetPosition() + direction * velocity * dT/1000);
+	if (direction.magnitude() > .1f)
+		tr->setPosition(tr->getPosition() + direction * velocity * dT/1000);
 
 	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
 
@@ -66,8 +66,8 @@ void Bullet::update(float dT)
 
 		// Si esta vivo, comprobar si esta lo suficientemente cerca de esta bala
 		GameObject* thisPlayerObj = allPlayers[i].gameObject;
-		float distance = LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition());
-		if (LMVector3::Distance(thisPlayerObj->getComponent<Transform>()->GetPosition(), tr->GetPosition()) < 30) {
+		float distance = LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition());
+		if (LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition()) < 30) {
 
 			thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}

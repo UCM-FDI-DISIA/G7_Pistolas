@@ -102,7 +102,7 @@ void GameplayManager::startRound()
 		if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
 			continue;
 
-		thisPlayer.gameObject->getComponent<Transform>()->SetPosition(spawnPoints[i]);
+		thisPlayer.gameObject->getComponent<Transform>()->setPosition(spawnPoints[i]);
 		thisPlayer.gameObject->getComponent<MeshRenderer>()->setVisible(true);
 
 		// Marcar a los personajes activos como vivos
@@ -119,7 +119,7 @@ void GameplayManager::start()
 
 	// Asignar la referencia a la camara y a la posicion inicial
 	camera = scene->getObjectByName("MainCamera")->getComponent<Transform>();
-	initCameraPos = camera->GetPosition();
+	initCameraPos = camera->getPosition();
 
 	// Asignar escala inicial de los personajes
 	//initCharacterScale = LocalMultiplayerManager::GetInstance()->getPlayers()[0].gameObject->getComponent<Transform>()->GetSize().GetX();
@@ -179,7 +179,7 @@ void GameplayManager::update(float dT)
 
 			LMVector3 startRotation = LMVector3(0, 0, 0);
 			LMVector3 endRotation = LMVector3(0, 360, 0);
-			LMVector3 currentCharacterRotation = LMVector3::Lerp(startRotation, endRotation, spawnCharactersProgress);
+			LMVector3 currentCharacterRotation = LMVector3::lerp(startRotation, endRotation, spawnCharactersProgress);
 
 			// Mover a los personajes a sus sitios de spawneo
 			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
@@ -189,13 +189,13 @@ void GameplayManager::update(float dT)
 
 				if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId()) {
 
-					thisPlayer.gameObject->getComponent<Transform>()->SetRotation(currentCharacterRotation);
+					thisPlayer.gameObject->getComponent<Transform>()->setRotation(currentCharacterRotation);
 
 					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -95, 0);
 					LMVector3 endPosition = spawnPoints[i];
-					LMVector3 currentCharacterPosition = LMVector3::Lerp(startPosition, endPosition, spawnCharactersProgress);
+					LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, spawnCharactersProgress);
 
-					thisPlayer.gameObject->getComponent<Transform>()->SetPosition(currentCharacterPosition);
+					thisPlayer.gameObject->getComponent<Transform>()->setPosition(currentCharacterPosition);
 				}
 			}
 		}
@@ -255,11 +255,11 @@ void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
 
 	// Actualizar posicion de camara
 	LMVector3 characterPosition = LocalMultiplayerManager::GetInstance()->
-		getPlayers()[winPlayerIndex].gameObject->getComponent<Transform>()->GetPosition();
+		getPlayers()[winPlayerIndex].gameObject->getComponent<Transform>()->getPosition();
 	LMVector3 closeToCharacterPos = characterPosition + LMVector3(0, 300, 300);
-	LMVector3 currentCameraPosition = LMVector3::Lerp(initCameraPos, closeToCharacterPos, cameraZoom);
+	LMVector3 currentCameraPosition = LMVector3::lerp(initCameraPos, closeToCharacterPos, cameraZoom);
 
-	camera->SetPosition(currentCameraPosition);
+	camera->setPosition(currentCameraPosition);
 }
 
 void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()

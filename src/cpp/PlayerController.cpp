@@ -68,11 +68,11 @@ void PlayerController::update(float dT)
 
 		// Mover revolver
 	GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
-	revolver->getComponent<Transform>()->SetPosition(tr->GetPosition() + direction * 50);
+	revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 50);
 
-	LMQuaternion revolverRotation = tr->GetRotation().Rotate(LMVector3(0, 1, 0), -90);
+	LMQuaternion revolverRotation = tr->getRotation().rotate(LMVector3(0, 1, 0), -90);
 	//revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
-	revolver->getComponent<Transform>()->SetRotation(revolverRotation);
+	revolver->getComponent<Transform>()->setRotation(revolverRotation);
 
 
 
@@ -87,29 +87,29 @@ void PlayerController::update(float dT)
 		// Movimiento horizontal
 
 		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
-		tr->SetPosition(tr->GetPosition() + currentDirection * velocity * dT / 1000);
+		tr->setPosition(tr->getPosition() + currentDirection * velocity * dT / 1000);
 
 		float lookJoystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Horizontal);
 		float lookJoystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Vertical);
 
 		LMVector3 lookDirection = LMVector3(lookJoystickValue_x, 0, lookJoystickValue_y);
 
-		if (lookDirection.Magnitude() > .1f) {
+		if (lookDirection.magnitude() > .1f) {
 			direction = lookDirection;
-			direction.Normalize();
+			direction.normalize();
 		}
-		lookDirection.Rotate(LMVector3(0, 1, 0), 180);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
-		tr->SetForward(lookDirection);
+		lookDirection.rotate(LMVector3(0, 1, 0), 180);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
+		tr->setForward(lookDirection);
 
 
 		// Cambiar la animacion si es necesario
@@ -128,11 +128,11 @@ void PlayerController::update(float dT)
 			bullet->getComponent<Bullet>()->setBulletActive(true);
 
 			Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
-			bulletTr->SetPosition(tr->GetPosition() + direction * 50);
+			bulletTr->setPosition(tr->getPosition() + direction * 50);
 			if (bulletTr == nullptr)
 				std::cout << "bulletTr NULL" << std::endl;
 
-			bulletTr->SetRotation(tr->GetRotation());
+			bulletTr->setRotation(tr->getRotation());
 			bullet->getComponent<Bullet>()->setDirection(direction);
 		}
 	}
