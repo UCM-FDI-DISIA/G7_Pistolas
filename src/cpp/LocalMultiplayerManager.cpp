@@ -29,7 +29,10 @@ LocalMultiplayerManager* LocalMultiplayerManager::GetInstance()
 
 std::array<LocalMultiplayerManager::PlayerData, 4> LocalMultiplayerManager::getPlayers()
 {
-	return allPlayers;
+	if (this == nullptr)
+		return std::array<LocalMultiplayerManager::PlayerData, 4>();
+	else
+		return allPlayers;
 }
 
 void LocalMultiplayerManager::start()
@@ -71,7 +74,7 @@ void LocalMultiplayerManager::start()
 	}
 
 	Transform* tr = allPlayers[3].gameObject->getComponent<Transform>();
-	tr->SetPosition(tr->GetPosition() + LMVector3(0, 50, 0));
+	tr->setPosition(tr->getPosition() + LMVector3(0, 50, 0));
 }
 
 void LocalMultiplayerManager::update(float dT)
@@ -108,7 +111,7 @@ void LocalMultiplayerManager::update(float dT)
 		allPlayers[playerIndex].gameObject->setActive(true);
 		allPlayers[playerIndex].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
 
-		allPlayers[playerIndex].gameObject->getComponent<Transform>()->SetPosition(spawnPoints[playerIndex]);
+		allPlayers[playerIndex].gameObject->getComponent<Transform>()->setPosition(spawnPoints[playerIndex]);
 
 		// Asignar a la clase PlayerController, el controllerId necesario para vincularlo con el mando
 		allPlayers[playerIndex].playerController->setControllerId(controllerId);

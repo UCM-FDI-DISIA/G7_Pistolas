@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "Transform.h"
 #include "LMVector.h"
+#include "UIImage.h"
 
 using namespace LocoMotor;
 
@@ -30,6 +31,13 @@ namespace JuegoDePistolas {
 
 	private:
 
+
+		void updateCameraAnimations(float dT);
+		void updateBackScoreAnimations();
+		void updateCrossAnimations();
+
+		float lerp(float a, float b, float t);
+
 		static GameplayManager* _instance;
 
 
@@ -51,6 +59,12 @@ namespace JuegoDePistolas {
 		// Valor entre 0 y 1 que se usa para determinar como de cerca debe estar la camara del personaje ganador
 		float cameraZoom = 0;
 
+		// Valor entre 0 y 1 que se usa en la animacion de principio de ronda para las animaciones de los personajes
+		// Spawneando
+		float spawnCharactersProgress = 0;
+		// Escala inicial de los personajes
+		int initCharacterScale;
+
 		bool startRoundActive = false;
 		float startRoundTime = 0;
 		float startRoundMaxTime = 4;
@@ -65,6 +79,15 @@ namespace JuegoDePistolas {
 		Transform* camera;
 		// Posicion inicial de la camara
 		LMVector3 initCameraPos;
+
+
+		UIImage* backImage;
+		std::array<UIImage*, 3> crosses;
+
+		int initScoreBackWidth;
+		int initScoreBackHeight;
+
+		int initCrossSize;
 	};
 }
 
