@@ -13,6 +13,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Bullet.h"
+#include "RigidBody.h"
 
 #include "GameplayManager.h"
 
@@ -48,14 +49,14 @@ void JuegoDePistolas::PlayerController::bulletHit()
 void PlayerController::start()
 {
 	Transform* tr = _gameObject->getComponent<Transform>();
-
+	
 	//tr->SetSize(LMVector3(.5f, .5f, .5f));
 }
 
 void PlayerController::update(float dT)
 {
 	//std::cout << "PlayerControllerUpdate" << std::endl;
-
+	
 	MeshRenderer* mesh = _gameObject->getComponent<MeshRenderer>();
 	Transform* tr = _gameObject->getComponent<Transform>();
 
@@ -153,6 +154,14 @@ void PlayerController::update(float dT)
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
 		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
 			_gameObject->getComponent<ParticleSystem>()->play();
+	}
+	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_0)) {
+		if (_gameObject->getComponent<RigidBody>() != nullptr) {
+			_gameObject->getComponent<RigidBody>()->ApplyTorqueImpulse({ 0,500,0 });
+			_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
+			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
+		}
+			
 	}
 
 }
