@@ -43,10 +43,10 @@ void LocalMultiplayerManager::start()
 
 	// Definir spawn points para los jugadores
 	spawnPoints = spawnPoints = {
-	LMVector3{80, 40, 80},
-	LMVector3{-80, 40, 80},
-	LMVector3{80, 40, -80},
-	LMVector3{-80, 40, -80}
+	LMVector3{8, 4, 8},
+	LMVector3{-8, 4, 8},
+	LMVector3{8, 4, -8},
+	LMVector3{-8, 4, -8}
 	};
 
 	// Asignar referencias de jugadores
