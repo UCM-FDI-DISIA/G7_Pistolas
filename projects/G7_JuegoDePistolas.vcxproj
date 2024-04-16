@@ -15,6 +15,7 @@
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
     <ClCompile Include="..\src\cpp\GameplayManager.cpp" />
     <ClCompile Include="..\src\cpp\LocalMultiplayerManager.cpp" />
+    <ClCompile Include="..\src\cpp\LocalMultiplayerManagerGeneral.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
     <ClCompile Include="..\src\cpp\Weapon.cpp" />
@@ -24,6 +25,7 @@
     <ClInclude Include="..\src\include\framework.h" />
     <ClInclude Include="..\src\include\GameplayManager.h" />
     <ClInclude Include="..\src\include\LocalMultiplayerManager.h" />
+    <ClInclude Include="..\src\include\LocalMultiplayerManagerGeneral.h" />
     <ClInclude Include="..\src\include\pch.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
     <ClInclude Include="..\src\include\Weapon.h" />
