@@ -91,8 +91,8 @@ void PlayerController::update(float dT)
 
 
 		// Mover revolver
-	//GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
-	//revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 50);
+	GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
+	revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 5);
 
 	//LMQuaternion revolverRotation = tr->getRotation().rotate(LMVector3(0, 1, 0), -90);
 	////revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
