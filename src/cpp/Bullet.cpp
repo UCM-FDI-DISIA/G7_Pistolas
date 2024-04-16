@@ -48,6 +48,11 @@ void Bullet::update(float dT)
 	if (bulletActive == false)
 		return;
 
+	if (!timeset) {
+		birthTime = dT;
+		timeset = true;
+	}
+
 	Transform* tr = _gameObject->getComponent<Transform>();
 
 	if (direction.magnitude() > .1f)
@@ -69,12 +74,28 @@ void Bullet::update(float dT)
 		float distance = LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition());
 		if (LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition()) < 30) {
 
-			thisPlayerObj->getComponent<PlayerController>()->bulletHit();
+			//thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}
+	}
+
+	if (dT - birthTime > 2) {
+		destroyBullet();
+		
 	}
 }
 
 void JuegoDePistolas::Bullet::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+}
+
+
+void JuegoDePistolas::Bullet::destroyBullet() {
+	timeset = false;
+	LocoMotor::SceneManager::GetInstance()->getActiveScene()->removeGameobject(this->_gameObject->getName());
+	
+}
+
+void JuegoDePistolas::Bullet::setVelocity(int vel) {
+	velocity = vel;
 }
 

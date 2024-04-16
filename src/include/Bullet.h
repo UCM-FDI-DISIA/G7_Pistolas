@@ -14,9 +14,11 @@ namespace JuegoDePistolas {
 		~Bullet();
 
 		void setDirection(LMVector3 _direction);
+		void setVelocity(int vel);
 
 		void setBulletActive(bool _bulletActive);
-
+		
+		void destroyBullet();
 	protected:
 		void start() override;
 		void update(float dT) override;
@@ -26,9 +28,13 @@ namespace JuegoDePistolas {
 
 		LMVector3 direction;
 
-		const int velocity = 200;
+		//const int velocity = 200;
+		int velocity = 200;
 
 		bool bulletActive = false;
+
+		float birthTime=0;
+		bool timeset = false;
 	};
 }
 

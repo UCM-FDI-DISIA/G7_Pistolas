@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <string>
 
 #include "InputManager.h"
 #include "MeshRenderer.h"
@@ -125,16 +126,22 @@ void PlayerController::update(float dT)
 
 		if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
 
-			GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Bullet");
-			bullet->getComponent<Bullet>()->setBulletActive(true);
 
+			
+			
+
+			createBullet(_bullID, tr->getPosition() + direction * 200, tr->getRotation());
+			_bullID++;
+			/*GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Bullet");
+			bullet->getComponent<Bullet>()->setBulletActive(true);
+			
 			Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
 			bulletTr->setPosition(tr->getPosition() + direction * 50);
 			if (bulletTr == nullptr)
 				std::cout << "bulletTr NULL" << std::endl;
 
-			bulletTr->setRotation(tr->getRotation());
-			bullet->getComponent<Bullet>()->setDirection(direction);
+			bulletTr->setRotation();
+			bullet->getComponent<Bullet>()->setDirection(direction);*/
 		}
 	}
 
@@ -159,7 +166,7 @@ void PlayerController::update(float dT)
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {
 			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,50,0 });
 			_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
-			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
+			_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
 			
 	}
@@ -168,5 +175,34 @@ void PlayerController::update(float dT)
 
 void JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+}
+
+
+GameObject* JuegoDePistolas::PlayerController::createBullet(int id, LMVector3 pos, LMQuaternion rot) {
+
+
+	std::string bulletName = "Bullet" + std::to_string(playerIndex) + std::to_string(id);
+
+
+	GameObject* nBullet = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(bulletName);
+
+	Bullet* bullComp = (Bullet*)nBullet->addComponent("Bullet");
+	Transform* transfComp = (Transform*)nBullet->addComponent("Transform");
+	MeshRenderer* meshComp = (MeshRenderer*)nBullet->addComponent("MeshRenderer");
+
+	meshComp->setMesh("Bullet.mesh");
+	meshComp->setMaterial("Bullet");
+	meshComp->setVisible(true);
+	meshComp->setEnabled(true);
+	bullComp->setBulletActive(true);
+	bullComp->setVelocity(200);
+	
+	//transfComp->setPosition(pos);
+	transfComp->setPosition({pos.getX()-4,pos.getY()-1,pos.getZ()});
+	transfComp->setSize({ 2, 2, 2 });
+	transfComp->setRotation(rot);
+
+
+	return nBullet;
 }
 

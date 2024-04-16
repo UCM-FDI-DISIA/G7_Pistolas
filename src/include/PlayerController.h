@@ -18,6 +18,9 @@ namespace JuegoDePistolas {
 		// Se llama desde una bala cuando esta colisiona con este personaje
 		void bulletHit();
 
+
+		GameObject* createBullet(int id,LMVector3 pos, LMQuaternion rot);
+
 	protected:
 		void start() override;
 		void update(float dT) override;
@@ -33,6 +36,7 @@ namespace JuegoDePistolas {
 		LMVector3 direction;
 
 		float debugParameter = 0;
+		int _bullID=0;
 	};
 }
 
