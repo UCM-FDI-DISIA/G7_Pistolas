@@ -17,6 +17,7 @@
 #include "RigidBody.h"
 
 #include "GameplayManager.h"
+#include "Weapon.h"
 
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
@@ -91,8 +92,8 @@ void PlayerController::update(float dT)
 
 
 		// Mover revolver
-	GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
-	revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 5);
+	/*GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
+	revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 5);*/
 
 	//LMQuaternion revolverRotation = tr->getRotation().rotate(LMVector3(0, 1, 0), -90);
 	////revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
@@ -146,14 +147,16 @@ void PlayerController::update(float dT)
 
 		// Disparo
 
-		if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
-
-
-			
-			
-
-			createBullet(_bullID, tr->getPosition() + direction * 200, tr->getRotation());
-			_bullID++;
+		if (hasWeapon && Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
+			//createBullet(_bulletID, tr->getPosition() + direction * 200, tr->getRotation());
+			GameObject* weaponGO = SceneManager::GetInstance()->getActiveScene()->getObjectByName(weaponName);
+			if (weaponGO != nullptr) {
+				Weapon* weaponComp = weaponGO->getComponent<Weapon>();
+				if (weaponComp != nullptr) {
+					weaponComp->shoot(playerIndex, bulletID);
+					bulletID++;
+				}
+			}
 			/*GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Bullet");
 			bullet->getComponent<Bullet>()->setBulletActive(true);
 			
@@ -204,11 +207,9 @@ void JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std:
 }
 
 
-GameObject* JuegoDePistolas::PlayerController::createBullet(int id, LMVector3 pos, LMQuaternion rot) {
-
-
+void JuegoDePistolas::PlayerController::createBullet(int id, LMVector3 pos, LMQuaternion rot) 
+{
 	std::string bulletName = "Bullet" + std::to_string(playerIndex) + std::to_string(id);
-
 
 	GameObject* nBullet = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(bulletName);
 
@@ -228,8 +229,5 @@ GameObject* JuegoDePistolas::PlayerController::createBullet(int id, LMVector3 po
 	transfComp->setSize({ 2, 2, 2 });
 	transfComp->setRotation(rot);
 	bullComp->setDirection(transfComp->getEulerRotation());
-
-
-	return nBullet;
 }
 

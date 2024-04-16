@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "Bullet.h"
+#include "MeshRenderer.h"
+#include <string>
 
 JuegoDePistolas::Weapon::Weapon()
 {
@@ -13,8 +16,31 @@ JuegoDePistolas::Weapon::~Weapon()
 {
 }
 
-void JuegoDePistolas::Weapon::shoot()
+void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 {
+	Transform* weaponTr = _gameObject->getComponent<Transform>();
+	if (weaponTr == nullptr)return;
+
+	std::string bulletName = "Bullet" + std::to_string(playerId) + std::to_string(bulletId);
+
+	GameObject* nBullet = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(bulletName);
+
+	Bullet* bullComp = (Bullet*)nBullet->addComponent("Bullet");
+	Transform* transfComp = (Transform*)nBullet->addComponent("Transform");
+	MeshRenderer* meshComp = (MeshRenderer*)nBullet->addComponent("MeshRenderer");
+
+	meshComp->setMesh("Bullet.mesh");
+	meshComp->setMaterial("Bullet");
+	meshComp->setVisible(true);
+	meshComp->setEnabled(true);
+	bullComp->setBulletActive(true);
+	bullComp->setVelocity(200);
+
+	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
+	transfComp->setSize({ 2, 2, 2 });
+	transfComp->setRotation(weaponTr->getRotation());
+	bullComp->setDirection(transfComp->getEulerRotation());
+
 	ammo--;
 }
 
@@ -26,16 +52,19 @@ void JuegoDePistolas::Weapon::update(float dT)
 {
 	if (!isPicked) { // El arma esta en el mapa esperando a ser recogida
 		std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
-		allPlayers[0].gameObject;
 
 		// Comprobar si algun player la recoge
 		for (int i = 0; i < allPlayers.size(); i++) {
-			GameObject* thisPlayerObj = allPlayers[i].gameObject;
+			LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
+			// Realizar cambios solo si es valido el controllerId
+			if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
+				continue;
+			GameObject* thisPlayerObj = thisPlayer.gameObject;
 			Transform* tr = _gameObject->getComponent<Transform>();
 			Transform* playerTr = thisPlayerObj->getComponent<Transform>();
 			PlayerController* playerContr = thisPlayerObj->getComponent<PlayerController>();
 			if (tr == nullptr || playerTr == nullptr || playerContr == nullptr)return;
-			if (!playerContr->getHasWeapon() && LMVector3::distance(playerTr->getPosition(), tr->getPosition()) < 30) {
+			if (!playerContr->getHasWeapon() && LMVector3::distance(playerTr->getPosition(), tr->getPosition()) < 10) {
 				playerContr->pickWeapon(_gameObject->getName());
 				isPicked = true;
 				holderPlayerName = thisPlayerObj->getName();
@@ -50,7 +79,7 @@ void JuegoDePistolas::Weapon::update(float dT)
 		Transform* playerTr = holderPlayerObj->getComponent<Transform>();
 		Transform* tr = _gameObject->getComponent<Transform>();
 		if (tr == nullptr || playerContr == nullptr)return;
-		tr->setPosition(playerTr->getPosition() + playerContr->getDirection() * 50);
+		tr->setPosition(playerTr->getPosition() + playerContr->getDirection() * 5);
 		LMQuaternion newRotation = playerTr->getRotation().rotate(LMVector3(0, 1, 0), -90);
 		tr->setRotation(newRotation);
 

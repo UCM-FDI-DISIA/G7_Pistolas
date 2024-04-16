@@ -17,13 +17,9 @@ namespace JuegoDePistolas {
 
 		// Se llama desde una bala cuando esta colisiona con este personaje
 		void bulletHit();
-
-
-		GameObject* createBullet(int id,LMVector3 pos, LMQuaternion rot);
+		void createBullet(int id,LMVector3 pos, LMQuaternion rot);
 		bool getHasWeapon();
-
 		void pickWeapon(std::string name);
-
 		void dropWeapon();
 
 		LMVector3 getDirection();
@@ -43,7 +39,7 @@ namespace JuegoDePistolas {
 		LMVector3 direction;
 
 		float debugParameter = 0;
-		int _bullID=0;
+		int bulletID = 0;
 
 		bool hasWeapon = false;
 
