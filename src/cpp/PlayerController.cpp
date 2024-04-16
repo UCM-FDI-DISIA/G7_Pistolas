@@ -47,6 +47,28 @@ void JuegoDePistolas::PlayerController::bulletHit()
 	GameplayManager::GetInstance()->playerDied(playerIndex);
 }
 
+bool JuegoDePistolas::PlayerController::getHasWeapon()
+{
+	return hasWeapon;
+}
+
+void JuegoDePistolas::PlayerController::pickWeapon(std::string name)
+{
+	weaponName = name;
+	hasWeapon = true;
+}
+
+void JuegoDePistolas::PlayerController::dropWeapon()
+{
+	weaponName = "";
+	hasWeapon = false;
+}
+
+LMVector3 JuegoDePistolas::PlayerController::getDirection()
+{
+	return direction;
+}
+
 void PlayerController::start()
 {
 	Transform* tr = _gameObject->getComponent<Transform>();
@@ -69,12 +91,12 @@ void PlayerController::update(float dT)
 
 
 		// Mover revolver
-	GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
-	revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 50);
+	//GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
+	//revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 50);
 
-	LMQuaternion revolverRotation = tr->getRotation().rotate(LMVector3(0, 1, 0), -90);
-	//revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
-	revolver->getComponent<Transform>()->setRotation(revolverRotation);
+	//LMQuaternion revolverRotation = tr->getRotation().rotate(LMVector3(0, 1, 0), -90);
+	////revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
+	//revolver->getComponent<Transform>()->setRotation(revolverRotation);
 
 
 
@@ -160,7 +182,11 @@ void PlayerController::update(float dT)
 
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
 		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
-			_gameObject->getComponent<ParticleSystem>()->play();
+			//_gameObject->getComponent<ParticleSystem>()->play();
+		{
+			SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
+			SceneManager::GetInstance()->changeScene("Game");
+		}
 	}
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_0)) {
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {

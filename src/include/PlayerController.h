@@ -20,6 +20,13 @@ namespace JuegoDePistolas {
 
 
 		GameObject* createBullet(int id,LMVector3 pos, LMQuaternion rot);
+		bool getHasWeapon();
+
+		void pickWeapon(std::string name);
+
+		void dropWeapon();
+
+		LMVector3 getDirection();
 
 	protected:
 		void start() override;
@@ -37,6 +44,10 @@ namespace JuegoDePistolas {
 
 		float debugParameter = 0;
 		int _bullID=0;
+
+		bool hasWeapon = false;
+
+		std::string weaponName = "";
 	};
 }
 

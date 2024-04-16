@@ -17,6 +17,7 @@
     <ClCompile Include="..\src\cpp\LocalMultiplayerManager.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
+    <ClCompile Include="..\src\cpp\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\Bullet.h" />
@@ -25,6 +26,7 @@
     <ClInclude Include="..\src\include\LocalMultiplayerManager.h" />
     <ClInclude Include="..\src\include\pch.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
+    <ClInclude Include="..\src\include\Weapon.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
