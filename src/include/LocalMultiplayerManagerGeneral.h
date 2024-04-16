@@ -21,6 +21,8 @@ namespace JuegoDePistolas {
 
 		void init();
 
+		void onControllersChange();
+
 		std::array<Input::InputManager::ControllerId, 4> getPlayers();
 
 	private:

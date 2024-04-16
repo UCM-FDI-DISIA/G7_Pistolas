@@ -36,6 +36,7 @@ void LocalMultiplayerManagerGeneral::init()
 {
 	_instance = this;
 
+	// Inicializar valores
 	int currentPlayer = 0;
 	for (Input::InputManager::ControllerId& controllerId : allPlayers) {
 
@@ -43,4 +44,14 @@ void LocalMultiplayerManagerGeneral::init()
 		controllerId = Input::InputManager::invalidControllerId();
 		currentPlayer++;
 	}
+
+	//// Suscribirse al InputManager para saber cuando se ha conectado/desconectado un mando
+	//Input::InputManager::GetInstance()->addListener([this]() {
+	//	this->onControllersChange();
+	//});
+}
+
+void LocalMultiplayerManagerGeneral::onControllersChange()
+{
+
 }
