@@ -157,7 +157,7 @@ void PlayerController::update(float dT)
 	}
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_0)) {
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {
-			_gameObject->getComponent<RigidBody>()->ApplyTorqueImpulse({ 0,50,0 });
+			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,50,0 });
 			_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
 			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
