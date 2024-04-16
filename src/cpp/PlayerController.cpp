@@ -201,6 +201,7 @@ GameObject* JuegoDePistolas::PlayerController::createBullet(int id, LMVector3 po
 	transfComp->setPosition({pos.getX()-4,pos.getY()-1,pos.getZ()});
 	transfComp->setSize({ 2, 2, 2 });
 	transfComp->setRotation(rot);
+	bullComp->setDirection(transfComp->getEulerRotation());
 
 
 	return nBullet;
