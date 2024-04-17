@@ -12,6 +12,7 @@
 #include "Bullet.h"
 #include <GameplayManager.h>
 #include "Weapon.h"
+#include "MainMenuManager.h"
 
 using namespace LocoMotor;
 using namespace JuegoDePistolas;
@@ -39,12 +40,13 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<Bullet>("Bullet");
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<GameplayManager>("GameplayManager");
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<Weapon>("Weapon");
+    LocoMotor::ComponentsFactory::GetInstance()->registerComponent<MainMenuManager>("MainMenuManager");
 
     LocoMotor::Audio::AudioManager::GetInstance()->loadFMODBuild("Assets/Sounds/StudioBuild");
 
     motor->setWindowName("Juego de pistolas");
 
-    motor->setStartingScene("Assets/Scenes/Scene.lua", "Scene");
+    motor->setStartingScene("Assets/Scenes/Menu.lua", "Menu");
 
 #ifdef _DEBUG
     return "Juego de pistolas: Running in DEBUG";

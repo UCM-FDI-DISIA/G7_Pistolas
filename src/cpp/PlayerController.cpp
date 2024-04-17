@@ -207,27 +207,3 @@ void JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std:
 }
 
 
-void JuegoDePistolas::PlayerController::createBullet(int id, LMVector3 pos, LMQuaternion rot) 
-{
-	std::string bulletName = "Bullet" + std::to_string(playerIndex) + std::to_string(id);
-
-	GameObject* nBullet = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(bulletName);
-
-	Bullet* bullComp = (Bullet*)nBullet->addComponent("Bullet");
-	Transform* transfComp = (Transform*)nBullet->addComponent("Transform");
-	MeshRenderer* meshComp = (MeshRenderer*)nBullet->addComponent("MeshRenderer");
-
-	meshComp->setMesh("Bullet.mesh");
-	meshComp->setMaterial("Bullet");
-	meshComp->setVisible(true);
-	meshComp->setEnabled(true);
-	bullComp->setBulletActive(true);
-	bullComp->setVelocity(200);
-	
-	//transfComp->setPosition(pos);
-	transfComp->setPosition({pos.getX()-4,pos.getY()-1,pos.getZ()});
-	transfComp->setSize({ 2, 2, 2 });
-	transfComp->setRotation(rot);
-	bullComp->setDirection(transfComp->getEulerRotation());
-}
-

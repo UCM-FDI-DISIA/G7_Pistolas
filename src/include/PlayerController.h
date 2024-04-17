@@ -17,7 +17,6 @@ namespace JuegoDePistolas {
 
 		// Se llama desde una bala cuando esta colisiona con este personaje
 		void bulletHit();
-		void createBullet(int id,LMVector3 pos, LMQuaternion rot);
 		bool getHasWeapon();
 		void pickWeapon(std::string name);
 		void dropWeapon();

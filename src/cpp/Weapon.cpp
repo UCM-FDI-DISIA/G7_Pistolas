@@ -51,6 +51,7 @@ void JuegoDePistolas::Weapon::start()
 void JuegoDePistolas::Weapon::update(float dT)
 {
 	if (!isPicked) { // El arma esta en el mapa esperando a ser recogida
+		if (LocalMultiplayerManager::GetInstance() == nullptr)return;
 		std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
 
 		// Comprobar si algun player la recoge
