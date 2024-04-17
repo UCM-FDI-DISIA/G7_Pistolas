@@ -23,6 +23,8 @@ namespace JuegoDePistolas {
 
 		LMVector3 getDirection();
 
+		void OnCollisionEnter(GameObject* other)override;
+
 	protected:
 		void start() override;
 		void update(float dT) override;

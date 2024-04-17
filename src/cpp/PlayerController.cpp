@@ -70,6 +70,11 @@ LMVector3 JuegoDePistolas::PlayerController::getDirection()
 	return direction;
 }
 
+void JuegoDePistolas::PlayerController::OnCollisionEnter(GameObject* other)
+{
+	std::cout << "I Collide with " << other->getName() << " Uju\n";
+}
+
 void PlayerController::start()
 {
 	Transform* tr = _gameObject->getComponent<Transform>();
@@ -195,7 +200,7 @@ void PlayerController::update(float dT)
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {
 			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,50,0 });
 			_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
-			_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
+			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
 			
 	}
