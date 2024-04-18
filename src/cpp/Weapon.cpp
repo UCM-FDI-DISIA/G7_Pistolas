@@ -16,7 +16,7 @@ JuegoDePistolas::Weapon::~Weapon()
 {
 }
 
-void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
+void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId, LocoMotor::GameObject* gObj )
 {
 	Transform* weaponTr = _gameObject->getComponent<Transform>();
 	if (weaponTr == nullptr)return;
@@ -39,7 +39,10 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
 	transfComp->setSize({ 2, 2, 2 });
 	transfComp->setRotation(weaponTr->getRotation());
-	bullComp->setDirection(transfComp->getEulerRotation());
+	
+	transfComp->setForward(transfComp->getEulerRotation());
+	//bullComp->setDirection(transfComp->getRotation());
+	bullComp->setDirection(gObj->getComponent<PlayerController>()->getDirection());
 
 	ammo--;
 }

@@ -10,7 +10,7 @@ namespace JuegoDePistolas {
 		Weapon();
 		~Weapon();
 		
-		void shoot(int playerId, int bulletId);
+		void shoot(int playerId, int bulletId,GameObject* gobj);
 	protected:
 		void start() override;
 		void update(float dT) override;

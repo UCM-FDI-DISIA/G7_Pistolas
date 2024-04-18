@@ -48,10 +48,7 @@ void Bullet::update(float dT)
 	if (bulletActive == false)
 		return;
 
-	if (!timeset) {
-		birthTime = dT;
-		timeset = true;
-	}
+	
 
 	Transform* tr = _gameObject->getComponent<Transform>();
 
@@ -77,10 +74,10 @@ void Bullet::update(float dT)
 			//thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}
 	}
-
-	if (dT - birthTime > 2) {
+	timeAlive++;
+	if (timeAlive>timeToLive) {
 		destroyBullet();
-		
+		timeAlive = 0;
 	}
 }
 

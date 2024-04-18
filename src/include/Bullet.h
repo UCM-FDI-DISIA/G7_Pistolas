@@ -33,7 +33,8 @@ namespace JuegoDePistolas {
 
 		bool bulletActive = false;
 
-		float birthTime=0;
+		float timeToLive=400;
+		float timeAlive = 0;
 		bool timeset = false;
 	};
 }

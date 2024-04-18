@@ -46,7 +46,8 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
 
     motor->setWindowName("Juego de pistolas");
 
-    motor->setStartingScene("Assets/Scenes/Menu.lua", "Menu");
+    //motor->setStartingScene("Assets/Scenes/Menu.lua", "Menu");
+    motor->setStartingScene("Assets/Scenes/Scene.lua", "Scene");
 
 #ifdef _DEBUG
     return "Juego de pistolas: Running in DEBUG";
