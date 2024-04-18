@@ -38,11 +38,8 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId, LocoMotor::GameO
 
 	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
 	transfComp->setSize({ 2, 2, 2 });
-	transfComp->setRotation(weaponTr->getRotation());
-	
-	transfComp->setForward(transfComp->getEulerRotation());
-	//bullComp->setDirection(transfComp->getRotation());
 	bullComp->setDirection(gObj->getComponent<PlayerController>()->getDirection());
+	transfComp->setRotation(gObj->getComponent<Transform>()->getRotation());
 
 	ammo--;
 }
