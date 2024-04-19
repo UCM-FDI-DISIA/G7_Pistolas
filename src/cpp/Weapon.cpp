@@ -16,10 +16,10 @@ JuegoDePistolas::Weapon::~Weapon()
 {
 }
 
-void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId, LocoMotor::GameObject* gObj )
+void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 {
 	Transform* weaponTr = _gameObject->getComponent<Transform>();
-	if (weaponTr == nullptr)return;
+	if (weaponTr == nullptr|| SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()==nullptr)return;
 
 	std::string bulletName = "Bullet" + std::to_string(playerId) + std::to_string(bulletId);
 
@@ -38,8 +38,12 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId, LocoMotor::GameO
 
 	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
 	transfComp->setSize({ 2, 2, 2 });
-	bullComp->setDirection(gObj->getComponent<PlayerController>()->getDirection());
-	transfComp->setRotation(gObj->getComponent<Transform>()->getRotation());
+	
+	
+	bullComp->setDirection(SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()->getRotation().forward() * -1);
+		
+	transfComp->setRotation(SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()->getRotation());
+	
 
 	ammo--;
 }

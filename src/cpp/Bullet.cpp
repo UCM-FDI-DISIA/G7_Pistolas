@@ -74,7 +74,7 @@ void Bullet::update(float dT)
 			//thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}
 	}
-	timeAlive++;
+	timeAlive+=dT;
 	if (timeAlive>timeToLive) {
 		destroyBullet();
 		timeAlive = 0;

@@ -158,7 +158,7 @@ void PlayerController::update(float dT)
 			if (weaponGO != nullptr) {
 				Weapon* weaponComp = weaponGO->getComponent<Weapon>();
 				if (weaponComp != nullptr) {
-					weaponComp->shoot(playerIndex, bulletID,_gameObject);
+					weaponComp->shoot(playerIndex, bulletID);
 					bulletID++;
 				}
 			}
