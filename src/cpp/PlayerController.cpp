@@ -72,13 +72,14 @@ LMVector3 JuegoDePistolas::PlayerController::getDirection()
 
 void JuegoDePistolas::PlayerController::OnCollisionEnter(GameObject* other)
 {
-	std::cout << "I Collide with " << other->getName() << " Uju\n";
+	std::cout << _gameObject->getName() << ":    \t" << "I Collide with " << other->getName() << " Uju\n";
 }
 
 void PlayerController::start()
 {
 	Transform* tr = _gameObject->getComponent<Transform>();
-	
+
+	_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
 	//tr->SetSize(LMVector3(.5f, .5f, .5f));
 }
 
@@ -106,7 +107,7 @@ void PlayerController::update(float dT)
 
 
 
-	float velocity = 130;
+	float velocity = 1500;
 
 	// Si hay un controllerId asignado
 	if (controllerId != Input::InputManager::invalidControllerId()) {
@@ -117,7 +118,12 @@ void PlayerController::update(float dT)
 		// Movimiento horizontal
 
 		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
-		tr->setPosition(tr->getPosition() + currentDirection * velocity * dT / 1000);
+		_gameObject->getComponent<RigidBody>()->AddForce(currentDirection * velocity * dT / 1000);
+
+		if (joystickValue_x > 0.1f || joystickValue_x < -0.1f || joystickValue_y > 0.1f || joystickValue_y < -0.1f)
+			_gameObject->getComponent<ParticleSystem>()->play();
+		else
+			_gameObject->getComponent<ParticleSystem>()->stop();
 
 		float lookJoystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Horizontal);
 		float lookJoystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Vertical);
@@ -196,10 +202,10 @@ void PlayerController::update(float dT)
 			SceneManager::GetInstance()->changeScene("Game");
 		}
 	}
-	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_0)) {
+
+	if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A)) {
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {
-			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,50,0 });
-			_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
+			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,20,0 });
 			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
 			

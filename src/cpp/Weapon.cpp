@@ -34,10 +34,10 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 	meshComp->setVisible(true);
 	meshComp->setEnabled(true);
 	bullComp->setBulletActive(true);
-	bullComp->setVelocity(200);
+	bullComp->setVelocity(100);
 
 	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
-	transfComp->setSize({ 2, 2, 2 });
+	transfComp->setSize({ 1, 1, 1 });
 	
 	
 	bullComp->setDirection(SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()->getRotation().forward() * -1);

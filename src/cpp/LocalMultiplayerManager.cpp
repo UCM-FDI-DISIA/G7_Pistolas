@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "LMVector.h"
 #include "MeshRenderer.h"
+#include "ParticleSystem.h"
 
 #include <iostream>
 #include <SceneManager.h>
@@ -43,10 +44,10 @@ void LocalMultiplayerManager::start()
 
 	// Definir spawn points para los jugadores
 	spawnPoints = spawnPoints = {
-	LMVector3{8, 28, 8},
-	LMVector3{-8, 28, 8},
-	LMVector3{8, 28, -8},
-	LMVector3{-8, 28, -8}
+	LMVector3{8, 2, 8},
+	LMVector3{-8, 2, 8},
+	LMVector3{8, 2, -8},
+	LMVector3{-8, 2, -8}
 	};
 
 	// Asignar referencias de jugadores
@@ -69,12 +70,10 @@ void LocalMultiplayerManager::start()
 		// Desactivar el objeto
 		playerData.gameObject->setActive(false);
 		playerData.gameObject->getComponent<MeshRenderer>()->setEnabled(false);
+		playerData.gameObject->getComponent<ParticleSystem>()->setEnabled(false);
 
 		currentPlayer++;
 	}
-
-	Transform* tr = allPlayers[3].gameObject->getComponent<Transform>();
-	tr->setPosition(tr->getPosition() + LMVector3(0, 50, 0));
 }
 
 void LocalMultiplayerManager::update(float dT)
@@ -110,6 +109,7 @@ void LocalMultiplayerManager::update(float dT)
 		// Activar el objeto jugador dependiendo del index del jugador
 		allPlayers[playerIndex].gameObject->setActive(true);
 		allPlayers[playerIndex].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
+		allPlayers[playerIndex].gameObject->getComponent<ParticleSystem>()->setEnabled(true);
 
 		allPlayers[playerIndex].gameObject->getComponent<Transform>()->setPosition(spawnPoints[playerIndex]);
 
