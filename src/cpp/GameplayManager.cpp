@@ -256,7 +256,7 @@ void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
 	// Actualizar posicion de camara
 	LMVector3 characterPosition = LocalMultiplayerManager::GetInstance()->
 		getPlayers()[winPlayerIndex].gameObject->getComponent<Transform>()->getPosition();
-	LMVector3 closeToCharacterPos = characterPosition + LMVector3(0, 300, 300);
+	LMVector3 closeToCharacterPos = characterPosition + LMVector3(0, 30, 30);
 	LMVector3 currentCameraPosition = LMVector3::lerp(initCameraPos, closeToCharacterPos, cameraZoom);
 
 	camera->setPosition(currentCameraPosition);

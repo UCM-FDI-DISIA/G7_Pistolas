@@ -69,9 +69,9 @@ void Bullet::update(float dT)
 		// Si esta vivo, comprobar si esta lo suficientemente cerca de esta bala
 		GameObject* thisPlayerObj = allPlayers[i].gameObject;
 		float distance = LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition());
-		if (LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition()) < 30) {
+		if (LMVector3::distance(thisPlayerObj->getComponent<Transform>()->getPosition(), tr->getPosition()) < 3) {
 
-			//thisPlayerObj->getComponent<PlayerController>()->bulletHit();
+			thisPlayerObj->getComponent<PlayerController>()->bulletHit();
 		}
 	}
 	timeAlive+=dT;
