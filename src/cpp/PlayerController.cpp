@@ -53,10 +53,11 @@ bool JuegoDePistolas::PlayerController::getHasWeapon()
 	return hasWeapon;
 }
 
-void JuegoDePistolas::PlayerController::pickWeapon(std::string name)
+void JuegoDePistolas::PlayerController::pickWeapon(std::string name,int spawnId)
 {
 	weaponName = name;
 	hasWeapon = true;
+	GameplayManager::GetInstance()->freeSpawnpoint(spawnId);
 }
 
 void JuegoDePistolas::PlayerController::dropWeapon()

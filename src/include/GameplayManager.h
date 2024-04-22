@@ -24,6 +24,10 @@ namespace JuegoDePistolas {
 
 		void startRound();
 
+		void spawnWeapon(int weaponId,int spawnposId);
+
+		void freeSpawnpoint(int spawnId);
+
 	protected:
 		void start() override;
 		void update(float dT) override;
@@ -88,6 +92,13 @@ namespace JuegoDePistolas {
 		int initScoreBackHeight;
 
 		int initCrossSize;
+
+		int weaponID = 0;
+		std::vector<LMVector3> fixedPos;
+		std::vector<bool> availablePos;
+		float timeToSpawn = 5000;
+		float currTimeTospawn = 0;
+
 	};
 }
 

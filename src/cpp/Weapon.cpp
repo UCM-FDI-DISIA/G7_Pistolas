@@ -70,7 +70,7 @@ void JuegoDePistolas::Weapon::update(float dT)
 			PlayerController* playerContr = thisPlayerObj->getComponent<PlayerController>();
 			if (tr == nullptr || playerTr == nullptr || playerContr == nullptr)return;
 			if (!playerContr->getHasWeapon() && LMVector3::distance(playerTr->getPosition(), tr->getPosition()) < 10) {
-				playerContr->pickWeapon(_gameObject->getName());
+				playerContr->pickWeapon(_gameObject->getName(),spawnInd);
 				isPicked = true;
 				holderPlayerName = thisPlayerObj->getName();
 			}
@@ -98,4 +98,13 @@ void JuegoDePistolas::Weapon::update(float dT)
 
 void JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+}
+
+
+int JuegoDePistolas::Weapon::getSpawnPoint() {
+	return spawnInd;
+}
+
+void JuegoDePistolas::Weapon::setSpawnPoint(int spawnpoint) {
+	spawnInd = spawnpoint;
 }

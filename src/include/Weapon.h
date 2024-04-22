@@ -11,6 +11,8 @@ namespace JuegoDePistolas {
 		~Weapon();
 		
 		void shoot(int playerId, int bulletId);
+		int getSpawnPoint();
+		void setSpawnPoint(int spawnpoint);
 	protected:
 		void start() override;
 		void update(float dT) override;
@@ -20,6 +22,8 @@ namespace JuegoDePistolas {
 		std::string holderPlayerName = "";
 		bool isPicked = false;
 		int ammo = 5;
+
+		int spawnInd=0;
 	};
 }
 
