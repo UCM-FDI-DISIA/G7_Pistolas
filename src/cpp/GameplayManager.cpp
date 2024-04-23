@@ -63,6 +63,14 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 
 			crosses[i]->show();
 			crosses[i]->setDimensions(0, 0);
+
+			// Tintar las cruces equivalentes a los puntos que tenga acumulados el juegador ganador de la ronda
+			if (i < scores[winPlayerIndex])
+				crosses[i]->setImage(getMaterialFromPlayerIndex(winPlayerIndex));
+
+			// Poner el resto de cruces blancas
+			else
+				crosses[i]->setImage("CrossMaterial");
 		}
 
 		//backImage->setDimensions(0, initHeight);
@@ -110,9 +118,6 @@ void GameplayManager::startRound()
 		// Marcar a los personajes activos como vivos
 		playersAlive[i] = true;
 	}
-
-
-
 }
 
 void GameplayManager::start()
@@ -242,8 +247,6 @@ void GameplayManager::update(float dT)
 
 void JuegoDePistolas::GameplayManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
-
-
 }
 
 void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
@@ -298,8 +301,7 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 	}
 	// Desde que se inicia hasta que termina
 	else if (endRoundTime >= scoreBack_init_time + scoreBack_init_duration && endRoundTime <= scoreBack_end_time)
-	{
-	}
+	{}
 	// Si es antes de la animacion init o despues de la animacion end, esconderlo
 	else
 		backImage->setDimensions(0, initScoreBackHeight);
@@ -337,15 +339,21 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 	// Animacion de la cruz del punto decreciendo, cambiando de color y volviendo a crecer
 	else if (endRoundTime > winCross_time && endRoundTime < winCross_time + winCross_duration) {
 
-		int crossIndex = 0;
+		int crossIndex = scores[winPlayerIndex] - 1;
+		for (int i = 0; i < 4; i++)
+			std::cout << "score_" << i << " = " << scores[i] << std::endl;
+
+		std::cout << "crossIndex = " << crossIndex << std::endl;
 		UIImage* winCross = crosses[crossIndex];
 
 		// Valor de 0 a 1 que define esta fragmento de tiempo
 		float totalT = (endRoundTime - winCross_time) / winCross_duration;
 
 		// Si se pasa de la mitad, cambiar de color
-		if (totalT >= .5f)
-			winCross->setImage("CrossMaterialBlue");
+		if (totalT >= .5f) {
+			//winPlayerIndex
+			winCross->setImage(getMaterialFromPlayerIndex(winPlayerIndex));
+		}
 
 		// Primera parte de la animacion
 		if (totalT < .5f) {
@@ -379,6 +387,28 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 
 		for (int i = 0; i < crosses.size(); i++)
 			crosses[i]->setDimensions(currentSize, currentSize);
+	}
+}
+
+std::string JuegoDePistolas::GameplayManager::getMaterialFromPlayerIndex(int playerIndex)
+{
+	switch (playerIndex)
+	{
+	case 0:
+		return "CrossMaterialBlue";
+		break;
+	case 1:
+		return "CrossMaterialRed";
+		break;
+	case 2:
+		return "CrossMaterialGreen";
+		break;
+	case 3:
+		return "CrossMaterialPurple";
+		break;
+
+	default:
+		break;
 	}
 }
 

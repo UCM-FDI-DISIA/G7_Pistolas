@@ -40,6 +40,8 @@ namespace JuegoDePistolas {
 		void updateBackScoreAnimations();
 		void updateCrossAnimations();
 
+		std::string getMaterialFromPlayerIndex(int playerIndex);
+
 		float lerp(float a, float b, float t);
 
 		static GameplayManager* _instance;
