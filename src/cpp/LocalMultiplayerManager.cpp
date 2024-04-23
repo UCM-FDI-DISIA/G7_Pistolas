@@ -4,6 +4,7 @@
 #include "LMVector.h"
 #include "MeshRenderer.h"
 #include "ParticleSystem.h"
+#include "GameplayManager.h"
 
 #include <iostream>
 #include <SceneManager.h>
@@ -40,16 +41,6 @@ void LocalMultiplayerManager::start()
 {
 	_instance = this;
 
-	int distance = 80;
-
-	// Definir spawn points para los jugadores
-	spawnPoints = spawnPoints = {
-	LMVector3{8, 2, 8},
-	LMVector3{-8, 2, 8},
-	LMVector3{8, 2, -8},
-	LMVector3{-8, 2, -8}
-	};
-
 	// Asignar referencias de jugadores
 
 	allPlayers[0].gameObject = SceneManager::GetInstance()->getActiveScene()->getObjectByName("cube");
@@ -81,6 +72,8 @@ void LocalMultiplayerManager::update(float dT)
 	// Check connections
 	std::list<Input::InputManager::ControllerId> controllersAdded = Input::InputManager::GetInstance()->getOnConnectControllers();
 	std::list<Input::InputManager::ControllerId> controllersRemoved = Input::InputManager::GetInstance()->getOnDisconnectControllers();
+
+	std::array<LMVector3, 4> spawnPoints = GameplayManager::GetInstance()->getSpawnPoints();
 
 	// Conexion de usuarios
 	for (const Input::InputManager::ControllerId& controllerId : controllersAdded) {

@@ -36,8 +36,6 @@ namespace JuegoDePistolas {
 
 		static LocalMultiplayerManager* _instance;
 
-		std::array<LMVector3, 4> spawnPoints;
-
 		// Stores all the player references by their controllerId
 		std::array<PlayerData, 4> allPlayers;
 	};

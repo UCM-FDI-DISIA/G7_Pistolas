@@ -111,8 +111,8 @@ void GameplayManager::startRound()
 		playersAlive[i] = true;
 	}
 
-	
-		
+
+
 }
 
 void GameplayManager::start()
@@ -131,10 +131,10 @@ void GameplayManager::start()
 
 	// Definir spawn points para los jugadores
 	spawnPoints = spawnPoints = {
-		LMVector3{80, 40, 80},
-		LMVector3{-80, 40, 80},
-		LMVector3{80, 40, -80},
-		LMVector3{-80, 40, -80}
+		LMVector3{8, 2, 8},
+		LMVector3{-8, 2, 8},
+		LMVector3{8, 2, -8},
+		LMVector3{-8, 2, -8}
 	};
 
 	// Referencias a la interfaz 
@@ -196,7 +196,7 @@ void GameplayManager::update(float dT)
 
 					thisPlayer.gameObject->getComponent<Transform>()->setRotation(currentCharacterRotation);
 
-					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -95, 0);
+					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -9, 0);
 					LMVector3 endPosition = spawnPoints[i];
 					LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, spawnCharactersProgress);
 
@@ -214,7 +214,7 @@ void GameplayManager::update(float dT)
 		//std::cout << "spawnCharactersProgress = " << spawnCharactersProgress << std::endl;
 	}
 
-	
+
 	// Si esta durante una animacion de ronda ganada, mover la camara
 	if (endRoundActive) {
 
@@ -242,7 +242,7 @@ void GameplayManager::update(float dT)
 
 void JuegoDePistolas::GameplayManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
-	
+
 
 }
 
@@ -298,7 +298,8 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 	}
 	// Desde que se inicia hasta que termina
 	else if (endRoundTime >= scoreBack_init_time + scoreBack_init_duration && endRoundTime <= scoreBack_end_time)
-	{ }
+	{
+	}
 	// Si es antes de la animacion init o despues de la animacion end, esconderlo
 	else
 		backImage->setDimensions(0, initScoreBackHeight);
@@ -392,4 +393,9 @@ void JuegoDePistolas::GameplayManager::freeSpawnpoint(int spawnId) {
 	if (weaponspawnpoints != nullptr) {
 		weaponspawnpoints->setSpawnerAvailable(spawnId, true);
 	}
+}
+
+std::array<LMVector3, 4> JuegoDePistolas::GameplayManager::getSpawnPoints()
+{
+	return spawnPoints;
 }
