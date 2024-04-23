@@ -152,10 +152,6 @@ void GameplayManager::start()
 	backImage->hide();
 	for (int i = 0; i < crosses.size(); i++)
 		crosses[i]->hide();
-
-
-
-
 }
 
 void GameplayManager::update(float dT)
@@ -279,7 +275,7 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 	float scoreBack_init_time = 1;
 	float scoreBack_init_duration = .5f;
 
-	float scoreBack_end_time = 2.5f;
+	float scoreBack_end_time = 3.5f;
 	float scoreBack_end_duration = .5f;
 
 	if (endRoundTime > scoreBack_init_time && endRoundTime < scoreBack_init_time + scoreBack_init_duration) {
@@ -300,24 +296,31 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 		int currentWidth = lerp(startValue, endValue, t);
 		backImage->setDimensions(currentWidth, initScoreBackHeight);
 	}
+	// Desde que se inicia hasta que termina
+	else if (endRoundTime >= scoreBack_init_time + scoreBack_init_duration && endRoundTime <= scoreBack_end_time)
+	{ }
+	// Si es antes de la animacion init o despues de la animacion end, esconderlo
+	else
+		backImage->setDimensions(0, initScoreBackHeight);
 }
 
 void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 {
+	// Todas las cruces escalandose al principio de la animacion
 	float allCrosses_init_time = 1;
 	float allCrosses_init_duration = .5f;
 
-	float allCrosses_end_time = 2;
+	// Animacion de la cruz decreciendo, cambiando de color, y volviendo a crecer
+	// En la duracion se incluye todo este proceso
+	float winCross_time = 2;
+	float winCross_duration = .75f;
+
+	// Todas las cruces decreciendo al final de la animacion
+	float allCrosses_end_time = 3.5f;
 	float allCrosses_end_duration = .5f;
 
-	float winCross_time = 1.5f;
 
-
-	// CROSSES
-	if (endRoundTime > winCross_time) {
-		// Cambiar de color a la X especificada
-	}
-
+	// Animacion de todas las cruces creciendo
 	if (endRoundTime > allCrosses_init_time && endRoundTime < allCrosses_init_time + allCrosses_init_duration) {
 
 		// Animacion tamaño
@@ -328,16 +331,43 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 
 		for (int i = 0; i < crosses.size(); i++)
 			crosses[i]->setDimensions(currentSize, currentSize);
-
-		//// Animacion rotacion
-		//float startValue_rotation = 0;
-		//float endValue_rotation = 360;
-		//float t_rotation = (endRoundTime - allCrosses_init_time) / allCrosses_init_duration;
-		//int currentRotation = lerp(startValue_rotation, endValue_rotation, t_rotation);
-
-		//for (int i = 0; i < crosses.size(); i++)
-		//	crosses[i]->setRotation(currentRotation);
 	}
+
+	// Animacion de la cruz del punto decreciendo, cambiando de color y volviendo a crecer
+	else if (endRoundTime > winCross_time && endRoundTime < winCross_time + winCross_duration) {
+
+		int crossIndex = 0;
+		UIImage* winCross = crosses[crossIndex];
+
+		// Valor de 0 a 1 que define esta fragmento de tiempo
+		float totalT = (endRoundTime - winCross_time) / winCross_duration;
+
+		// Si se pasa de la mitad, cambiar de color
+		if (totalT >= .5f)
+			winCross->setImage("CrossMaterialBlue");
+
+		// Primera parte de la animacion
+		if (totalT < .5f) {
+
+			float firstT = totalT / 0.5f;
+			float startValue_size = initCrossSize;
+			float endValue_size = 0;
+			int currentSize = lerp(startValue_size, endValue_size, firstT);
+			crosses[crossIndex]->setDimensions(currentSize, currentSize);
+		}
+		// Segunda parte de la animacion
+		else {
+			float secondT = (totalT - .5f) / 0.5f;
+			float startValue_size = 0;
+			float endValue_size = initCrossSize;
+			int currentSize = lerp(startValue_size, endValue_size, secondT);
+			crosses[crossIndex]->setDimensions(currentSize, currentSize);
+		}
+
+		std::cout << "totalT = " << totalT << std::endl;
+	}
+
+	// Animacion de todas las cruces decreciendo
 	else if (endRoundTime > allCrosses_end_time && endRoundTime < allCrosses_end_time + allCrosses_end_duration) {
 
 		// Actualizar UI
