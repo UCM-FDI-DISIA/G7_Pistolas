@@ -19,6 +19,7 @@
     <ClCompile Include="..\src\cpp\MainMenuManager.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
+    <ClCompile Include="..\src\cpp\Spawner.cpp" />
     <ClCompile Include="..\src\cpp\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="..\src\include\MainMenuManager.h" />
     <ClInclude Include="..\src\include\pch.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
+    <ClInclude Include="..\src\include\Spawner.h" />
     <ClInclude Include="..\src\include\Weapon.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

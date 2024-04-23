@@ -13,6 +13,7 @@
 #include <GameplayManager.h>
 #include "Weapon.h"
 #include "MainMenuManager.h"
+#include "Spawner.h"
 
 using namespace LocoMotor;
 using namespace JuegoDePistolas;
@@ -41,6 +42,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::Engine* motor)
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<GameplayManager>("GameplayManager");
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<Weapon>("Weapon");
     LocoMotor::ComponentsFactory::GetInstance()->registerComponent<MainMenuManager>("MainMenuManager");
+    LocoMotor::ComponentsFactory::GetInstance()->registerComponent<Spawner>("Spawner");
 
     LocoMotor::Audio::AudioManager::GetInstance()->loadFMODBuild("Assets/Sounds/StudioBuild");
 

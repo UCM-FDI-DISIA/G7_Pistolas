@@ -24,8 +24,6 @@ namespace JuegoDePistolas {
 
 		void startRound();
 
-		void spawnWeapon(int weaponId,int spawnposId);
-
 		void freeSpawnpoint(int spawnId);
 
 	protected:
@@ -77,7 +75,7 @@ namespace JuegoDePistolas {
 		float endRoundTime = 0;
 		float endRoundMaxTime = 4;
 
-
+		
 
 		// Referencia al componente Transform de la camara de la escena
 		Transform* camera;
@@ -93,11 +91,6 @@ namespace JuegoDePistolas {
 
 		int initCrossSize;
 
-		int weaponID = 0;
-		std::vector<LMVector3> fixedPos;
-		std::vector<bool> availablePos;
-		float timeToSpawn = 5000;
-		float currTimeTospawn = 0;
 
 	};
 }

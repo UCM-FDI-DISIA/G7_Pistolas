@@ -14,6 +14,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "LocalMultiplayerManager.h"
+#include "Spawner.h"
 
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
@@ -154,15 +155,6 @@ void GameplayManager::start()
 
 
 
-	//hacerlo en lua en un vector de pares
-	fixedPos.push_back({ -15, 10,0 });
-	fixedPos.push_back({ 15, 10,0 });
-	fixedPos.push_back({ 5, 10,10 });
-	fixedPos.push_back({ 5, 10,-10 });
-
-	for (int j = 0; j < 4; j++) {
-		availablePos.push_back(true);
-	}
 
 }
 
@@ -226,20 +218,7 @@ void GameplayManager::update(float dT)
 		//std::cout << "spawnCharactersProgress = " << spawnCharactersProgress << std::endl;
 	}
 
-	currTimeTospawn += dT;
 	
-	if (currTimeTospawn > timeToSpawn) {
-		
-		int pos = std::rand() % 4;
-		
-		if (availablePos[pos]) {
-			spawnWeapon(weaponID, pos);
-			weaponID++;
-			
-		}
-		currTimeTospawn = 0;
-	}
-
 	// Si esta durante una animacion de ronda ganada, mover la camara
 	if (endRoundActive) {
 
@@ -267,6 +246,8 @@ void GameplayManager::update(float dT)
 
 void JuegoDePistolas::GameplayManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+	
+
 }
 
 void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
@@ -376,31 +357,9 @@ float JuegoDePistolas::GameplayManager::lerp(float a, float b, float t)
 }
 
 
-void JuegoDePistolas::GameplayManager::spawnWeapon(int weaponId,int spawnposId) {
-
-	std::string weaponName = "Weapon" +  std::to_string(weaponId);
-
-	GameObject* nWeapon = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(weaponName);
-
-	Transform* transfComp = (Transform*)nWeapon->addComponent("Transform");
-	MeshRenderer* meshComp = (MeshRenderer*)nWeapon->addComponent("MeshRenderer");
-	Weapon* weaponComp = (Weapon*)nWeapon->addComponent("Weapon");
-
-	meshComp->setMesh("Revolver.mesh");
-	meshComp->setMaterial("Revolver");
-	meshComp->setVisible(true);
-	meshComp->setEnabled(true);
-
-	
-
-	transfComp->setPosition(fixedPos[spawnposId]);
-	transfComp->setSize({ 1, 1, 1 });
-	weaponComp->setSpawnPoint(spawnposId);
-	
-	availablePos[spawnposId] = false;
-
-}
-
 void JuegoDePistolas::GameplayManager::freeSpawnpoint(int spawnId) {
-	availablePos[spawnId] = true;
+	Spawner* weaponspawnpoints = this->_gameObject->getComponent<Spawner>();
+	if (weaponspawnpoints != nullptr) {
+		weaponspawnpoints->setSpawnerAvailable(spawnId, true);
+	}
 }
