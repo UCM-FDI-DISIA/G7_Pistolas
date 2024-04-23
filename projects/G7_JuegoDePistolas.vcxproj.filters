@@ -42,6 +42,9 @@
     <ClCompile Include="..\src\cpp\MainMenuManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\cpp\Spawner.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\framework.h">
@@ -69,6 +72,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\MainMenuManager.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\Spawner.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
