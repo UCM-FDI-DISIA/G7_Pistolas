@@ -72,8 +72,9 @@ namespace JuegoDePistolas {
 		bool matchEnd = false;
 
 		// Numero de rondas necesarias para que un jugador gane la partida
-		const int winScore = 3;
+		const int winScore = 1;
 
+		bool sceneChanged = false;
 
 		// Valor entre 0 y 1 que se usa para determinar como de cerca debe estar la camara del personaje ganador
 		float cameraZoom = 0;

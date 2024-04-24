@@ -324,7 +324,15 @@ void GameplayManager::update(float dT)
 
 		// Si es la ronda ganadora, esperar un rato antes de cambiar de escena de vuelta al menu
 		if (matchEnd && endRoundTime > 6)
-			std::cout << "CAMBIO DE ESCENA AL MENU; FINAL DE PARTIDA";
+		{
+			if (!sceneChanged) {
+
+				sceneChanged = true;
+
+				SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
+				SceneManager::GetInstance()->changeScene("Menu");
+			}
+		}
 	}
 }
 
