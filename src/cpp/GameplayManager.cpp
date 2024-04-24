@@ -82,6 +82,10 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 
 		// Actualizar puntos
 		std::cout << "PLAYER WIN index = " << winPlayerIndex << std::endl;
+
+		//std::string message = 
+
+		//winText->setText()
 	}
 
 	// Desactivar el personaje que acaba de ser eliminado
@@ -135,12 +139,30 @@ void GameplayManager::start()
 	//initCharacterScale = LocalMultiplayerManager::GetInstance()->getPlayers()[0].gameObject->getComponent<Transform>()->GetSize().GetX();
 
 	// Definir spawn points para los jugadores
-	spawnPoints = spawnPoints = {
+	spawnPoints = {
 		scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
 		scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
 		scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
 		scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
 	};
+
+	// Asignar colores de los jugadores
+	playerColors = {
+		LMVector3{0.3294f, 0.7372f, 0.8352f},
+		LMVector3{0.8078f, 0.2745f, 0.2745f},
+		LMVector3{0.3764f, 0.8078f, 0.2784f},
+		LMVector3{0.7137f, 0.4078f, 0.8352f}
+	};
+
+	// Asignar colores de los jugadores
+	playerColorsName = {
+		"BLUE", "RED", "GREEN", "PURPLE"
+	};
+
+	winText = scene->getObjectByName("UIPlayerWin")->getComponent<UIText>();
+	winTextShade = scene->getObjectByName("UIPlayerWinShade")->getComponent<UIText>();
+	winTextY = winText->getPositionY();
+
 	//spawnPoints = spawnPoints = {
 	//LMVector3{8, 2, 8},
 	//LMVector3{-8, 2, 8},
@@ -269,8 +291,9 @@ void GameplayManager::update(float dT)
 
 		// Actualizar animaciones
 		updateCameraAnimations(dT);
-		updateCrossAnimations();
 		updateBackScoreAnimations();
+		updateCrossAnimations();
+		updateWinText();
 
 
 		//std::cout << "endRoundTime = " << endRoundTime << std::endl;
@@ -420,6 +443,25 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 
 		for (int i = 0; i < crosses.size(); i++)
 			crosses[i]->setDimensions(currentSize, currentSize);
+	}
+}
+
+void JuegoDePistolas::GameplayManager::updateWinText() {
+
+
+	float winText_init_time = 1;
+	float winText_init_duration = .5f;
+
+	if (endRoundTime > winText_init_time && endRoundTime < winText_init_time + winText_init_duration) {
+
+		// Actualizar UI
+		float startValue = -300;
+		float endValue = winTextY;
+		float t = (endRoundTime - winText_init_time) / winText_init_duration;
+		int currentY = lerp(startValue, endValue, t);
+		winText->setPosition(winText->getPositionX(), currentY);
+
+		winTextShade->setPosition(winText->getPositionX(), currentY + 5);
 	}
 }
 

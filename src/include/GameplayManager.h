@@ -35,6 +35,7 @@ namespace JuegoDePistolas {
 		void updateCameraAnimations(float dT);
 		void updateBackScoreAnimations();
 		void updateCrossAnimations();
+		void updateWinText();
 
 		std::string getMaterialFromPlayerIndex(int playerIndex);
 
@@ -54,6 +55,17 @@ namespace JuegoDePistolas {
 		// Puntos de spawneo
 		std::array<LMVector3, 4> spawnPoints;
 
+		// Colores para los colores de las interfaces
+		std::array<LMVector3, 4> playerColors;
+
+		// Colores para los colores de las interfaces
+		std::array<std::string, 4> playerColorsName;
+
+		// Referencia a los textos de win y su sombra
+		UIText* winText;
+		UIText* winTextShade;
+		float winTextY;
+		float winTextX;
 
 		int winPlayerIndex = -1;
 
