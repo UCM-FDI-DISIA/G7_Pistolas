@@ -65,6 +65,40 @@ void LocalMultiplayerManager::start()
 
 		currentPlayer++;
 	}
+
+	// Temporal, arreglar lo de que el update siempre se llame despues de cualquier start
+	Scene* scene = SceneManager::GetInstance()->getActiveScene();
+	spawnPoints = {
+	scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
+	scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
+	scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
+	scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
+	};
+
+	//  Mostrar los players de los mandos ya conectados al entrar a la escena
+	std::list<LocoMotor::Input::InputManager::ControllerId>controllers = Input::InputManager::GetInstance()->getCurrentlyConnectedControllers();
+	int it = 0;
+	for (auto contrID : controllers) {
+		// No se permitiran mas de 4 mandos conectados al mismo tiempo
+		if (it > 4)
+			break;
+		allPlayers[it].controllerId = contrID;
+
+		// Activar el objeto jugador dependiendo del index del jugador
+		allPlayers[it].gameObject->setActive(true);
+		if (allPlayers[it].gameObject->getComponent<MeshRenderer>() != nullptr)
+			allPlayers[it].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
+
+		if (allPlayers[it].gameObject->getComponent<ParticleSystem>() != nullptr)
+			allPlayers[it].gameObject->getComponent<ParticleSystem>()->setEnabled(true);
+
+		if (allPlayers[it].gameObject->getComponent<Transform>() != nullptr)
+			allPlayers[it].gameObject->getComponent<Transform>()->setPosition(spawnPoints[it]);
+
+		// Asignar a la clase PlayerController, el controllerId necesario para vincularlo con el mando
+		allPlayers[it].playerController->setControllerId(contrID);
+		it++;
+	}
 }
 
 void LocalMultiplayerManager::update(float dT)
@@ -73,17 +107,17 @@ void LocalMultiplayerManager::update(float dT)
 	std::list<Input::InputManager::ControllerId> controllersAdded = Input::InputManager::GetInstance()->getOnConnectControllers();
 	std::list<Input::InputManager::ControllerId> controllersRemoved = Input::InputManager::GetInstance()->getOnDisconnectControllers();
 
-	// Temporal, arreglar lo de que el update siempre se llame despues de cualquier start
-	Scene* scene = SceneManager::GetInstance()->getActiveScene();
-	std::array<LMVector3, 4> spawnPoints = spawnPoints = {
-	scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
-	scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
-	scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
-	scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
-	};
-
 	// Conexion de usuarios
 	for (const Input::InputManager::ControllerId& controllerId : controllersAdded) {
+
+		bool playerAlreadyAdded = false;
+		for (auto e : allPlayers) {
+			if (e.controllerId == controllerId) {
+				playerAlreadyAdded = true;
+				break;
+			}
+		}
+		if (playerAlreadyAdded)continue;
 
 		std::cout << "controllerAdded" << std::endl;
 

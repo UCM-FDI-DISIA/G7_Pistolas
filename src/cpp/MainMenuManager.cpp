@@ -28,6 +28,19 @@ void JuegoDePistolas::MainMenuManager::start()
 		if (playerData.gameObject->getComponent<MeshRenderer>() != nullptr)
 			playerData.gameObject->getComponent<MeshRenderer>()->setEnabled(false);
 	}
+
+	//  Mostrar los players de los mandos ya conectados al entrar a la escena
+	std::list<LocoMotor::Input::InputManager::ControllerId>controllers = Input::InputManager::GetInstance()->getCurrentlyConnectedControllers();
+	int it = 0;
+	for (auto contrID : controllers) {
+		// No se permitiran mas de 4 mandos conectados al mismo tiempo
+		if (it > 4)
+			break;
+		players[it].controllerId = contrID;
+		if (players[it].gameObject->getComponent<MeshRenderer>() != nullptr)
+			players[it].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
+		it++;
+	}
 }
 
 void JuegoDePistolas::MainMenuManager::update(float dT)
@@ -39,9 +52,15 @@ void JuegoDePistolas::MainMenuManager::update(float dT)
 	for (auto contrID : controllersAdded) {
 		int freePlayer;
 		for (freePlayer = 0; freePlayer < players.size(); freePlayer++) {
+			// Si la conexion del mando ya se habia detectado en el start la ignoramos
+			if (players[freePlayer].controllerId == contrID) {
+				freePlayer = -1;
+				break;
+			}
 			if (players[freePlayer].controllerId == Input::InputManager::invalidControllerId())
 				break;
 		}
+		if (freePlayer == -1)continue;
 		players[freePlayer].controllerId = contrID;
 		if (players[freePlayer].gameObject->getComponent<MeshRenderer>() != nullptr)
 			players[freePlayer].gameObject->getComponent<MeshRenderer>()->setEnabled(true);

@@ -199,8 +199,8 @@ void PlayerController::update(float dT)
 		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
 			//_gameObject->getComponent<ParticleSystem>()->play();
 		{
-			SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
-			SceneManager::GetInstance()->changeScene("Game");
+			SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
+			SceneManager::GetInstance()->changeScene("Menu");
 		}
 	}
 

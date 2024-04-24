@@ -38,6 +38,9 @@ namespace JuegoDePistolas {
 
 		// Stores all the player references by their controllerId
 		std::array<PlayerData, 4> allPlayers;
+
+		// The positions where players will spawn
+		std::array<LMVector3, 4> spawnPoints;
 	};
 }
 
