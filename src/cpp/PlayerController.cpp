@@ -195,14 +195,14 @@ void PlayerController::update(float dT)
 	//	SceneManager::GetInstance()->changeScene("Game");d
 	//}
 
-	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
-		if (_gameObject->getComponent<ParticleSystem>() != nullptr)
-			//_gameObject->getComponent<ParticleSystem>()->play();
-		{
-			SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
-			SceneManager::GetInstance()->changeScene("Menu");
-		}
-	}
+	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
+	//	if (_gameObject->getComponent<ParticleSystem>() != nullptr)
+	//		//_gameObject->getComponent<ParticleSystem>()->play();
+	//	{
+	//		SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
+	//		SceneManager::GetInstance()->changeScene("Menu");
+	//	}
+	//}
 
 	if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A)) {
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {

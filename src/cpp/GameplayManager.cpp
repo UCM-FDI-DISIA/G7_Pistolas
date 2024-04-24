@@ -211,6 +211,21 @@ void GameplayManager::update(float dT)
 {
 	// DEBUG
 
+	//if (matchEnd && endRoundTime > 6)
+	//{
+	//	if (!sceneChanged) {
+
+	//		sceneChanged = true;
+	//		SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
+	//		SceneManager::GetInstance()->changeScene("Menu");
+	//	}
+	//}
+
+	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
+		SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
+		SceneManager::GetInstance()->changeScene("Menu");
+	}
+
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMScanCode::LMKS_P))
 		startRound();
 

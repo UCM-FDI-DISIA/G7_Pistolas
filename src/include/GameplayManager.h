@@ -72,7 +72,7 @@ namespace JuegoDePistolas {
 		bool matchEnd = false;
 
 		// Numero de rondas necesarias para que un jugador gane la partida
-		const int winScore = 1;
+		const int winScore = 3;
 
 		bool sceneChanged = false;
 
