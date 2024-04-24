@@ -205,6 +205,8 @@ void GameplayManager::start()
 	// Referencia al texto countdown
 	countdownText = scene->getObjectByName("UICountdown")->getComponent<UIText>();
 	countdownText->setText("");
+
+	startRound();
 }
 
 void GameplayManager::update(float dT)
