@@ -68,6 +68,11 @@ namespace JuegoDePistolas {
 		float winTextX;
 
 		int winPlayerIndex = -1;
+		// Se cambiara a true solo cuando un jugador haya ganado la partida, es decir, al ganar X rondas
+		bool matchEnd = false;
+
+		// Numero de rondas necesarias para que un jugador gane la partida
+		const int winScore = 3;
 
 
 		// Valor entre 0 y 1 que se usa para determinar como de cerca debe estar la camara del personaje ganador

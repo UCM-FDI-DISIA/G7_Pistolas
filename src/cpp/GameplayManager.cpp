@@ -80,12 +80,21 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 		// Sumar los puntos al jugador vivo
 		scores[winPlayerIndex]++;
 
-		// Actualizar puntos
-		std::cout << "PLAYER WIN index = " << winPlayerIndex << std::endl;
+		// Comprobar si este jugador ha llegado al score maximo
+		if (scores[winPlayerIndex] >= winScore) {
 
-		//std::string message = 
+			// Indicar a la logica que la partida ya ha terminado
+			matchEnd = true;
 
-		//winText->setText()
+			// Actualizar el texto con el ganador de la partida
+			std::string message = playerColorsName[winPlayerIndex] + " WINS";
+			winText->setText(message);
+			winTextShade->setText(message);
+			winText->setColor(playerColors[winPlayerIndex]);
+
+			// Debug
+			std::cout << "PLAYER WIN index = " << winPlayerIndex << std::endl;
+		}
 	}
 
 	// Desactivar el personaje que acaba de ser eliminado
@@ -162,6 +171,13 @@ void GameplayManager::start()
 	winText = scene->getObjectByName("UIPlayerWin")->getComponent<UIText>();
 	winTextShade = scene->getObjectByName("UIPlayerWinShade")->getComponent<UIText>();
 	winTextY = winText->getPositionY();
+
+	// Ocultar textos
+	winText->setText("");
+	winTextShade->setText("");
+	// Situar el texto en la posicion inicio de la animacion
+	winText->setPosition(winText->getPositionX(), -500);
+	winTextShade->setPosition(winText->getPositionX(), -500);
 
 	//spawnPoints = spawnPoints = {
 	//LMVector3{8, 2, 8},
@@ -278,26 +294,37 @@ void GameplayManager::update(float dT)
 	// Si esta durante una animacion de ronda ganada, mover la camara
 	if (endRoundActive) {
 
-		// Tiempo maximo de ronda
-		if (endRoundTime < endRoundMaxTime)
-			endRoundTime += dT / 1000;
-		else {
-			endRoundTime = endRoundMaxTime;
+		// Si no es la ultima ronda de la partida, en la que ha ganado uno de los jugadores
+		// Calcular el tiempo respetando el limite de animacion y llamando a startRound cuando ya esta hecho
+		if (!matchEnd) {
+			// Tiempo maximo de ronda
+			if (endRoundTime < endRoundMaxTime)
+				endRoundTime += dT / 1000;
+			else {
+				endRoundTime = endRoundMaxTime;
 
-			// Terminar animacion de final de ronda
-			endRoundActive = false;
-			startRound();
+				// Terminar animacion de final de ronda
+				endRoundActive = false;
+				startRound();
+			}
 		}
+		// En la ronda ganadora, simplemente actualizar el valor que mueve las animaciones 
+		// hasta llegar al final de la animacion ganadora
+		else
+			endRoundTime += dT / 1000;
 
 		// Actualizar animaciones
 		updateCameraAnimations(dT);
 		updateBackScoreAnimations();
 		updateCrossAnimations();
-		updateWinText();
 
+		// Solo animar el texto con el nombre del jugador ganador si es el final de partida
+		if (matchEnd)
+			updateWinText();
 
-		//std::cout << "endRoundTime = " << endRoundTime << std::endl;
-		//std::cout << "cameraZoom = " << cameraZoom << std::endl;
+		// Si es la ronda ganadora, esperar un rato antes de cambiar de escena de vuelta al menu
+		if (matchEnd && endRoundTime > 6)
+			std::cout << "CAMBIO DE ESCENA AL MENU; FINAL DE PARTIDA";
 	}
 }
 
@@ -307,17 +334,25 @@ void JuegoDePistolas::GameplayManager::setParameters(std::vector<std::pair<std::
 
 void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
 {
-	// Comprobar si el endRoundTime esta en el ultimo segundo de animacion
-	if (endRoundTime > endRoundMaxTime - 1)
-		cameraZoom = endRoundMaxTime - endRoundTime;
-
-	// Si no esta en el ultimo segundo de animacion, aplicar camerazoom
-	else {
-
+	if (matchEnd) {
 		if (cameraZoom < 1)
 			cameraZoom += dT / 1000;
 		else
 			cameraZoom = 1;
+	}
+	else {
+		// Comprobar si el endRoundTime esta en el ultimo segundo de animacion
+		if (endRoundTime > endRoundMaxTime - 1)
+			cameraZoom = endRoundMaxTime - endRoundTime;
+
+		// Si no esta en el ultimo segundo de animacion, aplicar camerazoom
+		else {
+
+			if (cameraZoom < 1)
+				cameraZoom += dT / 1000;
+			else
+				cameraZoom = 1;
+		}
 	}
 
 	// Actualizar posicion de camara
@@ -357,7 +392,8 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 	}
 	// Desde que se inicia hasta que termina
 	else if (endRoundTime >= scoreBack_init_time + scoreBack_init_duration && endRoundTime <= scoreBack_end_time)
-	{}
+	{
+	}
 	// Si es antes de la animacion init o despues de la animacion end, esconderlo
 	else
 		backImage->setDimensions(0, initScoreBackHeight);
@@ -448,14 +484,13 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 
 void JuegoDePistolas::GameplayManager::updateWinText() {
 
-
 	float winText_init_time = 1;
-	float winText_init_duration = .5f;
+	float winText_init_duration = 1;
 
 	if (endRoundTime > winText_init_time && endRoundTime < winText_init_time + winText_init_duration) {
 
 		// Actualizar UI
-		float startValue = -300;
+		float startValue = -500;
 		float endValue = winTextY;
 		float t = (endRoundTime - winText_init_time) / winText_init_duration;
 		int currentY = lerp(startValue, endValue, t);
