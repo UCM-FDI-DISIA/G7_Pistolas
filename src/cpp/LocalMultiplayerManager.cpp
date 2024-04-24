@@ -73,7 +73,14 @@ void LocalMultiplayerManager::update(float dT)
 	std::list<Input::InputManager::ControllerId> controllersAdded = Input::InputManager::GetInstance()->getOnConnectControllers();
 	std::list<Input::InputManager::ControllerId> controllersRemoved = Input::InputManager::GetInstance()->getOnDisconnectControllers();
 
-	std::array<LMVector3, 4> spawnPoints = GameplayManager::GetInstance()->getSpawnPoints();
+	// Temporal, arreglar lo de que el update siempre se llame despues de cualquier start
+	Scene* scene = SceneManager::GetInstance()->getActiveScene();
+	std::array<LMVector3, 4> spawnPoints = spawnPoints = {
+	scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
+	scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
+	scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
+	scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
+	};
 
 	// Conexion de usuarios
 	for (const Input::InputManager::ControllerId& controllerId : controllersAdded) {

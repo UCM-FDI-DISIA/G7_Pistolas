@@ -136,11 +136,17 @@ void GameplayManager::start()
 
 	// Definir spawn points para los jugadores
 	spawnPoints = spawnPoints = {
-		LMVector3{8, 2, 8},
-		LMVector3{-8, 2, 8},
-		LMVector3{8, 2, -8},
-		LMVector3{-8, 2, -8}
+		scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
 	};
+	//spawnPoints = spawnPoints = {
+	//LMVector3{8, 2, 8},
+	//LMVector3{-8, 2, 8},
+	//LMVector3{8, 2, -8},
+	//LMVector3{-8, 2, -8}
+	//};
 
 	// Referencias a la interfaz 
 	backImage = scene->getObjectByName("ScoreBackground")->getComponent<UIImage>();
@@ -157,6 +163,10 @@ void GameplayManager::start()
 	backImage->hide();
 	for (int i = 0; i < crosses.size(); i++)
 		crosses[i]->hide();
+
+	// Referencia al texto countdown
+	countdownText = scene->getObjectByName("UICountdown")->getComponent<UIText>();
+	countdownText->setText("");
 }
 
 void GameplayManager::update(float dT)
@@ -209,12 +219,35 @@ void GameplayManager::update(float dT)
 				}
 			}
 		}
-		else {
 
-			// Mostrar cuenta atras de 3 a 0
-			int currentTimerState = floorf(3 - startRoundTime - 1);
+
+		// Mostrar cuenta atras de 3 a 1 segundos y despues GO
+		float countdownStart = 1;
+		float countdownDuration = 1.5f;
+
+		if (startRoundTime > countdownStart && startRoundTime < countdownStart + countdownDuration) {
+
+			// valor que va de 0 a 1 que representa esta seccion de tiempo
+			float t = (startRoundTime - countdownStart) / countdownDuration;
+			std::cout << "t = " << t << std::endl;
+
+			float eachNumberDuration = 0.2;
+
+			std::string currentCountDown = "-1";
+			if (t < eachNumberDuration)
+				currentCountDown = "3";
+			else if (t < eachNumberDuration * 2)
+				currentCountDown = "2";
+			else if (t < eachNumberDuration * 3)
+				currentCountDown = "1";
+			else
+				currentCountDown = "GO";
+
 			//std::cout << "TIMER = " << currentTimerState << std::endl;
+			countdownText->setText(currentCountDown);
 		}
+		else
+			countdownText->setText("");
 
 		//std::cout << "spawnCharactersProgress = " << spawnCharactersProgress << std::endl;
 	}

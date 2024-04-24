@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "LMVector.h"
 #include "UIImage.h"
+#include "UIText.h"
 
 using namespace LocoMotor;
 
@@ -19,13 +20,9 @@ namespace JuegoDePistolas {
 
 
 		void playerDied(int playerIndex);
-
 		bool isPlayerAlive(int playerIndex);
-
 		void startRound();
-
 		void freeSpawnpoint(int spawnId);
-
 		std::array<LMVector3, 4> getSpawnPoints();
 
 	protected:
@@ -34,7 +31,6 @@ namespace JuegoDePistolas {
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
 
 	private:
-
 
 		void updateCameraAnimations(float dT);
 		void updateBackScoreAnimations();
@@ -95,6 +91,7 @@ namespace JuegoDePistolas {
 
 		int initCrossSize;
 
+		UIText* countdownText;
 
 	};
 }
