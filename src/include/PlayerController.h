@@ -24,6 +24,8 @@ namespace JuegoDePistolas {
 		LMVector3 getDirection();
 
 		void OnCollisionEnter(GameObject* other)override;
+		void OnCollisionStay(GameObject* other)override;
+		void OnCollisionExit(GameObject* other)override;
 
 	protected:
 		void start() override;
@@ -43,7 +45,7 @@ namespace JuegoDePistolas {
 		int bulletID = 0;
 
 		bool hasWeapon = false;
-
+		bool isOnFloor = false;
 		std::string weaponName = "";
 	};
 }

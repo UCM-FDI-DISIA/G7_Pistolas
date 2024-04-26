@@ -73,7 +73,23 @@ LMVector3 JuegoDePistolas::PlayerController::getDirection()
 
 void JuegoDePistolas::PlayerController::OnCollisionEnter(GameObject* other)
 {
-	std::cout << _gameObject->getName() << ":    \t" << "I Collide with " << other->getName() << " Uju\n";
+
+}
+
+void JuegoDePistolas::PlayerController::OnCollisionStay(GameObject* other)
+{
+	std::string otherName = other->getName();
+	if (otherName.find("platform") != std::string::npos) {
+		isOnFloor = true;
+	}
+}
+
+void JuegoDePistolas::PlayerController::OnCollisionExit(GameObject* other)
+{
+	std::string otherName = other->getName();
+	if (otherName.find("platform") != std::string::npos) {
+		isOnFloor = false;
+	}
 }
 
 void PlayerController::start()
@@ -204,13 +220,15 @@ void PlayerController::update(float dT)
 	//	}
 	//}
 
-	if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A)) {
+	if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A) && isOnFloor) {
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {
+			if(_gameObject->getComponent<RigidBody>()->GetLinearVelocity().getY() < 5)
 			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,20,0 });
 			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
 			
 	}
+
 
 }
 
