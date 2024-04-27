@@ -37,7 +37,7 @@ std::array<LocalMultiplayerManager::PlayerData, 4> LocalMultiplayerManager::getP
 		return allPlayers;
 }
 
-void LocalMultiplayerManager::start()
+void JuegoDePistolas::LocalMultiplayerManager::awake()
 {
 	_instance = this;
 
@@ -99,6 +99,11 @@ void LocalMultiplayerManager::start()
 		allPlayers[it].playerController->setControllerId(contrID);
 		it++;
 	}
+}
+
+void LocalMultiplayerManager::start()
+{
+	
 }
 
 void LocalMultiplayerManager::update(float dT)
