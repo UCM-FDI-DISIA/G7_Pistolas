@@ -1,0 +1,37 @@
+Bateria de pruebas juego de pistolas:
+
+En cada prueba se ejecutara el juego 2 veces, en cada ejecución se cambiará de escena 4 veces (menu-gameplay-menu-gameplay-menu), 
+en gameplay se disparará 1 vez y esperaremos a que se borre la bala; y al acabar se cerrara de manera normal
+
+Cada una de estas pruebas va a ser hecha por 2-3 personas, dependiendo de la dificultad de hacerlas bien, se indicara al final
+
+Reportaremos como error Si y solo si salta una excepción no controlada o hay un memory leak. 
+Crearemos una tarea en github, priorizaremos y si por desgracia no podemos con todas ahi las tenemos para ponerlo en "Known issues"/ para extraordinaria.
+
+En cualquier otro caso que veamos que actua de manera "rara" (ya se, subjetivo) lo comunicaremos con el equipo a ver que hacemos
+
+=================================================================================================================================================================
+Compilación automática:
+---------------------------------------------------------------------------------------------
+	Ya se comprueba en la batería sobre el motor...
+
+=================================================================================================================================================================
+Carga de escenas:	
+---------------------------------------------------------------------------------------------
+	Quitar gameobjects 			-1
+		(Se quita uno, se hace una prueba, se vuelve a añadir y se quita el siguiente, se hace otra prueba...)
+---------------------------------------------------------------------------------------------
+	Quitar componentes			-2
+		(Se quita uno, se hace una prueba, se vuelve a añadir y se quita el siguiente, se hace otra prueba...)
+---------------------------------------------------------------------------------------------
+	Quitar parámetros			-3
+		(Se quita uno, se hace una prueba, se vuelve a añadir y se quita el siguiente, se hace otra prueba...)
+
+
+=================================================================================================================================================================
+Scripts de Ogre: (.material, .particle, .font)
+---------------------------------------------------------------------------------------------
+	No existen los assets (.png, .ttf...)	-2
+
+=================================================================================================================================================================
+Assets: quitar/renombrar assets			-2

@@ -28,6 +28,7 @@ namespace JuegoDePistolas {
 		std::array<PlayerData, 4> getPlayers();
 
 	protected:
+		void awake() override;
 		void start() override;
 		void update(float dT) override;
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
