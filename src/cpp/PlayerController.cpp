@@ -73,7 +73,10 @@ LMVector3 JuegoDePistolas::PlayerController::getDirection()
 
 void JuegoDePistolas::PlayerController::OnCollisionEnter(GameObject* other)
 {
-
+	std::string otherName = other->getName();
+	if (otherName.find("Bullet") != std::string::npos) {
+		std::cout << "Bullet" << std::endl;
+	}
 }
 
 void JuegoDePistolas::PlayerController::OnCollisionStay(GameObject* other)

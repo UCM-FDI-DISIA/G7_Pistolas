@@ -19,17 +19,19 @@ namespace JuegoDePistolas {
 		void setBulletActive(bool _bulletActive);
 		
 		void destroyBullet();
+		void OnCollisionEnter(GameObject* other);
 	protected:
 		void start() override;
 		void update(float dT) override;
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
+		void awake()override;
 
 	private:
 
 		LMVector3 direction;
 
 		//const int velocity = 200;
-		int velocity = 200;
+		int velocity = 100;
 
 		bool bulletActive = false;
 

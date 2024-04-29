@@ -284,7 +284,7 @@ void GameplayManager::update(float dT)
 
 			// valor que va de 0 a 1 que representa esta seccion de tiempo
 			float t = (startRoundTime - countdownStart) / countdownDuration;
-			std::cout << "t = " << t << std::endl;
+			//std::cout << "t = " << t << std::endl;
 
 			float eachNumberDuration = 0.2;
 
@@ -457,10 +457,10 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 	else if (endRoundTime > winCross_time && endRoundTime < winCross_time + winCross_duration) {
 
 		int crossIndex = scores[winPlayerIndex] - 1;
-		for (int i = 0; i < 4; i++)
-			std::cout << "score_" << i << " = " << scores[i] << std::endl;
+		//for (int i = 0; i < 4; i++)
+			//std::cout << "score_" << i << " = " << scores[i] << std::endl;
 
-		std::cout << "crossIndex = " << crossIndex << std::endl;
+		//std::cout << "crossIndex = " << crossIndex << std::endl;
 		UIImage* winCross = crosses[crossIndex];
 
 		// Valor de 0 a 1 que define esta fragmento de tiempo
