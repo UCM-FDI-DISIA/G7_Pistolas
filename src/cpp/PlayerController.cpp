@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "LMVector.h"
 #include "ParticleSystem.h"
+#include "EventEmitter.h"
 
 #include <iostream>
 #include <cmath>
@@ -227,6 +228,9 @@ void PlayerController::update(float dT)
 			if(_gameObject->getComponent<RigidBody>()->GetLinearVelocity().getY() < 5)
 			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,20,0 });
 			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
+		}
+		if (_gameObject->getComponent<EventEmitter>() != nullptr) {
+			_gameObject->getComponent<EventEmitter>()->play();
 		}
 			
 	}

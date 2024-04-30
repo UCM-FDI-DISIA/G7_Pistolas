@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Bullet.h"
 #include "MeshRenderer.h"
+#include "EventEmitter.h"
 #include <string>
 
 JuegoDePistolas::Weapon::Weapon()
@@ -28,6 +29,7 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 	Bullet* bullComp = (Bullet*)nBullet->addComponent("Bullet");
 	Transform* transfComp = (Transform*)nBullet->addComponent("Transform");
 	MeshRenderer* meshComp = (MeshRenderer*)nBullet->addComponent("MeshRenderer");
+	EventEmitter* emitComp = (EventEmitter*)nBullet->addComponent("EventEmitter");
 
 	meshComp->setMesh("Bullet.mesh");
 	meshComp->setMaterial("Bullet");
@@ -35,6 +37,10 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 	meshComp->setEnabled(true);
 	bullComp->setBulletActive(true);
 	bullComp->setVelocity(100);
+
+	emitComp->setEvent("event:/Shot");
+	emitComp->play();
+	
 
 	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
 	transfComp->setSize({ 1, 1, 1 });

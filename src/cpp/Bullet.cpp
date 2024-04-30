@@ -49,10 +49,10 @@ void Bullet::update(float dT)
 	// Si esta desactivado, no ejecutar el update
 	if (bulletActive == false)
 		return;
-	_gameObject->getComponent<RigidBody>()->BeATrigger();
-	
-
+	RigidBody* rb = _gameObject->getComponent<RigidBody>();
+	if (rb)rb->BeATrigger();
 	Transform* tr = _gameObject->getComponent<Transform>();
+	if (direction.magnitude() > .1f)
 	_gameObject->getComponent<RigidBody>()->SetLinearVelocity(direction * velocity * dT);
 	/*if (direction.magnitude() > .1f)
 		tr->setPosition(tr->getPosition() + direction * velocity * dT/1000);*/
