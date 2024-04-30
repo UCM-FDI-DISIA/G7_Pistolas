@@ -293,8 +293,7 @@ void GameplayManager::update(float dT)
 
 				if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId()) {
 
-					thisPlayer.gameObject->getComponent<Transform>()->setRotation(currentCharacterRotation);
-
+					thisPlayer.gameObject->getComponent<Transform>()->setRotation(currentCharacterRotation.asRotToQuaternion());
 					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -9, 0);
 					LMVector3 endPosition = spawnPoints[i];
 					LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, spawnCharactersProgress);
