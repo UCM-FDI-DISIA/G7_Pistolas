@@ -5,6 +5,8 @@
 [Bb]in/*.dll
 [Bb]in/*.log
 [Bb]in/*.lib
+[Bb]in/
+![Bb]in/Assets 
 [Ll]ib/
 [Oo]bj/
 
