@@ -83,5 +83,12 @@ Menu = {
             mesh = "CylindermanMesh.mesh",
             material = "PurpleCharacter"
         }
+    },
+      -- SOUND --
+    Emitter = {
+        EventEmitter = {
+            EventID = "event:/lobby",
+            Play = ""
+        }  
     }
 }
