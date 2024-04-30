@@ -1,0 +1,7 @@
+font Heavitas
+{
+    type truetype
+    source Heavitas.ttf
+    size 32
+    resolution 512
+}

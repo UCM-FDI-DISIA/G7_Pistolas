@@ -1,0 +1,92 @@
+particle_system Smoke
+{ 
+    renderer billboard
+    billboard_type point 
+    particle_width 1
+    particle_height 1
+    quota 300
+    material Smoke
+
+    emitter Point
+    { 
+        direction 0 0 -1
+        position 0.8 -1.8 0
+        angle 10
+        emission_rate 12
+        time_to_live 1.5
+        velocity_min 0.5
+        velocity_max 1
+        colour 1 1 1 1
+    }
+
+    emitter Point
+    { 
+        direction 0 0 -1
+        position -0.8 -1.8 0
+        angle 10
+        emission_rate 12
+        time_to_live 1.5
+        velocity_min 0.5
+        velocity_max 1
+        colour 1 1 1 1
+    }
+
+    affector Rotator
+    { 
+        rotation_range_start 0
+        rotation_range_end 360
+        rotation_speed_range_start -60
+        rotation_speed_range_end 200
+    }
+
+    affector Scaler
+    { 
+        rate -5
+    }
+
+    affector DirectionRandomiser
+    { 
+        randomness 5
+    }
+}
+
+particle_system GunShot
+{ 
+    renderer billboard
+    billboard_type point 
+    particle_width 1
+    particle_height 1
+    quota 1500
+    material Smoke
+
+    emitter Point
+    { 
+        direction 0 0 1
+        position 1 0 2
+        angle 90
+        emission_rate 500
+        time_to_live 0.8
+        velocity_min 1
+        velocity_max 5
+        colour 1 1 1 1
+        duration 0.05
+    }
+
+    affector Rotator
+    { 
+        rotation_range_start 0
+        rotation_range_end 360
+        rotation_speed_range_start -60
+        rotation_speed_range_end 200
+    }
+
+    affector Scaler
+    { 
+        rate -15
+    }
+
+    affector DirectionRandomiser
+    { 
+        randomness 5
+    }
+}

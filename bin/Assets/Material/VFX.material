@@ -1,0 +1,16 @@
+material Smoke {
+    technique {
+        pass {
+            
+            scene_blend alpha_blend
+            depth_write off
+            diffuse vertexcolour
+            lighting off
+            texture_unit {
+                texture Dust.png
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
