@@ -91,7 +91,7 @@ void JuegoDePistolas::Bullet::awake()
 {
 	_gameObject->addComponent("RigidBody");
 	_gameObject->getComponent<RigidBody>()->SetMass(0.5);
-	_gameObject->getComponent<RigidBody>()->SetSize({ 1,1,1 });
+	_gameObject->getComponent<RigidBody>()->SetSize({ 1,0.2,1 });
 
 }
 
@@ -103,8 +103,9 @@ void JuegoDePistolas::Bullet::destroyBullet() {
 
 void JuegoDePistolas::Bullet::OnCollisionEnter(GameObject* other)
 {
-	/*std::string otherName = other->getName();
-	std::cout << otherName << std::endl;*/
+	std::string otherName = other->getName();
+	std::cout << otherName << std::endl;
+	destroyBullet();
 }
 
 void JuegoDePistolas::Bullet::setVelocity(int vel) {
