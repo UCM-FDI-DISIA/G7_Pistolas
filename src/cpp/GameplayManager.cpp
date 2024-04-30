@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "LMVector.h"
 #include "ParticleSystem.h"
+#include "EventEmitter.h"
 
 #include <iostream>
 #include <cmath>
@@ -51,6 +52,17 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 	}
 
 	std::cout << "Player " << playerIndex << " Died, " << numPlayersAlive << " players alive" << std::endl;
+
+	GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
+	GameObject* deathSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterDeath");
+
+	if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+		bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
+	}
+
+	if (deathSound->getComponent<EventEmitter>() != nullptr) {
+		deathSound->getComponent<EventEmitter>()->play();
+	}
 
 	// Si solo hay un jugador vivo
 	if (numPlayersAlive == 1) {
@@ -131,6 +143,21 @@ void GameplayManager::startRound()
 		// Marcar a los personajes activos como vivos
 		playersAlive[i] = true;
 	}
+
+	int numPlayersAlive = 0;
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (playersAlive[i]) {
+			numPlayersAlive++;
+			winPlayerIndex = i;
+		}
+	}
+
+	GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
+
+	if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+		bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
+	}
 }
 
 void GameplayManager::start()
@@ -140,6 +167,8 @@ void GameplayManager::start()
 	// Referencia a la escena actual
 	Scene* scene = SceneManager::GetInstance()->getActiveScene();
 
+	
+	
 	// Asignar la referencia a la camara y a la posicion inicial
 	camera = scene->getObjectByName("MainCamera")->getComponent<Transform>();
 	initCameraPos = camera->getPosition();
