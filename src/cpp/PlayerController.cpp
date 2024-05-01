@@ -15,7 +15,6 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Bullet.h"
-#include "RigidBody.h"
 
 #include "GameplayManager.h"
 #include "Weapon.h"
@@ -128,10 +127,14 @@ void JuegoDePistolas::PlayerController::OnCollisionExit(GameObject* other)
 
 void PlayerController::start()
 {
-	Transform* tr = _gameObject->getComponent<Transform>();
+	rb = _gameObject->getComponent<RigidBody>();
+	rb->FreezeRotation({ 0,0,0 });
+	rb->UseGravity(LMVector3(0, -gravity, 0));
+	rb->SetLinearDamping(linearDrag);
+	rb->SetAngularDamping(0);
 
-	_gameObject->getComponent<RigidBody>()->FreezeRotation({ 0,0,0 });
-	//tr->SetSize(LMVector3(.5f, .5f, .5f));
+	Transform* tr = _gameObject->getComponent<Transform>();
+	tr->setSize(LMVector3(1.5f, 1.5f, 1.5f));
 }
 
 void PlayerController::update(float dT)
@@ -146,7 +149,6 @@ void PlayerController::update(float dT)
 	shadowLineTr->setPosition(tr->getPosition());
 
 
-	float velocity = 1500;
 
 	// Si hay un controllerId asignado
 	if (controllerId != Input::InputManager::invalidControllerId()) {
@@ -157,7 +159,28 @@ void PlayerController::update(float dT)
 		// Movimiento horizontal
 
 		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
-		_gameObject->getComponent<RigidBody>()->AddForce(currentDirection * velocity * dT / 1000);
+		rb->AddForce(currentDirection * velocity * dT / 1000);
+		
+		// Limitar la velocidad maxima horizontal a la que puede moverse el personaje
+		LMVector3 currentVelocity = rb->GetLinearVelocity();
+		float velocityY = currentVelocity.getY();
+		currentVelocity = LMVector3(currentVelocity.getX(), 0, currentVelocity.getZ());
+		float linearVelocity = currentVelocity.magnitude();
+
+		float maxVelocity;
+		if (isOnFloor)
+			maxVelocity = floorMaxHorizontalVelocity;
+		else 
+			maxVelocity = airMaxHorizontalVelocity;
+
+		if (linearVelocity > maxVelocity)
+		{
+			// Calcular velocidad maxima en la direccion actual
+			currentVelocity.normalize();
+			LMVector3 maxHorVelocity = currentVelocity * maxVelocity;
+			maxHorVelocity = LMVector3(maxHorVelocity.getX(), velocityY, maxHorVelocity.getZ());
+			rb->SetLinearVelocity(maxHorVelocity);
+		}
 
 		if (joystickValue_x > 0.1f || joystickValue_x < -0.1f || joystickValue_y > 0.1f || joystickValue_y < -0.1f)
 			_gameObject->getComponent<ParticleSystem>()->play();
@@ -242,10 +265,13 @@ void PlayerController::update(float dT)
 	//	}
 	//}
 
-	if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A) && isOnFloor) {
-		if (_gameObject->getComponent<RigidBody>() != nullptr) {
-			if (_gameObject->getComponent<RigidBody>()->GetLinearVelocity().getY() < 5)
-				_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,20,0 });
+	bool buttonPressed = (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_LEFTSHOULDER) 
+		|| Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A));
+
+	if (buttonPressed && isOnFloor) {
+		if (rb != nullptr) {
+			if (rb->GetLinearVelocity().getY() < 5)
+				rb->ApplyCentralImpulse({ 0,jumpForce,0 });
 			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
 		if (_gameObject->getComponent<EventEmitter>() != nullptr) {

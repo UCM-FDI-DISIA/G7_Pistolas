@@ -20,7 +20,7 @@ JuegoDePistolas::Weapon::~Weapon()
 void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 {
 	Transform* weaponTr = _gameObject->getComponent<Transform>();
-	if (weaponTr == nullptr|| SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()==nullptr)return;
+	if (weaponTr == nullptr || SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>() == nullptr)return;
 
 	std::string bulletName = "Bullet" + std::to_string(playerId) + std::to_string(bulletId);
 
@@ -36,20 +36,20 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 	meshComp->setVisible(true);
 	meshComp->setEnabled(true);
 	bullComp->setBulletActive(true);
-	bullComp->setVelocity(100);
+	bullComp->setVelocity(40);
 
 	emitComp->setEvent("event:/Shot");
 	emitComp->play();
-	
+
 
 	transfComp->setPosition({ weaponTr->getPosition().getX(),weaponTr->getPosition().getY(),weaponTr->getPosition().getZ() });
-	transfComp->setSize({ 1, 1, 1 });
-	
-	
+	transfComp->setSize({ 2, 2, 2 });
+
+
 	bullComp->setDirection(SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()->getRotation().forward() * -1);
-		
+
 	transfComp->setRotation(SceneManager::GetInstance()->getActiveScene()->getObjectByName(holderPlayerName)->getComponent<Transform>()->getRotation());
-	
+
 
 	ammo--;
 }
@@ -76,7 +76,7 @@ void JuegoDePistolas::Weapon::update(float dT)
 			PlayerController* playerContr = thisPlayerObj->getComponent<PlayerController>();
 			if (tr == nullptr || playerTr == nullptr || playerContr == nullptr)return;
 			if (!playerContr->getHasWeapon() && LMVector3::distance(playerTr->getPosition(), tr->getPosition()) < 10) {
-				playerContr->pickWeapon(_gameObject->getName(),spawnInd);
+				playerContr->pickWeapon(_gameObject->getName(), spawnInd);
 				isPicked = true;
 				holderPlayerName = thisPlayerObj->getName();
 			}
@@ -99,7 +99,7 @@ void JuegoDePistolas::Weapon::update(float dT)
 			SceneManager::GetInstance()->getActiveScene()->removeGameobject(_gameObject->getName());
 		}
 	}
-	
+
 }
 
 void JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, std::string>>& params)

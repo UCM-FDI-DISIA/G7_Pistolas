@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "LMVector.h"
 #include "Transform.h"
+#include "RigidBody.h"
 
 using namespace LocoMotor;
 
@@ -51,6 +52,16 @@ namespace JuegoDePistolas {
 
 		// Referencia al transform de la sombra de este personaje
 		Transform* shadowLineTr;
+
+		RigidBody* rb;
+
+		float jumpForce = 50;
+		float gravity = 100;
+
+		float velocity = 5000;
+		float floorMaxHorizontalVelocity = 30;
+		float airMaxHorizontalVelocity = 25;
+		float linearDrag = .9f;
 	};
 }
 

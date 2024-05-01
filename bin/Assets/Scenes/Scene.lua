@@ -144,7 +144,8 @@ Scene = {
         RigidBody = {
             mass = "1",
             group = "1",
-            ignoreGroup = "1"
+            ignoreGroup = "1",
+            size = "2 2 2"
         },
         EventEmitter = {
             EventID = "event:/Jump",
@@ -174,9 +175,8 @@ Scene = {
         RigidBody = {
             mass = "1",
             group = "1",
-            ignoreGroup = "1"
-            
-            
+            ignoreGroup = "1",
+            size = "2 2 2"
         },
         EventEmitter = {
             EventID = "event:/Jump",
@@ -206,7 +206,8 @@ Scene = {
         RigidBody = {
             mass = "1",
             group = "1",
-            ignoreGroup = "1"
+            ignoreGroup = "1",
+            size = "2 2 2"
         },
         EventEmitter = {
             EventID = "event:/Jump",
@@ -236,7 +237,8 @@ Scene = {
         RigidBody = {
             mass = "1",
             group = "1",
-            ignoreGroup = "1"
+            ignoreGroup = "1",
+            size = "2 2 2"
         },
         EventEmitter = {
             EventID = "event:/Jump",

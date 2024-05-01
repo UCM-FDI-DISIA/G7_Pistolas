@@ -30,8 +30,7 @@ namespace JuegoDePistolas {
 
 		LMVector3 direction;
 
-		//const int velocity = 200;
-		int velocity = 100;
+		int velocity = 0;
 
 		bool bulletActive = false;
 
