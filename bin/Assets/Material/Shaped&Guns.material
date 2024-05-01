@@ -167,6 +167,19 @@ material CrossMaterialPurple {
     }
 }
 
+material ShadowLineBlue {
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture ShadowLineBlue.jpg
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
+
 material DebugCube {
     technique {
         pass {

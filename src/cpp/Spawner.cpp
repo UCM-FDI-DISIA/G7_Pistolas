@@ -55,7 +55,7 @@ void JuegoDePistolas::Spawner::setParameters(std::vector<std::pair<std::string, 
 
 	for (const auto& pair : params) {
 		if (pair.first == "spawnpoint1") {
-			
+
 			_spawners.push_back({ true,LMVector3::stringToVector(pair.second) });
 		}
 		else if (pair.first == "spawnpoint2") {
@@ -73,7 +73,7 @@ void JuegoDePistolas::Spawner::setParameters(std::vector<std::pair<std::string, 
 }
 
 
-void JuegoDePistolas::Spawner::setSpawnerPosition(int id,LMVector3 pos)
+void JuegoDePistolas::Spawner::setSpawnerPosition(int id, LMVector3 pos)
 {
 	_spawners[id].second = pos;
 }
@@ -83,7 +83,7 @@ LMVector3 JuegoDePistolas::Spawner::getSpawnerPosition(int id)
 	return _spawners[id].second;
 }
 
-void JuegoDePistolas::Spawner::setSpawnerAvailable(int id,bool avail)
+void JuegoDePistolas::Spawner::setSpawnerAvailable(int id, bool avail)
 {
 	_spawners[id].first = avail;
 }
@@ -95,27 +95,27 @@ bool JuegoDePistolas::Spawner::getSpawnerAvailableState(int id)
 
 void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 {
-	
-
-		std::string weaponName = "Weapon" + std::to_string(id);
-
-		GameObject* nWeapon = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(weaponName);
-
-		Transform* transfComp = (Transform*)nWeapon->addComponent("Transform");
-		MeshRenderer* meshComp = (MeshRenderer*)nWeapon->addComponent("MeshRenderer");
-		Weapon* weaponComp = (Weapon*)nWeapon->addComponent("Weapon");
-
-		meshComp->setMesh("Revolver.mesh");
-		meshComp->setMaterial("Revolver");
-		meshComp->setVisible(true);
-		meshComp->setEnabled(true);
 
 
+	std::string weaponName = "Weapon" + std::to_string(id);
 
-		transfComp->setPosition(_spawners[spawnindex].second);
-		transfComp->setSize({ 1, 1, 1 });
-		weaponComp->setSpawnPoint(spawnindex);
+	GameObject* nWeapon = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(weaponName);
 
-		setSpawnerAvailable(spawnindex,false);
+	Transform* transfComp = (Transform*)nWeapon->addComponent("Transform");
+	MeshRenderer* meshComp = (MeshRenderer*)nWeapon->addComponent("MeshRenderer");
+	Weapon* weaponComp = (Weapon*)nWeapon->addComponent("Weapon");
+
+	meshComp->setMesh("Revolver.mesh");
+	meshComp->setMaterial("Revolver");
+	meshComp->setVisible(true);
+	meshComp->setEnabled(true);
+
+
+
+	transfComp->setPosition(_spawners[spawnindex].second);
+	transfComp->setSize({ 1, 1, 1 });
+	weaponComp->setSpawnPoint(spawnindex);
+
+	setSpawnerAvailable(spawnindex, false);
 
 }

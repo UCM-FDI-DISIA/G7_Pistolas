@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "InputManager.h"
 #include "LMVector.h"
+#include "Transform.h"
 
 using namespace LocoMotor;
 
@@ -47,6 +48,9 @@ namespace JuegoDePistolas {
 		bool hasWeapon = false;
 		bool isOnFloor = false;
 		std::string weaponName = "";
+
+		// Referencia al transform de la sombra de este personaje
+		Transform* shadowLineTr;
 	};
 }
 

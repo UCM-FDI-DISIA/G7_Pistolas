@@ -35,6 +35,37 @@ PlayerController::~PlayerController()
 void JuegoDePistolas::PlayerController::setPlayerId(int _playerIndex)
 {
 	playerIndex = _playerIndex;
+
+
+	// Al saber el id de este jugador y por lo tanto, su color podemos crear la sombra que tendra
+	GameObject* shadowLine = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime("shadowLine_" + playerIndex);
+
+	// Guardarse una referencia al transform de la sombra
+	shadowLineTr = (Transform*)shadowLine->addComponent("Transform");
+	MeshRenderer* meshComp = (MeshRenderer*)shadowLine->addComponent("MeshRenderer");
+
+	meshComp->setMesh("ShadowLine.mesh");
+	// Asignar el material adecuado
+	switch (playerIndex)
+	{
+	case 0:
+		meshComp->setMaterial("ShadowLineBlue");
+		break;
+	case 1:
+		meshComp->setMaterial("ShadowLineRed");
+		break;
+	case 2:
+		meshComp->setMaterial("ShadowLineGreen");
+		break;
+	case 3:
+		meshComp->setMaterial("ShadowLinePurple");
+		break;
+	default:
+		break;
+	}
+
+	meshComp->setVisible(true);
+	meshComp->setEnabled(true);
 }
 
 void PlayerController::setControllerId(Input::InputManager::ControllerId _controllerId)
@@ -45,7 +76,7 @@ void PlayerController::setControllerId(Input::InputManager::ControllerId _contro
 void JuegoDePistolas::PlayerController::bulletHit()
 {
 	if (GameplayManager::GetInstance()->isPlayerAlive(playerIndex))
-	GameplayManager::GetInstance()->playerDied(playerIndex);
+		GameplayManager::GetInstance()->playerDied(playerIndex);
 }
 
 bool JuegoDePistolas::PlayerController::getHasWeapon()
@@ -53,7 +84,7 @@ bool JuegoDePistolas::PlayerController::getHasWeapon()
 	return hasWeapon;
 }
 
-void JuegoDePistolas::PlayerController::pickWeapon(std::string name,int spawnId)
+void JuegoDePistolas::PlayerController::pickWeapon(std::string name, int spawnId)
 {
 	weaponName = name;
 	hasWeapon = true;
@@ -106,25 +137,13 @@ void PlayerController::start()
 void PlayerController::update(float dT)
 {
 	//std::cout << "PlayerControllerUpdate" << std::endl;
-	
+
 	MeshRenderer* mesh = _gameObject->getComponent<MeshRenderer>();
 	Transform* tr = _gameObject->getComponent<Transform>();
 
-	////tr = _gameObject->getComponent<Transform>();
-	//tr->SetRotation(LMVector3(0, debugParameter, 0));
-	//debugParameter += dT / 1000 * 20;
 
-	//return;
-
-
-		// Mover revolver
-	/*GameObject* revolver = SceneManager::GetInstance()->getActiveScene()->getObjectByName("revolver");
-	revolver->getComponent<Transform>()->setPosition(tr->getPosition() + direction * 5);*/
-
-	//LMQuaternion revolverRotation = tr->getRotation().rotate(LMVector3(0, 1, 0), -90);
-	////revolverRotation = revolverRotation.Rotate(LMVector3(0, 0, 1), 90);
-	//revolver->getComponent<Transform>()->setRotation(revolverRotation);
-
+	// Mover la sombra debajo del jugador cada frame
+	shadowLineTr->setPosition(tr->getPosition());
 
 
 	float velocity = 1500;
@@ -190,7 +209,7 @@ void PlayerController::update(float dT)
 			}
 			/*GameObject* bullet = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Bullet");
 			bullet->getComponent<Bullet>()->setBulletActive(true);
-			
+
 			Transform* bulletTr = (Transform*)bullet->addComponent("Transform");
 			bulletTr->setPosition(tr->getPosition() + direction * 50);
 			if (bulletTr == nullptr)
@@ -225,14 +244,14 @@ void PlayerController::update(float dT)
 
 	if (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A) && isOnFloor) {
 		if (_gameObject->getComponent<RigidBody>() != nullptr) {
-			if(_gameObject->getComponent<RigidBody>()->GetLinearVelocity().getY() < 5)
-			_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,20,0 });
+			if (_gameObject->getComponent<RigidBody>()->GetLinearVelocity().getY() < 5)
+				_gameObject->getComponent<RigidBody>()->ApplyCentralImpulse({ 0,20,0 });
 			//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
 		}
 		if (_gameObject->getComponent<EventEmitter>() != nullptr) {
 			_gameObject->getComponent<EventEmitter>()->play();
 		}
-			
+
 	}
 
 
