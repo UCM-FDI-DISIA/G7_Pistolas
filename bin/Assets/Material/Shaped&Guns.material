@@ -179,6 +179,42 @@ material ShadowLineBlue {
         }
     }
 }
+material ShadowLineRed {
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture ShadowLineRed.jpg
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
+material ShadowLineGreen {
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture ShadowLineGreen.jpg
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
+material ShadowLinePurple {
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture ShadowLinePurple.jpg
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
 
 material DebugCube {
     technique {
