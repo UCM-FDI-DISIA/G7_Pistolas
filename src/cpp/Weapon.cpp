@@ -107,8 +107,6 @@ void JuegoDePistolas::Weapon::update(float dT)
 
 			float t = spawnAnimationTimer / spawnAnimationDuration;
 
-			std::cout << "t = " << t << std::endl;
-
 			// Animacion tamaño
 			float startValue = initialPosY + spawnHeight;
 			float endValue = initialPosY;
