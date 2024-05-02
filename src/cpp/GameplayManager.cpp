@@ -55,6 +55,7 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 
 	GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
 	GameObject* deathSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterDeath");
+	GameObject* winSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterWin");
 
 	if (bgMusic->getComponent<EventEmitter>() != nullptr) {
 		bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
@@ -83,6 +84,18 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 			// Poner el resto de cruces blancas
 			else
 				crosses[i]->setImage("CrossMaterial");
+
+			if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+				bgMusic->getComponent<EventEmitter>()->stop();
+			}
+
+			
+
+			if (winSound->getComponent<EventEmitter>() != nullptr) {
+				winSound->getComponent<EventEmitter>()->play();
+			}
+
+			
 		}
 
 		//backImage->setDimensions(0, initHeight);
@@ -103,6 +116,18 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 			winText->setText(message);
 			winTextShade->setText(message);
 			winText->setColor(playerColors[winPlayerIndex]);
+
+			
+
+			if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+				bgMusic->getComponent<EventEmitter>()->stop();
+			}
+
+			
+
+			if (winSound->getComponent<EventEmitter>() != nullptr) {
+				winSound->getComponent<EventEmitter>()->play();
+			}
 
 			// Debug
 			std::cout << "PLAYER WIN index = " << winPlayerIndex << std::endl;
@@ -157,11 +182,20 @@ void GameplayManager::startRound()
 		}
 	}
 
+	GameObject* winMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterWin");
+
+	if (winMusic->getComponent<EventEmitter>() != nullptr) {
+		winMusic->getComponent<EventEmitter>()->stop();
+	}
+
 	GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
 
 	if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+		bgMusic->getComponent<EventEmitter>()->play();
 		bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
 	}
+
+	cdEmit = false;
 }
 
 void GameplayManager::start()
@@ -238,6 +272,12 @@ void GameplayManager::start()
 	// Referencia al texto countdown
 	countdownText = scene->getObjectByName("UICountdown")->getComponent<UIText>();
 	countdownText->setText("");
+
+	GameObject* cdSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterCD");
+
+	if (cdSound->getComponent<EventEmitter>() != nullptr) {
+		cdSound->getComponent<EventEmitter>()->stop();
+	}
 
 	startRound();
 }
@@ -329,7 +369,14 @@ void GameplayManager::update(float dT)
 		float countdownDuration = 2;
 
 		if (startRoundTime > countdownStart && startRoundTime < countdownStart + countdownDuration) {
+			if (!cdEmit) {
+				GameObject* cdSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterCD");
 
+				if (cdSound->getComponent<EventEmitter>() != nullptr) {
+					cdSound->getComponent<EventEmitter>()->play();
+				}
+				cdEmit = true;
+			}
 			// valor que va de 0 a 1 que representa esta seccion de tiempo
 			float t = (startRoundTime - countdownStart) / countdownDuration;
 			//std::cout << "t = " << t << std::endl;

@@ -119,6 +119,19 @@ Scene = {
         }
        
     },
+    EmitterCD = {
+        EventEmitter = {
+            EventID = "event:/CountDown",
+           
+        }
+    },
+    EmitterWin = {
+        EventEmitter = {
+            EventID = "event:/Win",
+           
+        }
+    },
+    
 
         -- CHARACTERS --
     cube = {

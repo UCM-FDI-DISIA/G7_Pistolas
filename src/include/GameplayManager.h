@@ -93,7 +93,7 @@ namespace JuegoDePistolas {
 		float endRoundTime = 0;
 		float endRoundMaxTime = 5;
 
-		
+		bool cdEmit = false;
 
 		// Referencia al componente Transform de la camara de la escena
 		Transform* camera;
