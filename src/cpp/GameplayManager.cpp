@@ -89,13 +89,13 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 				bgMusic->getComponent<EventEmitter>()->stop();
 			}
 
-			
+
 
 			if (winSound->getComponent<EventEmitter>() != nullptr) {
 				winSound->getComponent<EventEmitter>()->play();
 			}
 
-			
+
 		}
 
 		//backImage->setDimensions(0, initHeight);
@@ -117,13 +117,13 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 			winTextShade->setText(message);
 			winText->setColor(playerColors[winPlayerIndex]);
 
-			
+
 
 			if (bgMusic->getComponent<EventEmitter>() != nullptr) {
 				bgMusic->getComponent<EventEmitter>()->stop();
 			}
 
-			
+
 
 			if (winSound->getComponent<EventEmitter>() != nullptr) {
 				winSound->getComponent<EventEmitter>()->play();
@@ -182,6 +182,11 @@ void GameplayManager::startRound()
 		}
 	}
 
+	// Borrar las armas que haya por el suelo sin recogen
+	Spawner* spawner = GameplayManager::GetInstance()->_gameObject->getComponent<Spawner>();
+	if (spawner != nullptr)
+		spawner->deleteAllWeapons();
+
 	GameObject* winMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterWin");
 
 	if (winMusic->getComponent<EventEmitter>() != nullptr) {
@@ -205,8 +210,8 @@ void GameplayManager::start()
 	// Referencia a la escena actual
 	Scene* scene = SceneManager::GetInstance()->getActiveScene();
 
-	
-	
+
+
 	// Asignar la referencia a la camara y a la posicion inicial
 	camera = scene->getObjectByName("MainCamera")->getComponent<Transform>();
 	initCameraPos = camera->getPosition();

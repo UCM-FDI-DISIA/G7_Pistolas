@@ -24,11 +24,22 @@ JuegoDePistolas::Spawner::~Spawner()
 }
 
 
-void JuegoDePistolas::Spawner::addSpawnpoints(LMVector3 pos)
+void JuegoDePistolas::Spawner::awake()
 {
-	_spawners.push_back({ true,pos });
-}
+	Scene* scene = SceneManager::GetInstance()->getActiveScene();
 
+	// Posiciones de los spawnpoints
+	gunSpawners = {
+		{true, scene->getObjectByName("GunSpawnpoint_1")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_2")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_3")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_4")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_5")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_6")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_7")->getComponent<Transform>()->getPosition()},
+		{true, scene->getObjectByName("GunSpawnpoint_8")->getComponent<Transform>()->getPosition()}
+	};
+}
 
 void JuegoDePistolas::Spawner::start()
 {
@@ -46,7 +57,7 @@ void JuegoDePistolas::Spawner::update(float dT)
 	if (allWeapons.size() < maxWeapons
 		&& _currTimeTospawn > _timeToSpawn) {
 
-		int pos = std::rand() % _spawners.size();
+		int pos = std::rand() % gunSpawners.size();
 
 		if (getSpawnerAvailableState(pos)) {
 			addWeapon(_weaponID, pos);
@@ -58,45 +69,41 @@ void JuegoDePistolas::Spawner::update(float dT)
 
 void JuegoDePistolas::Spawner::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
-
-	for (const auto& pair : params) {
-		if (pair.first == "spawnpoint1") {
-
-			_spawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-		}
-		else if (pair.first == "spawnpoint2") {
-			_spawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-		}
-		else if (pair.first == "spawnpoint3") {
-			_spawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-		}
-		else if (pair.first == "spawnpoint4") {
-			_spawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-		}
-
-	}
-
+	//for (const auto& pair : params) {
+	//	if (pair.first == "spawnpoint1") {
+	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
+	//	}
+	//	else if (pair.first == "spawnpoint2") {
+	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
+	//	}
+	//	else if (pair.first == "spawnpoint3") {
+	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
+	//	}
+	//	else if (pair.first == "spawnpoint4") {
+	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
+	//	}
+	//}
 }
 
 
 void JuegoDePistolas::Spawner::setSpawnerPosition(int id, LMVector3 pos)
 {
-	_spawners[id].second = pos;
+	gunSpawners[id].second = pos;
 }
 
 LMVector3 JuegoDePistolas::Spawner::getSpawnerPosition(int id)
 {
-	return _spawners[id].second;
+	return gunSpawners[id].second;
 }
 
 void JuegoDePistolas::Spawner::setSpawnerAvailable(int id, bool avail)
 {
-	_spawners[id].first = avail;
+	gunSpawners[id].first = avail;
 }
 
 bool JuegoDePistolas::Spawner::getSpawnerAvailableState(int id)
 {
-	return _spawners[id].first;
+	return gunSpawners[id].first;
 }
 
 void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
@@ -115,7 +122,7 @@ void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 	meshComp->setEnabled(true);
 
 
-	transfComp->setPosition(_spawners[spawnindex].second);
+	transfComp->setPosition(gunSpawners[spawnindex].second);
 	transfComp->setSize({ 1, 1, 1 });
 	weaponComp->setSpawnPoint(spawnindex);
 
@@ -126,7 +133,7 @@ void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 	std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
 }
 
-void JuegoDePistolas::Spawner::deleteWeapon(const std::string& key)
+void JuegoDePistolas::Spawner::deleteWeapon(const std::string key)
 {
 	// Busca el elemento en el diccionario
 	auto it = allWeapons.find(key);
@@ -138,12 +145,19 @@ void JuegoDePistolas::Spawner::deleteWeapon(const std::string& key)
 	std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
 }
 
-void JuegoDePistolas::Spawner::resetRound()
+void JuegoDePistolas::Spawner::deleteAllWeapons()
 {
-	for (const auto& spawner : _spawners) {
-		// spawner es de tipo std::pair<bool, LMVector3>
-		bool flag = spawner.first;
-		LMVector3 vector = spawner.second;
+	//for (auto it = allWeapons.begin(); it != allWeapons.end(); ++it) {
+	//	deleteWeapon(it->second->getGameObject()->getName()); // Llama a deleteWeapon con la clave actual
+	//}
 
+	for (auto it = allWeapons.begin(); it != allWeapons.end(); ) {
+		//deleteWeapon(it->first); // Llama a deleteWeapon con la clave actual
+		it->second->deleteWeapon();
+		it = allWeapons.begin(); // Reinicia el iterador después de borrar
 	}
+
+	//for (const auto& pair : allWeapons) {
+	//	deleteWeapon(pair.first); // Llama a deleteWeapon con la clave actual
+	//}
 }

@@ -20,23 +20,23 @@ namespace JuegoDePistolas {
 		LMVector3 getSpawnerPosition(int id);
 		void setSpawnerAvailable(int id,bool avail);
 		bool getSpawnerAvailableState(int id);
-		void addSpawnpoints(LMVector3 pos);
 		void addWeapon(int id, int spawnindex);
 
 		// Eliminar un arma por su nombre del map de armas del spawner
-		void deleteWeapon(const std::string& weaponName);
+		void deleteWeapon(const std::string weaponName);
 
 		// Se llama al iniciar una nueva ronda
-		void resetRound();
+		void deleteAllWeapons();
 
 	protected:
+		void awake() override;
 		void start() override;
 		void update(float dT) override;
 		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
 
 	private:
 
-		std::vector<std::pair<bool, LMVector3>> _spawners;
+		std::vector<std::pair<bool, LMVector3>> gunSpawners;
 
 		// Mantiene un registro de todas las armas que hay actualmente en el escenario
 		std::unordered_map<std::string, Weapon*> allWeapons;

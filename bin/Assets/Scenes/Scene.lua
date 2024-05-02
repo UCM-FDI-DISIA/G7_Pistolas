@@ -107,10 +107,10 @@ Scene = {
             EventID = "event:/ambience2",
             Play = ""
         },
-        MeshRenderer = {
-            mesh = "CubemanMesh.mesh",
-            material = "RedCharacter"
-        }
+        -- MeshRenderer = {
+        --     mesh = "CubemanMesh.mesh",
+        --     material = "RedCharacter"
+        -- }
     },
     EmitterDeath = {
         EventEmitter = {
@@ -258,17 +258,17 @@ Scene = {
             
         }
     },
-    -- SPAWNPOINTS
+    -- CHARACTERS SPAWNPOINTS
     CharacterSpawnpoint_1 = {
         Transform = {
             position = "8 2 8",
             size = "1 1 1",
             rotation = "0 0 0"
         },
-        MeshRenderer = {
-            mesh = "DebugCube.mesh",
-            material = "DebugCube"
-        }
+        -- MeshRenderer = {
+        --     mesh = "DebugCube.mesh",
+        --     material = "DebugCube"
+        -- }
     },
     CharacterSpawnpoint_2 = {
         Transform = {
@@ -276,10 +276,10 @@ Scene = {
             size = "1 1 1",
             rotation = "0 0 0"
         },
-        MeshRenderer = {
-            mesh = "DebugCube.mesh",
-            material = "DebugCube"
-        }
+        -- MeshRenderer = {
+        --     mesh = "DebugCube.mesh",
+        --     material = "DebugCube"
+        -- }
     },
     CharacterSpawnpoint_3 = {
         Transform = {
@@ -287,14 +287,26 @@ Scene = {
             size = "1 1 1",
             rotation = "0 0 0"
         },
-        MeshRenderer = {
-            mesh = "DebugCube.mesh",
-            material = "DebugCube"
-        }
+        -- MeshRenderer = {
+        --     mesh = "DebugCube.mesh",
+        --     material = "DebugCube"
+        -- }
     },
     CharacterSpawnpoint_4 = {
         Transform = {
             position = "-8 2 -8",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        -- MeshRenderer = {
+        --     mesh = "DebugCube.mesh",
+        --     material = "DebugCube"
+        -- }
+    },
+
+    GunSpawnpoint_1 = {
+        Transform = {
+            position = "0 3 0",
             size = "1 1 1",
             rotation = "0 0 0"
         },
@@ -303,7 +315,84 @@ Scene = {
             material = "DebugCube"
         }
     },
-
+    GunSpawnpoint_2 = {
+        Transform = {
+            position = "-18 7 5",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    GunSpawnpoint_3 = {
+        Transform = {
+            position = "18 7 5",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    GunSpawnpoint_4 = {
+        Transform = {
+            position = "-15 7 20",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    GunSpawnpoint_5 = {
+        Transform = {
+            position = "15 7 20",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    GunSpawnpoint_6 = {
+        Transform = {
+            position = "15 10 -15",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    GunSpawnpoint_7 = {
+        Transform = {
+            position = "-15 10 -15",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    GunSpawnpoint_8 = {
+        Transform = {
+            position = "0 10 -15",
+            size = "1 1 1",
+            rotation = "0 0 0"
+        },
+        MeshRenderer = {
+            mesh = "DebugCube.mesh",
+            material = "DebugCube"
+        }
+    },
+    -- GUNS SPAWN POINTS
 
     -- GAME LOGIC --
     GameplayManager = {
@@ -331,7 +420,7 @@ Scene = {
         }
     },
 
-    -- GUNS
+    -- GUNS SPAWN POINTS
     -- revolver = {
     --     Transform = {
     --         position = "-10 10 0",
