@@ -37,6 +37,14 @@ std::array<LocalMultiplayerManager::PlayerData, 4> LocalMultiplayerManager::getP
 		return allPlayers;
 }
 
+int JuegoDePistolas::LocalMultiplayerManager::getNumPlayersConnected()
+{
+	int numPlayers = Input::InputManager::GetInstance()->getCurrentlyConnectedControllers().size();
+	if (numPlayers > 4)
+		numPlayers = 4;
+	return numPlayers;
+}
+
 void JuegoDePistolas::LocalMultiplayerManager::awake()
 {
 	_instance = this;

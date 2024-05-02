@@ -319,19 +319,19 @@ Scene = {
     },
 
     -- GUNS
-    revolver = {
-        Transform = {
-            position = "-10 10 0",
-            size = "1 1 1",
-            rotation = "115 -130 0"
-        },
-        MeshRenderer = {
-            mesh = "Revolver.mesh",
-            material = "Revolver"
-        },
-        Weapon = {
-        }
-    },
+    -- revolver = {
+    --     Transform = {
+    --         position = "-10 10 0",
+    --         size = "1 1 1",
+    --         rotation = "115 -130 0"
+    --     },
+    --     MeshRenderer = {
+    --         mesh = "Revolver.mesh",
+    --         material = "Revolver"
+    --     },
+    --     Weapon = {
+    --     }
+    -- },
 
     -- PLATFORMS --
     platform_01 = {

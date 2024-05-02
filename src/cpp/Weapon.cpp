@@ -1,5 +1,6 @@
 #include "Weapon.h"
 #include "LocalMultiplayerManager.h"
+#include "GameplayManager.h"
 #include "Transform.h"
 #include "GameObject.h"
 #include "SceneManager.h"
@@ -8,6 +9,7 @@
 #include "MeshRenderer.h"
 #include "EventEmitter.h"
 #include <string>
+#include <Spawner.h>
 
 JuegoDePistolas::Weapon::Weapon()
 {
@@ -117,4 +119,9 @@ void JuegoDePistolas::Weapon::deleteWeapon()
 {
 	if (_gameObject != nullptr)
 		SceneManager::GetInstance()->getActiveScene()->removeGameobject(_gameObject->getName());
+
+	// Notificar al spawner, que tiene un registro de todas las armas que hay en escena
+	Spawner* spawner = GameplayManager::GetInstance()->getGameObject()->getComponent<Spawner>();
+	if (spawner != nullptr)
+		spawner->deleteWeapon(_gameObject->getName());
 }

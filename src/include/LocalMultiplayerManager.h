@@ -27,6 +27,8 @@ namespace JuegoDePistolas {
 
 		std::array<PlayerData, 4> getPlayers();
 
+		int getNumPlayersConnected();
+
 	protected:
 		void awake() override;
 		void start() override;

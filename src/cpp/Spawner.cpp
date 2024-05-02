@@ -12,6 +12,7 @@
 #include "Scene.h"
 #include "GameplayManager.h"
 #include "Weapon.h"
+#include <LocalMultiplayerManager.h>
 
 JuegoDePistolas::Spawner::Spawner()
 {
@@ -37,14 +38,19 @@ void JuegoDePistolas::Spawner::update(float dT)
 {
 	_currTimeTospawn += dT;
 
-	if (_currTimeTospawn > _timeToSpawn) {
+
+	// Numero maximo de armas que pueden existir en la escena simultaneamente segun el numero de jugadores actuales
+	int maxWeapons = LocalMultiplayerManager::GetInstance()->getNumPlayersConnected() + 1;
+
+	// Spawnear un arma
+	if (allWeapons.size() < maxWeapons
+		&& _currTimeTospawn > _timeToSpawn) {
 
 		int pos = std::rand() % _spawners.size();
 
 		if (getSpawnerAvailableState(pos)) {
 			addWeapon(_weaponID, pos);
 			_weaponID++;
-
 		}
 		_currTimeTospawn = 0;
 	}
@@ -95,8 +101,6 @@ bool JuegoDePistolas::Spawner::getSpawnerAvailableState(int id)
 
 void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 {
-
-
 	std::string weaponName = "Weapon" + std::to_string(id);
 
 	GameObject* nWeapon = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(weaponName);
@@ -111,11 +115,35 @@ void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 	meshComp->setEnabled(true);
 
 
-
 	transfComp->setPosition(_spawners[spawnindex].second);
 	transfComp->setSize({ 1, 1, 1 });
 	weaponComp->setSpawnPoint(spawnindex);
 
 	setSpawnerAvailable(spawnindex, false);
 
+	// Añadir arma al registro de armas de la partida
+	allWeapons[weaponName] = weaponComp;
+	std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
+}
+
+void JuegoDePistolas::Spawner::deleteWeapon(const std::string& key)
+{
+	// Busca el elemento en el diccionario
+	auto it = allWeapons.find(key);
+
+	// Verifica si se encontró el elemento
+	if (it != allWeapons.end()) {
+		allWeapons.erase(it); // Elimina el elemento del diccionario
+	}
+	std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
+}
+
+void JuegoDePistolas::Spawner::resetRound()
+{
+	for (const auto& spawner : _spawners) {
+		// spawner es de tipo std::pair<bool, LMVector3>
+		bool flag = spawner.first;
+		LMVector3 vector = spawner.second;
+
+	}
 }

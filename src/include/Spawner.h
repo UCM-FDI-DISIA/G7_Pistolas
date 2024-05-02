@@ -1,7 +1,10 @@
 #pragma once
 #include "LMVector.h"
 #include "Component.h"
+#include "Weapon.h"
 #include <vector>
+#include <unordered_map>
+#include <string>
 
 using namespace LocoMotor;
 
@@ -18,8 +21,13 @@ namespace JuegoDePistolas {
 		void setSpawnerAvailable(int id,bool avail);
 		bool getSpawnerAvailableState(int id);
 		void addSpawnpoints(LMVector3 pos);
-
 		void addWeapon(int id, int spawnindex);
+
+		// Eliminar un arma por su nombre del map de armas del spawner
+		void deleteWeapon(const std::string& weaponName);
+
+		// Se llama al iniciar una nueva ronda
+		void resetRound();
 
 	protected:
 		void start() override;
@@ -29,10 +37,12 @@ namespace JuegoDePistolas {
 	private:
 
 		std::vector<std::pair<bool, LMVector3>> _spawners;
+
+		// Mantiene un registro de todas las armas que hay actualmente en el escenario
+		std::unordered_map<std::string, Weapon*> allWeapons;
 		
 		float _currTimeTospawn = 0;
 		int _weaponID = 0;
 		float _timeToSpawn = 5000;
-
 	};
 }
