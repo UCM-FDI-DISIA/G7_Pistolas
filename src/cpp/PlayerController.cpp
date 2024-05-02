@@ -137,7 +137,9 @@ void JuegoDePistolas::PlayerController::setPlayerActive(bool active)
 
 	if (tr == nullptr)
 		tr = _gameObject->getComponent<Transform>();
-	tr->setPosition(LMVector3(0, -50, 0));
+
+	if (!active)
+		tr->setPosition(LMVector3(0, -500, 0));
 
 	shadowLineMesh->setVisible(active);
 	shadowLineMesh->setEnabled(active);

@@ -145,6 +145,7 @@ void GameplayManager::startRound()
 		playersAlive[i] = true;
 
 		thisPlayer.playerController->setCanMove(false);
+		thisPlayer.playerController->dropWeapon();
 	}
 
 	int numPlayersAlive = 0;
