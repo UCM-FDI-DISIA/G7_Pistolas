@@ -59,9 +59,10 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 		playerData.playerController->setPlayerId(currentPlayer);
 
 		// Desactivar el objeto
-		playerData.gameObject->setActive(false);
-		playerData.gameObject->getComponent<MeshRenderer>()->setEnabled(false);
-		playerData.gameObject->getComponent<ParticleSystem>()->setEnabled(false);
+		playerData.playerController->setPlayerActive(false);
+		//playerData.gameObject->setActive(false);
+		//playerData.gameObject->getComponent<MeshRenderer>()->setEnabled(false);
+		//playerData.gameObject->getComponent<ParticleSystem>()->setEnabled(false);
 
 		currentPlayer++;
 	}
@@ -69,10 +70,10 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 	// Temporal, arreglar lo de que el update siempre se llame despues de cualquier start
 	Scene* scene = SceneManager::GetInstance()->getActiveScene();
 	spawnPoints = {
-	scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
-	scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
-	scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
-	scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
+		scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
 	};
 
 	//  Mostrar los players de los mandos ya conectados al entrar a la escena
@@ -85,12 +86,13 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 		allPlayers[it].controllerId = contrID;
 
 		// Activar el objeto jugador dependiendo del index del jugador
-		allPlayers[it].gameObject->setActive(true);
-		if (allPlayers[it].gameObject->getComponent<MeshRenderer>() != nullptr)
-			allPlayers[it].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
+		allPlayers[it].playerController->setPlayerActive(true);
+		//allPlayers[it].gameObject->setActive(true);
+		//if (allPlayers[it].gameObject->getComponent<MeshRenderer>() != nullptr)
+		//	allPlayers[it].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
 
-		if (allPlayers[it].gameObject->getComponent<ParticleSystem>() != nullptr)
-			allPlayers[it].gameObject->getComponent<ParticleSystem>()->setEnabled(true);
+		//if (allPlayers[it].gameObject->getComponent<ParticleSystem>() != nullptr)
+		//	allPlayers[it].gameObject->getComponent<ParticleSystem>()->setEnabled(true);
 
 		if (allPlayers[it].gameObject->getComponent<Transform>() != nullptr)
 			allPlayers[it].gameObject->getComponent<Transform>()->setPosition(spawnPoints[it]);

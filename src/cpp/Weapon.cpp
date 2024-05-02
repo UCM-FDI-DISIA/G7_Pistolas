@@ -94,12 +94,10 @@ void JuegoDePistolas::Weapon::update(float dT)
 		LMQuaternion newRotation = playerTr->getRotation().rotate(LMVector3(0, 1, 0), -90);
 		tr->setRotation(newRotation);
 
-		if (ammo <= 0) { // Si no queda municion se destruye el arma
+		// Si no queda municion se destruye el arma
+		if (ammo <= 0)
 			playerContr->dropWeapon();
-			SceneManager::GetInstance()->getActiveScene()->removeGameobject(_gameObject->getName());
-		}
 	}
-
 }
 
 void JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, std::string>>& params)
@@ -113,4 +111,10 @@ int JuegoDePistolas::Weapon::getSpawnPoint() {
 
 void JuegoDePistolas::Weapon::setSpawnPoint(int spawnpoint) {
 	spawnInd = spawnpoint;
+}
+
+void JuegoDePistolas::Weapon::deleteWeapon()
+{
+	if (_gameObject != nullptr)
+		SceneManager::GetInstance()->getActiveScene()->removeGameobject(_gameObject->getName());
 }

@@ -137,11 +137,14 @@ void GameplayManager::startRound()
 		if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
 			continue;
 
-		thisPlayer.gameObject->getComponent<Transform>()->setPosition(spawnPoints[i]);
-		thisPlayer.gameObject->getComponent<MeshRenderer>()->setVisible(true);
+		//thisPlayer.gameObject->getComponent<Transform>()->setPosition(spawnPoints[i]);
+		//thisPlayer.gameObject->getComponent<MeshRenderer>()->setVisible(true);
+		thisPlayer.playerController->setPlayerActive(true);
 
 		// Marcar a los personajes activos como vivos
 		playersAlive[i] = true;
+
+		thisPlayer.playerController->setCanMove(false);
 	}
 
 	int numPlayersAlive = 0;
@@ -260,7 +263,6 @@ void GameplayManager::update(float dT)
 	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMScanCode::LMKS_P))
 		startRound();
 
-
 	// Si se esta en la animacion de inicio de ronda
 	if (startRoundActive) {
 
@@ -268,22 +270,39 @@ void GameplayManager::update(float dT)
 
 		if (startRoundTime < startRoundMaxTime)
 			startRoundTime += dT / 1000;
-		else
+		else {
+			// Detectar el final de la animacion de inicio de ronda
 			startRoundTime = startRoundMaxTime;
-
-		if (startRoundTime > startRoundMaxTime)
 			startRoundActive = false;
 
+			// Habilitar control a los personsajes para que se puedan mover
+			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
+			for (int i = 0; i < allPlayers.size(); i++) {
+
+				LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
+
+				// Realizar cambios solo si es valido el controllerId
+				if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
+					continue;
+
+				thisPlayer.playerController->setCanMove(true);
+			}
+		}
+
+		float spawnCharactersDuration = 1;
+
 		// Si se esta en el primer segundo de animacion
-		if (startRoundTime < 1) {
+		if (startRoundTime < spawnCharactersDuration) {
 
 			spawnCharactersProgress += dT / 1000;
-			if (spawnCharactersProgress > 1)
-				spawnCharactersProgress = 1;
+			if (spawnCharactersProgress > spawnCharactersDuration)
+				spawnCharactersProgress = spawnCharactersDuration;
+
+			float t = spawnCharactersProgress / spawnCharactersDuration;
 
 			LMVector3 startRotation = LMVector3(0, 0, 0);
 			LMVector3 endRotation = LMVector3(0, 360, 0);
-			LMVector3 currentCharacterRotation = LMVector3::lerp(startRotation, endRotation, spawnCharactersProgress);
+			LMVector3 currentCharacterRotation = LMVector3::lerp(startRotation, endRotation, t);
 
 			// Mover a los personajes a sus sitios de spawneo
 			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
@@ -294,9 +313,9 @@ void GameplayManager::update(float dT)
 				if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId()) {
 
 					thisPlayer.gameObject->getComponent<Transform>()->setRotation(currentCharacterRotation.asRotToQuaternion());
-					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -9, 0);
+					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -6, 0);
 					LMVector3 endPosition = spawnPoints[i];
-					LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, spawnCharactersProgress);
+					LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, t);
 
 					thisPlayer.gameObject->getComponent<Transform>()->setPosition(currentCharacterPosition);
 				}
@@ -306,7 +325,7 @@ void GameplayManager::update(float dT)
 
 		// Mostrar cuenta atras de 3 a 1 segundos y despues GO
 		float countdownStart = 1;
-		float countdownDuration = 1.5f;
+		float countdownDuration = 2;
 
 		if (startRoundTime > countdownStart && startRoundTime < countdownStart + countdownDuration) {
 
@@ -314,7 +333,7 @@ void GameplayManager::update(float dT)
 			float t = (startRoundTime - countdownStart) / countdownDuration;
 			//std::cout << "t = " << t << std::endl;
 
-			float eachNumberDuration = 0.2;
+			float eachNumberDuration = 1.f / 4.f;
 
 			std::string currentCountDown = "-1";
 			if (t < eachNumberDuration)

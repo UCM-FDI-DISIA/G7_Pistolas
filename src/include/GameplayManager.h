@@ -87,7 +87,7 @@ namespace JuegoDePistolas {
 
 		bool startRoundActive = false;
 		float startRoundTime = 0;
-		float startRoundMaxTime = 4;
+		float startRoundMaxTime = 3;
 
 		bool endRoundActive = false;
 		float endRoundTime = 0;

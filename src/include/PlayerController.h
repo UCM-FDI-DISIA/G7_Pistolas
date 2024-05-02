@@ -4,6 +4,7 @@
 #include "LMVector.h"
 #include "Transform.h"
 #include "RigidBody.h"
+#include "MeshRenderer.h"
 
 using namespace LocoMotor;
 
@@ -21,9 +22,13 @@ namespace JuegoDePistolas {
 		void bulletHit();
 		bool getHasWeapon();
 		void pickWeapon(std::string name,int spawnId);
+		// Elimina el arma que tiene este jugador ahora mismo, si no tiene arma, no tiene ningun efecto
 		void dropWeapon();
+		void setCanMove(bool _canMove);
 
 		LMVector3 getDirection();
+
+		void setPlayerActive(bool active);
 
 		void OnCollisionEnter(GameObject* other)override;
 		void OnCollisionStay(GameObject* other)override;
@@ -39,6 +44,9 @@ namespace JuegoDePistolas {
 		// Id del jugador al que representa este personaje, es decir, al cubo, triangulo, ...
 		int playerIndex;
 
+		// Define si este jugador puede ser controlado por el usurio o no
+		bool canMove = false;
+
 		Input::InputManager::ControllerId controllerId;
 
 		LMVector3 direction;
@@ -52,7 +60,10 @@ namespace JuegoDePistolas {
 
 		// Referencia al transform de la sombra de este personaje
 		Transform* shadowLineTr;
+		MeshRenderer* shadowLineMesh;
 
+		MeshRenderer* mesh;
+		Transform* tr;
 		RigidBody* rb;
 
 		float jumpForce = 50;
@@ -62,8 +73,7 @@ namespace JuegoDePistolas {
 		float floorMaxHorizontalVelocity = 30;
 		float airMaxHorizontalVelocity = 25;
 		float linearDrag = .9f;
+
+		bool playerActive;
 	};
 }
-
-
-

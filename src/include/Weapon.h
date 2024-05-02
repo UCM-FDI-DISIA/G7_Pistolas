@@ -13,6 +13,7 @@ namespace JuegoDePistolas {
 		void shoot(int playerId, int bulletId);
 		int getSpawnPoint();
 		void setSpawnPoint(int spawnpoint);
+		void deleteWeapon();
 	protected:
 		void start() override;
 		void update(float dT) override;
