@@ -215,6 +215,18 @@ material ShadowLinePurple {
         }
     }
 }
+material ShadowLineWhite {
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture ShadowLineWhite.jpg
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
 
 material DebugCube {
     technique {

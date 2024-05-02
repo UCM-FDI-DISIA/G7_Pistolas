@@ -56,13 +56,75 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 	ammo--;
 }
 
+//void JuegoDePistolas::Weapon::start()
+//{
+//	initialPosY = _gameObject->getComponent<Transform>()->getPosition().getY();
+//}
+
 void JuegoDePistolas::Weapon::start()
 {
+	tr = _gameObject->getComponent<Transform>();
+
+	initialPosY = tr->getPosition().getY();
+
+	GameObject* shadowLine = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime("shadowLine_" + _gameObject->getName());
+
+	// Guardarse una referencia al transform de la sombra
+	shadowLineTr = (Transform*)shadowLine->addComponent("Transform");
+	MeshRenderer* shadowLineMesh = (MeshRenderer*)shadowLine->addComponent("MeshRenderer");
+
+	shadowLineMesh->setMesh("ShadowLine.mesh");
+	shadowLineMesh->setMaterial("ShadowLineWhite");
+
+	rotationSpeed = rotationSpeedSpawning;
 }
 
 void JuegoDePistolas::Weapon::update(float dT)
 {
+
 	if (!isPicked) { // El arma esta en el mapa esperando a ser recogida
+
+		// Animacion de spawn
+		if (spawnAnimationTimer < spawnAnimationDuration)
+		{
+			spawnAnimationTimer += dT / 1000;
+
+			// Actualizar posicion de sombra
+			if (shadowLineTr != nullptr)
+				shadowLineTr->setPosition(tr->getPosition());
+
+			if (spawnAnimationTimer > spawnAnimationDuration) {
+				spawnAnimationTimer = spawnAnimationDuration;
+
+				// Ultima iteracion de la animacion de spawneo
+
+				// Borrar sombra
+				deleteShadow();
+
+				// Ralentizar rotacion del arma
+				rotationSpeed = rotationSpeedIdle;
+			}
+
+			float t = spawnAnimationTimer / spawnAnimationDuration;
+
+			std::cout << "t = " << t << std::endl;
+
+			// Animacion tamaño
+			float startValue = initialPosY + spawnHeight;
+			float endValue = initialPosY;
+			float currentValue = lerp(startValue, endValue, t);
+
+			Transform* tr = _gameObject->getComponent<Transform>();
+			if (tr != nullptr)
+				tr->setPosition(LMVector3(tr->getPosition().getX(), currentValue, tr->getPosition().getZ()));
+		}
+
+
+		currentRotation += rotationSpeed * dT / 1000;
+
+		// Animacion rotacion
+		tr->setRotationWithVector(LMVector3(0, currentRotation, 0));
+
 		if (LocalMultiplayerManager::GetInstance() == nullptr)return;
 		std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
 
@@ -81,6 +143,7 @@ void JuegoDePistolas::Weapon::update(float dT)
 				playerContr->pickWeapon(_gameObject->getName(), spawnInd);
 				isPicked = true;
 				holderPlayerName = thisPlayerObj->getName();
+				deleteShadow();
 			}
 		}
 	}
@@ -106,6 +169,25 @@ void JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, s
 {
 }
 
+float JuegoDePistolas::Weapon::lerp(float a, float b, float t)
+{
+	return a + t * (b - a);
+}
+
+void JuegoDePistolas::Weapon::deleteShadow()
+{
+	// Borrar sombra
+	if (shadowLineTr != nullptr) {
+		GameObject* shadowLineObj = shadowLineTr->getGameObject();
+		if (shadowLineObj != nullptr) {
+
+			shadowLineTr = nullptr;
+			SceneManager::GetInstance()->getActiveScene()->removeGameobject(shadowLineObj->getName());
+		}
+		SceneManager::GetInstance()->getActiveScene()->removeGameobject(shadowLineObj->getName());
+	}
+}
+
 
 int JuegoDePistolas::Weapon::getSpawnPoint() {
 	return spawnInd;
@@ -124,4 +206,7 @@ void JuegoDePistolas::Weapon::deleteWeapon()
 	Spawner* spawner = GameplayManager::GetInstance()->getGameObject()->getComponent<Spawner>();
 	if (spawner != nullptr)
 		spawner->deleteWeapon(_gameObject->getName());
+
+	// Borrar la sombra si todavia no ha sido borrada
+	deleteShadow();
 }

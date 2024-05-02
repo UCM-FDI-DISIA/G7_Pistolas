@@ -5,6 +5,7 @@
 #include "LMVector.h"
 #include "UIImage.h"
 #include "UIText.h"
+#include "LocalMultiplayerManager.h"
 
 using namespace LocoMotor;
 
@@ -44,6 +45,10 @@ namespace JuegoDePistolas {
 		static GameplayManager* _instance;
 
 
+
+		LocalMultiplayerManager* localMultiplayerManager;
+
+
 		const int MAX_PLAYERS = 4;
 
 		// Almacena las puntuaciones actuales de todos los jugadores
@@ -67,7 +72,7 @@ namespace JuegoDePistolas {
 		float winTextY;
 		float winTextX;
 
-		int winPlayerIndex = -1;
+		int winPlayerIndex = 0;
 		// Se cambiara a true solo cuando un jugador haya ganado la partida, es decir, al ganar X rondas
 		bool matchEnd = false;
 

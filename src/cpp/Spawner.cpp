@@ -26,6 +26,7 @@ JuegoDePistolas::Spawner::~Spawner()
 
 void JuegoDePistolas::Spawner::awake()
 {
+
 	Scene* scene = SceneManager::GetInstance()->getActiveScene();
 
 	// Posiciones de los spawnpoints
@@ -59,7 +60,17 @@ void JuegoDePistolas::Spawner::update(float dT)
 
 		int pos = std::rand() % gunSpawners.size();
 
-		if (getSpawnerAvailableState(pos)) {
+		int i = 0;
+		int maxTries = 50;
+		// Cambiarlo hasta encontrar un spawnpoint disponible
+		while (!getSpawnerAvailableState(pos) && i < 50)
+		{
+			pos = std::rand() % gunSpawners.size();
+			i++;
+		}
+
+		// Si se ha encontrado un spawnpoint disponible
+		if (i < maxTries) {
 			addWeapon(_weaponID, pos);
 			_weaponID++;
 		}
@@ -145,19 +156,15 @@ void JuegoDePistolas::Spawner::deleteWeapon(const std::string key)
 	std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
 }
 
-void JuegoDePistolas::Spawner::deleteAllWeapons()
+void JuegoDePistolas::Spawner::startRound()
 {
-	//for (auto it = allWeapons.begin(); it != allWeapons.end(); ++it) {
-	//	deleteWeapon(it->second->getGameObject()->getName()); // Llama a deleteWeapon con la clave actual
-	//}
+	// Resetear tiempo de spawn
+	_currTimeTospawn = 0;
 
+	// Eliminar todas las armas
 	for (auto it = allWeapons.begin(); it != allWeapons.end(); ) {
 		//deleteWeapon(it->first); // Llama a deleteWeapon con la clave actual
 		it->second->deleteWeapon();
 		it = allWeapons.begin(); // Reinicia el iterador después de borrar
 	}
-
-	//for (const auto& pair : allWeapons) {
-	//	deleteWeapon(pair.first); // Llama a deleteWeapon con la clave actual
-	//}
 }

@@ -26,7 +26,7 @@ namespace JuegoDePistolas {
 		void deleteWeapon(const std::string weaponName);
 
 		// Se llama al iniciar una nueva ronda
-		void deleteAllWeapons();
+		void startRound();
 
 	protected:
 		void awake() override;

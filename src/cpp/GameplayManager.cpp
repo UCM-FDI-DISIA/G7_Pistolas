@@ -14,7 +14,6 @@
 #include "LMInputs.h"
 #include "SceneManager.h"
 #include "Scene.h"
-#include "LocalMultiplayerManager.h"
 #include "Spawner.h"
 
 using namespace JuegoDePistolas;
@@ -37,12 +36,20 @@ GameplayManager* JuegoDePistolas::GameplayManager::GetInstance()
 
 void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 {
+	// Si es duante la animacion de ronda final, no contar la muerte
+	if (endRoundActive)
+		return;
+
+	// Si solo queda un jugador, no contar la muerte
+	if (localMultiplayerManager->getNumPlayersConnected() <= 1)
+		return;
+
 	playersAlive[playerIndex] = false;
 
 	// Comprobar si la ronda ha terminado
 	// Contar el numero de jugadores que quedan vivos en la ronda
 	int numPlayersAlive = 0;
-	winPlayerIndex = -1;
+	winPlayerIndex = 0;
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
 		if (playersAlive[i]) {
@@ -185,7 +192,7 @@ void GameplayManager::startRound()
 	// Borrar las armas que haya por el suelo sin recogen
 	Spawner* spawner = GameplayManager::GetInstance()->_gameObject->getComponent<Spawner>();
 	if (spawner != nullptr)
-		spawner->deleteAllWeapons();
+		spawner->startRound();
 
 	GameObject* winMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterWin");
 
@@ -207,10 +214,11 @@ void GameplayManager::start()
 {
 	_instance = this;
 
+	// Asignar referencia al multiplayerManager
+	localMultiplayerManager = LocalMultiplayerManager::GetInstance();
+
 	// Referencia a la escena actual
 	Scene* scene = SceneManager::GetInstance()->getActiveScene();
-
-
 
 	// Asignar la referencia a la camara y a la posicion inicial
 	camera = scene->getObjectByName("MainCamera")->getComponent<Transform>();
@@ -289,6 +297,10 @@ void GameplayManager::start()
 
 void GameplayManager::update(float dT)
 {
+	// Si no hay jugadores conectados, no actualizar la logica
+	if (localMultiplayerManager->getNumPlayersConnected() <= 0)
+		return;
+
 	// DEBUG
 
 	//if (matchEnd && endRoundTime > 6)

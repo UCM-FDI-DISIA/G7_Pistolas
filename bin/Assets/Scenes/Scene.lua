@@ -57,12 +57,12 @@ Scene = {
     UICountdown = {
         UIText = {
             anchor = ".5 .5",
-            position = "60 -40",
+            position = "0 -40",
             pivot = ".5 .5",
             size = "120 120",
             text = "3",
             font = "Heavitas",
-            alignment = "r",
+            alignment = "c",
             colorTop = "0.9 0 0.2",
             colorBot = "0.2 0 0.9"
         }
