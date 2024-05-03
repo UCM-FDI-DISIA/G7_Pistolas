@@ -92,8 +92,11 @@ void JuegoDePistolas::MainMenuManager::update(float dT)
 		}
 		if (freePlayer == -1)continue;
 		players[freePlayer].controllerId = contrID;
-		if (players[freePlayer].gameObject->getComponent<MeshRenderer>() != nullptr)
+		if (players[freePlayer].gameObject->getComponent<MeshRenderer>() != nullptr) {
+
 			players[freePlayer].gameObject->getComponent<MeshRenderer>()->setEnabled(true);
+			players[freePlayer].gameObject->getComponent<MeshRenderer>()->playAnimation("Idle", true);
+		}
 	}
 
 	// Ocultar los players de los mandos desconectados

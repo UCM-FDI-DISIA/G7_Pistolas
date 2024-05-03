@@ -115,6 +115,7 @@ namespace JuegoDePistolas {
 		int initCrossSize;
 
 		UIText* countdownText;
+		UIText* countdownTextShadow;
 
 	};
 }

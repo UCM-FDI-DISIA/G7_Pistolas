@@ -285,6 +285,8 @@ void GameplayManager::start()
 	// Referencia al texto countdown
 	countdownText = scene->getObjectByName("UICountdown")->getComponent<UIText>();
 	countdownText->setText("");
+	countdownTextShadow = scene->getObjectByName("UICountdownShadow")->getComponent<UIText>();
+	countdownTextShadow->setText("");
 
 	GameObject* cdSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterCD");
 
@@ -400,6 +402,9 @@ void GameplayManager::update(float dT)
 
 			float eachNumberDuration = 1.f / 4.f;
 
+			// Amarillo
+			LMVector3 topTextColor = LMVector3(0.9960f, 0.7882f, 0.0156f);
+			LMVector3 bottomTextColor = LMVector3(0.9882f, 0.6627f, 0.0078f);
 			std::string currentCountDown = "-1";
 			if (t < eachNumberDuration)
 				currentCountDown = "3";
@@ -407,14 +412,24 @@ void GameplayManager::update(float dT)
 				currentCountDown = "2";
 			else if (t < eachNumberDuration * 3)
 				currentCountDown = "1";
-			else
+			else {
 				currentCountDown = "GO";
+
+				topTextColor = LMVector3(0.2039f, 0.8117f, 0.2431f);
+				bottomTextColor = LMVector3(0.1294f, 0.6274f, 0.1607f);
+			}
+
+			countdownText->setColorTop(topTextColor);
+			countdownText->setColorBottom(bottomTextColor);
 
 			//std::cout << "TIMER = " << currentTimerState << std::endl;
 			countdownText->setText(currentCountDown);
+			countdownTextShadow->setText(currentCountDown);
 		}
-		else
+		else{
 			countdownText->setText("");
+			countdownTextShadow->setText("");
+		}
 
 		//std::cout << "spawnCharactersProgress = " << spawnCharactersProgress << std::endl;
 	}
