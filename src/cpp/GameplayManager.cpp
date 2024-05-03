@@ -41,10 +41,11 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 		return;
 
 	// Si solo queda un jugador, no contar la muerte
-	if (localMultiplayerManager->getNumPlayersConnected() <= 1)
+	if (localMultiplayerManager != nullptr && localMultiplayerManager->getNumPlayersConnected() <= 1)
 		return;
 
-	playersAlive[playerIndex] = false;
+	if (playersAlive.size() > playerIndex)
+		playersAlive[playerIndex] = false;
 
 	// Comprobar si la ronda ha terminado
 	// Contar el numero de jugadores que quedan vivos en la ronda
@@ -52,7 +53,7 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 	winPlayerIndex = 0;
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		if (playersAlive[i]) {
+		if (playersAlive.size() > i && playersAlive[i]) {
 			numPlayersAlive++;
 			winPlayerIndex = i;
 		}
@@ -60,16 +61,22 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 
 	std::cout << "Player " << playerIndex << " Died, " << numPlayersAlive << " players alive" << std::endl;
 
-	GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
-	GameObject* deathSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterDeath");
-	GameObject* winSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterWin");
+	Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
 
-	if (bgMusic->getComponent<EventEmitter>() != nullptr) {
-		bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
-	}
+	GameObject* bgMusic = nullptr;
+	GameObject* deathSound = nullptr;
+	GameObject* winSound = nullptr;
 
-	if (deathSound->getComponent<EventEmitter>() != nullptr) {
-		deathSound->getComponent<EventEmitter>()->play();
+	if (activeScene != nullptr) {
+		bgMusic = activeScene->getObjectByName("Emitter");
+		deathSound = activeScene->getObjectByName("EmitterDeath");
+		winSound = activeScene->getObjectByName("EmitterWin");
+
+		if (bgMusic != nullptr && bgMusic->getComponent<EventEmitter>() != nullptr)
+			bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
+
+		if (deathSound != nullptr && deathSound->getComponent<EventEmitter>() != nullptr)
+			deathSound->getComponent<EventEmitter>()->play();
 	}
 
 	// Si solo hay un jugador vivo
@@ -78,31 +85,31 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 		// Resetear variables
 		cameraZoom = 0;
 		endRoundTime = 0;
-		backImage->show();
+
+		if (backImage != nullptr)
+			backImage->show();
+
 		for (int i = 0; i < crosses.size(); i++) {
+
+			if (crosses[i] == nullptr)
+				continue;
 
 			crosses[i]->show();
 			crosses[i]->setDimensions(0, 0);
 
 			// Tintar las cruces equivalentes a los puntos que tenga acumulados el juegador ganador de la ronda
-			if (i < scores[winPlayerIndex])
+			if (scores.size() > winPlayerIndex && i < scores[winPlayerIndex])
 				crosses[i]->setImage(getMaterialFromPlayerIndex(winPlayerIndex));
 
 			// Poner el resto de cruces blancas
 			else
 				crosses[i]->setImage("CrossMaterial");
 
-			if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+			if (bgMusic->getComponent<EventEmitter>() != nullptr)
 				bgMusic->getComponent<EventEmitter>()->stop();
-			}
 
-
-
-			if (winSound->getComponent<EventEmitter>() != nullptr) {
+			if (winSound->getComponent<EventEmitter>() != nullptr)
 				winSound->getComponent<EventEmitter>()->play();
-			}
-
-
 		}
 
 		//backImage->setDimensions(0, initHeight);
@@ -110,31 +117,33 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 		endRoundActive = true;
 
 		// Sumar los puntos al jugador vivo
-		scores[winPlayerIndex]++;
+		if (scores.size() > winPlayerIndex)
+			scores[winPlayerIndex]++;
 
 		// Comprobar si este jugador ha llegado al score maximo
-		if (scores[winPlayerIndex] >= winScore) {
+		if (scores.size() > winPlayerIndex &&
+			scores[winPlayerIndex] >= winScore) {
 
 			// Indicar a la logica que la partida ya ha terminado
 			matchEnd = true;
 
 			// Actualizar el texto con el ganador de la partida
-			std::string message = playerColorsName[winPlayerIndex] + " WINS";
-			winText->setText(message);
-			winTextShade->setText(message);
-			winText->setColor(playerColors[winPlayerIndex]);
+			if (playerColorsName.size() > winPlayerIndex) {
+				std::string message = playerColorsName[winPlayerIndex] + " WINS";
 
+				if (winText != nullptr) {
+					winText->setText(message);
+					winText->setColor(playerColors[winPlayerIndex]);
+				}
+				if (winTextShade != nullptr)
+					winTextShade->setText(message);
+			}
 
-
-			if (bgMusic->getComponent<EventEmitter>() != nullptr) {
+			if (bgMusic->getComponent<EventEmitter>() != nullptr)
 				bgMusic->getComponent<EventEmitter>()->stop();
-			}
 
-
-
-			if (winSound->getComponent<EventEmitter>() != nullptr) {
+			if (winSound->getComponent<EventEmitter>() != nullptr)
 				winSound->getComponent<EventEmitter>()->play();
-			}
 
 			// Debug
 			std::cout << "PLAYER WIN index = " << winPlayerIndex << std::endl;
@@ -142,8 +151,23 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 	}
 
 	// Desactivar el personaje que acaba de ser eliminado
-	LocalMultiplayerManager::GetInstance()->
-		getPlayers()[playerIndex].gameObject->getComponent<MeshRenderer>()->setVisible(false);
+	if (localMultiplayerManager != nullptr) {
+
+		std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = localMultiplayerManager->getPlayers();
+
+		if (allPlayers.size() > playerIndex) {
+
+			GameObject* thisPlayerObj = allPlayers[playerIndex].gameObject;
+
+			if (thisPlayerObj != nullptr) {
+				MeshRenderer* thisPlayerMeshRenderer = thisPlayerObj->getComponent<MeshRenderer>();
+				if (thisPlayerMeshRenderer != nullptr)
+					thisPlayerMeshRenderer->setVisible(false);
+			}
+		}
+	}
+	//LocalMultiplayerManager::GetInstance()->
+	//	getPlayers()[playerIndex].gameObject->getComponent<MeshRenderer>()->setVisible(false);
 }
 
 
@@ -160,7 +184,13 @@ void GameplayManager::startRound()
 	spawnCharactersProgress = 0;
 
 	// Mover a los personajes a sus sitios de spawneo
-	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
+	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers;
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	int size = allPlayers.size();
+	if (localMultiplayerManager != nullptr) {
+		allPlayers = localMultiplayerManager->getPlayers();
+	}
+
 	for (int i = 0; i < allPlayers.size(); i++) {
 
 		LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
@@ -169,42 +199,49 @@ void GameplayManager::startRound()
 		if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
 			continue;
 
-		//thisPlayer.gameObject->getComponent<Transform>()->setPosition(spawnPoints[i]);
-		//thisPlayer.gameObject->getComponent<MeshRenderer>()->setVisible(true);
-		thisPlayer.playerController->setPlayerActive(true);
-
 		// Marcar a los personajes activos como vivos
 		playersAlive[i] = true;
 
-		thisPlayer.playerController->setCanMove(false);
-		thisPlayer.playerController->dropWeapon();
+		if (thisPlayer.playerController != nullptr) {
+			thisPlayer.playerController->setPlayerActive(true);
+			thisPlayer.playerController->setCanMove(false);
+			thisPlayer.playerController->dropWeapon();
+		}
 	}
 
 	int numPlayersAlive = 0;
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		if (playersAlive[i]) {
+		if (playersAlive.size() > i && playersAlive[i]) {
 			numPlayersAlive++;
 			winPlayerIndex = i;
 		}
 	}
 
 	// Borrar las armas que haya por el suelo sin recogen
-	Spawner* spawner = GameplayManager::GetInstance()->_gameObject->getComponent<Spawner>();
-	if (spawner != nullptr)
-		spawner->startRound();
+	GameplayManager* gameplayManager = GameplayManager::GetInstance();
+	if (gameplayManager != nullptr) {
 
-	GameObject* winMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterWin");
+		GameObject* gameplayManagerObj = gameplayManager->_gameObject;
 
-	if (winMusic->getComponent<EventEmitter>() != nullptr) {
-		winMusic->getComponent<EventEmitter>()->stop();
+		if (gameplayManagerObj != nullptr) {
+			Spawner* spawner = gameplayManagerObj->getComponent<Spawner>();
+			if (spawner != nullptr)
+				spawner->startRound();
+		}
 	}
 
-	GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
+	Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
+	if (activeScene != nullptr) {
+		GameObject* winMusic = activeScene->getObjectByName("EmitterWin");
+		if (winMusic != nullptr && winMusic->getComponent<EventEmitter>() != nullptr)
+			winMusic->getComponent<EventEmitter>()->stop();
 
-	if (bgMusic->getComponent<EventEmitter>() != nullptr) {
-		bgMusic->getComponent<EventEmitter>()->play();
-		bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
+		GameObject* bgMusic = SceneManager::GetInstance()->getActiveScene()->getObjectByName("Emitter");
+		if (bgMusic != nullptr && bgMusic->getComponent<EventEmitter>() != nullptr) {
+			bgMusic->getComponent<EventEmitter>()->play();
+			bgMusic->getComponent<EventEmitter>()->setParameter("PlayersAlive", numPlayersAlive);
+		}
 	}
 
 	cdEmit = false;
@@ -218,22 +255,45 @@ void GameplayManager::start()
 	localMultiplayerManager = LocalMultiplayerManager::GetInstance();
 
 	// Referencia a la escena actual
-	Scene* scene = SceneManager::GetInstance()->getActiveScene();
+	Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
+	if (activeScene == nullptr)
+		return;
 
 	// Asignar la referencia a la camara y a la posicion inicial
-	camera = scene->getObjectByName("MainCamera")->getComponent<Transform>();
-	initCameraPos = camera->getPosition();
+	GameObject* cameraObj = activeScene->getObjectByName("MainCamera");
+	if (cameraObj != nullptr) {
 
-	// Asignar escala inicial de los personajes
-	//initCharacterScale = LocalMultiplayerManager::GetInstance()->getPlayers()[0].gameObject->getComponent<Transform>()->GetSize().GetX();
+		camera = cameraObj->getComponent<Transform>();
+		if (camera != nullptr)
+			initCameraPos = camera->getPosition();
+	}
+
 
 	// Definir spawn points para los jugadores
-	spawnPoints = {
-		scene->getObjectByName("CharacterSpawnpoint_1")->getComponent<Transform>()->getPosition(),
-		scene->getObjectByName("CharacterSpawnpoint_2")->getComponent<Transform>()->getPosition(),
-		scene->getObjectByName("CharacterSpawnpoint_3")->getComponent<Transform>()->getPosition(),
-		scene->getObjectByName("CharacterSpawnpoint_4")->getComponent<Transform>()->getPosition(),
-	};
+	GameObject* CharacterSpawnpoint_1 = activeScene->getObjectByName("CharacterSpawnpoint_1");
+	GameObject* CharacterSpawnpoint_2 = activeScene->getObjectByName("CharacterSpawnpoint_2");
+	GameObject* CharacterSpawnpoint_3 = activeScene->getObjectByName("CharacterSpawnpoint_3");
+	GameObject* CharacterSpawnpoint_4 = activeScene->getObjectByName("CharacterSpawnpoint_4");
+
+	if (CharacterSpawnpoint_1 != nullptr && CharacterSpawnpoint_2 != nullptr
+		&& CharacterSpawnpoint_3 != nullptr && CharacterSpawnpoint_4 != nullptr) {
+
+		Transform* CharacterSpawnpoint_1_transform = CharacterSpawnpoint_1->getComponent<Transform>();
+		Transform* CharacterSpawnpoint_2_transform = CharacterSpawnpoint_2->getComponent<Transform>();
+		Transform* CharacterSpawnpoint_3_transform = CharacterSpawnpoint_3->getComponent<Transform>();
+		Transform* CharacterSpawnpoint_4_transform = CharacterSpawnpoint_4->getComponent<Transform>();
+
+		if (CharacterSpawnpoint_1_transform != nullptr && CharacterSpawnpoint_2_transform != nullptr
+			&& CharacterSpawnpoint_3_transform != nullptr && CharacterSpawnpoint_4_transform != nullptr) {
+
+			spawnPoints = {
+				CharacterSpawnpoint_1_transform->getPosition(),
+				CharacterSpawnpoint_2_transform->getPosition(),
+				CharacterSpawnpoint_3_transform->getPosition(),
+				CharacterSpawnpoint_4_transform->getPosition(),
+			};
+		}
+	}
 
 	// Asignar colores de los jugadores
 	playerColors = {
@@ -243,91 +303,110 @@ void GameplayManager::start()
 		LMVector3{0.7137f, 0.4078f, 0.8352f}
 	};
 
-	// Asignar colores de los jugadores
+	// Asignar nombres de colores de los jugadores
 	playerColorsName = {
 		"BLUE", "RED", "GREEN", "PURPLE"
 	};
 
-	winText = scene->getObjectByName("UIPlayerWin")->getComponent<UIText>();
-	winTextShade = scene->getObjectByName("UIPlayerWinShade")->getComponent<UIText>();
-	winTextY = winText->getPositionY();
+	GameObject* UIPlayerWinObj = activeScene->getObjectByName("UIPlayerWin");
+	if (UIPlayerWinObj != nullptr) {
+		winText = UIPlayerWinObj->getComponent<UIText>();
+		if (winText != nullptr) {
+			winTextY = winText->getPositionY();
+			// Ocultar textos
+			winText->setText("");
+			// Situar el texto en la posicion inicio de la animacion
+			winText->setPosition(winText->getPositionX(), -500);
+		}
+	}
+	GameObject* UIPlayerWinShadeObj = activeScene->getObjectByName("UIPlayerWinShade");
+	if (UIPlayerWinShadeObj != nullptr) {
+		winTextShade = UIPlayerWinShadeObj->getComponent<UIText>();
+		if (winTextShade != nullptr) {
+			// Ocultar textos
+			winTextShade->setText("");
+			// Situar el texto en la posicion inicio de la animacion
+			winTextShade->setPosition(winText->getPositionX(), -500);
+		}
+	}
 
-	// Ocultar textos
-	winText->setText("");
-	winTextShade->setText("");
-	// Situar el texto en la posicion inicio de la animacion
-	winText->setPosition(winText->getPositionX(), -500);
-	winTextShade->setPosition(winText->getPositionX(), -500);
+	// Referencias a la interfaz
+	GameObject* scoreBackgroundObj = activeScene->getObjectByName("ScoreBackground");
+	if (scoreBackgroundObj != nullptr)
+		backImage = scoreBackgroundObj->getComponent<UIImage>();
 
-	//spawnPoints = spawnPoints = {
-	//LMVector3{8, 2, 8},
-	//LMVector3{-8, 2, 8},
-	//LMVector3{8, 2, -8},
-	//LMVector3{-8, 2, -8}
-	//};
+	if (crosses.size() > 2) {
+		GameObject* cross_01Obj = activeScene->getObjectByName("Cross_01");
+		if (cross_01Obj != nullptr)
+			crosses[0] = cross_01Obj->getComponent<UIImage>();
 
-	// Referencias a la interfaz 
-	backImage = scene->getObjectByName("ScoreBackground")->getComponent<UIImage>();
+		GameObject* cross_02Obj = activeScene->getObjectByName("Cross_02");
+		if (cross_02Obj != nullptr)
+			crosses[1] = cross_02Obj->getComponent<UIImage>();
 
-	crosses[0] = scene->getObjectByName("Cross_01")->getComponent<UIImage>();
-	crosses[1] = scene->getObjectByName("Cross_02")->getComponent<UIImage>();
-	crosses[2] = scene->getObjectByName("Cross_03")->getComponent<UIImage>();
+		GameObject* cross_03Obj = activeScene->getObjectByName("Cross_03");
+		if (cross_03Obj != nullptr)
+			crosses[2] = cross_03Obj->getComponent<UIImage>();
+	}
 
 	// Inicializar valores
-	initScoreBackWidth = backImage->getWidth();
-	initScoreBackHeight = backImage->getHeight();
-	initCrossSize = crosses[0]->getWidth();
+	if (backImage != nullptr) {
+		initScoreBackWidth = backImage->getWidth();
+		initScoreBackHeight = backImage->getHeight();
+		backImage->hide();
+	}
 
-	backImage->hide();
+	if (crosses.size() > 0 && crosses[0] != nullptr)
+		initCrossSize = crosses[0]->getWidth();
+
 	for (int i = 0; i < crosses.size(); i++)
-		crosses[i]->hide();
+		if (crosses[i] != nullptr)
+			crosses[i]->hide();
 
 	// Referencia al texto countdown
-	countdownText = scene->getObjectByName("UICountdown")->getComponent<UIText>();
-	countdownText->setText("");
-	countdownTextShadow = scene->getObjectByName("UICountdownShadow")->getComponent<UIText>();
-	countdownTextShadow->setText("");
-
-	GameObject* cdSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterCD");
-
-	if (cdSound->getComponent<EventEmitter>() != nullptr) {
-		cdSound->getComponent<EventEmitter>()->stop();
+	GameObject* UICountdownObj = activeScene->getObjectByName("UICountdown");
+	if (UICountdownObj != nullptr) {
+		countdownText = UICountdownObj->getComponent<UIText>();
+		if (countdownText != nullptr)
+			countdownText->setText("");
 	}
+
+	GameObject* UICountdownShadowObj = activeScene->getObjectByName("UICountdownShadow");
+	if (UICountdownShadowObj != nullptr) {
+		countdownTextShadow = UICountdownShadowObj->getComponent<UIText>();
+		if (countdownTextShadow != nullptr)
+			countdownTextShadow->setText("");
+	}
+
+	GameObject* cdSound = activeScene->getObjectByName("EmitterCD");
+
+	if (cdSound != nullptr && cdSound->getComponent<EventEmitter>() != nullptr)
+		cdSound->getComponent<EventEmitter>()->stop();
 
 	startRound();
 }
 
 void GameplayManager::update(float dT)
 {
+	if (localMultiplayerManager == nullptr)
+		return;
+
 	// Si no hay jugadores conectados, no actualizar la logica
 	if (localMultiplayerManager->getNumPlayersConnected() <= 0)
 		return;
 
-	// DEBUG
-
-	//if (matchEnd && endRoundTime > 6)
-	//{
-	//	if (!sceneChanged) {
-
-	//		sceneChanged = true;
-	//		SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
-	//		SceneManager::GetInstance()->changeScene("Menu");
-	//	}
+	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
+	//	SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
+	//	SceneManager::GetInstance()->changeScene("Menu");
 	//}
 
-	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
-		SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
-		SceneManager::GetInstance()->changeScene("Menu");
-	}
-
-	if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMScanCode::LMKS_P))
-		startRound();
+	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMScanCode::LMKS_P))
+	//	startRound();
 
 	// Si se esta en la animacion de inicio de ronda
 	if (startRoundActive) {
 
 		// Los personajes spawnean en en el primer segundo
-
 		if (startRoundTime < startRoundMaxTime)
 			startRoundTime += dT / 1000;
 		else {
@@ -336,7 +415,7 @@ void GameplayManager::update(float dT)
 			startRoundActive = false;
 
 			// Habilitar control a los personsajes para que se puedan mover
-			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
+			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = localMultiplayerManager->getPlayers();
 			for (int i = 0; i < allPlayers.size(); i++) {
 
 				LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
@@ -345,7 +424,8 @@ void GameplayManager::update(float dT)
 				if (thisPlayer.controllerId == Input::InputManager::invalidControllerId())
 					continue;
 
-				thisPlayer.playerController->setCanMove(true);
+				if (thisPlayer.playerController != nullptr)
+					thisPlayer.playerController->setCanMove(true);
 			}
 		}
 
@@ -365,19 +445,32 @@ void GameplayManager::update(float dT)
 			LMVector3 currentCharacterRotation = LMVector3::lerp(startRotation, endRotation, t);
 
 			// Mover a los personajes a sus sitios de spawneo
-			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
-			for (int i = 0; i < 4; i++) {
+			std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = localMultiplayerManager->getPlayers();
+			for (int i = 0; i < MAX_PLAYERS; i++) {
+
+				if (allPlayers.size() <= i)
+					return;
 
 				LocalMultiplayerManager::PlayerData thisPlayer = allPlayers[i];
 
 				if (thisPlayer.controllerId != Input::InputManager::GetInstance()->invalidControllerId()) {
 
-					thisPlayer.gameObject->getComponent<Transform>()->setRotation(currentCharacterRotation.asRotToQuaternion());
-					LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -6, 0);
-					LMVector3 endPosition = spawnPoints[i];
-					LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, t);
+					if (thisPlayer.gameObject != nullptr) {
 
-					thisPlayer.gameObject->getComponent<Transform>()->setPosition(currentCharacterPosition);
+						Transform* thisPlayerTr = thisPlayer.gameObject->getComponent<Transform>();
+
+						if (thisPlayerTr != nullptr) {
+							thisPlayerTr->setRotation(currentCharacterRotation.asRotToQuaternion());
+
+							if (spawnPoints.size() > i) {
+								LMVector3 startPosition = spawnPoints[i] + LMVector3(0, -6, 0);
+								LMVector3 endPosition = spawnPoints[i];
+								LMVector3 currentCharacterPosition = LMVector3::lerp(startPosition, endPosition, t);
+
+								thisPlayerTr->setPosition(currentCharacterPosition);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -389,11 +482,15 @@ void GameplayManager::update(float dT)
 
 		if (startRoundTime > countdownStart && startRoundTime < countdownStart + countdownDuration) {
 			if (!cdEmit) {
-				GameObject* cdSound = SceneManager::GetInstance()->getActiveScene()->getObjectByName("EmitterCD");
 
-				if (cdSound->getComponent<EventEmitter>() != nullptr) {
-					cdSound->getComponent<EventEmitter>()->play();
+				Scene* activeSceme = SceneManager::GetInstance()->getActiveScene();
+				if (activeSceme != nullptr) {
+
+					GameObject* cdSound = activeSceme->getObjectByName("EmitterCD");
+					if (cdSound != nullptr && cdSound->getComponent<EventEmitter>() != nullptr)
+						cdSound->getComponent<EventEmitter>()->play();
 				}
+
 				cdEmit = true;
 			}
 			// valor que va de 0 a 1 que representa esta seccion de tiempo
@@ -419,21 +516,24 @@ void GameplayManager::update(float dT)
 				bottomTextColor = LMVector3(0.1294f, 0.6274f, 0.1607f);
 			}
 
-			countdownText->setColorTop(topTextColor);
-			countdownText->setColorBottom(bottomTextColor);
+			if (countdownText != nullptr) {
+				countdownText->setColorTop(topTextColor);
+				countdownText->setColorBottom(bottomTextColor);
 
-			//std::cout << "TIMER = " << currentTimerState << std::endl;
-			countdownText->setText(currentCountDown);
-			countdownTextShadow->setText(currentCountDown);
-		}
-		else{
-			countdownText->setText("");
-			countdownTextShadow->setText("");
-		}
+				countdownText->setText(currentCountDown);
+			}
 
-		//std::cout << "spawnCharactersProgress = " << spawnCharactersProgress << std::endl;
+			if (countdownTextShadow != nullptr)
+				countdownTextShadow->setText(currentCountDown);
+		}
+		else {
+			if (countdownText != nullptr)
+				countdownText->setText("");
+
+			if (countdownTextShadow != nullptr)
+				countdownTextShadow->setText("");
+		}
 	}
-
 
 	// Si esta durante una animacion de ronda ganada, mover la camara
 	if (endRoundActive) {
@@ -508,12 +608,27 @@ void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
 	}
 
 	// Actualizar posicion de camara
-	LMVector3 characterPosition = LocalMultiplayerManager::GetInstance()->
-		getPlayers()[winPlayerIndex].gameObject->getComponent<Transform>()->getPosition();
+
+	// Acceder a la posicion del jugador
+	LMVector3 characterPosition = LMVector3(0, 0, 0);
+	if (localMultiplayerManager != nullptr) {
+		std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = localMultiplayerManager->getPlayers();
+		// Comprobar si hay suficientes jugadores en el array antes de acceder a el
+		if (allPlayers.size() > winPlayerIndex) {
+			GameObject* thisPlayerObj = allPlayers[winPlayerIndex].gameObject;
+			if (thisPlayerObj != nullptr) {
+				Transform* thisPlayerObjTr = thisPlayerObj->getComponent<Transform>();
+				if (thisPlayerObjTr != nullptr)
+					characterPosition = thisPlayerObjTr->getPosition();
+			}
+		}
+	}
+
 	LMVector3 closeToCharacterPos = characterPosition + LMVector3(0, 30, 30);
 	LMVector3 currentCameraPosition = LMVector3::lerp(initCameraPos, closeToCharacterPos, cameraZoom);
 
-	camera->setPosition(currentCameraPosition);
+	if (camera != nullptr)
+		camera->setPosition(currentCameraPosition);
 }
 
 void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
@@ -531,7 +646,8 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 		float endValue = initScoreBackWidth;
 		float t = (endRoundTime - scoreBack_init_time) / scoreBack_init_duration;
 		int currentWidth = lerp(startValue, endValue, t);
-		backImage->setDimensions(currentWidth, initScoreBackHeight);
+		if (backImage != nullptr)
+			backImage->setDimensions(currentWidth, initScoreBackHeight);
 	}
 	else if (endRoundTime > scoreBack_end_time && endRoundTime < scoreBack_end_time + scoreBack_end_duration) {
 
@@ -540,15 +656,18 @@ void JuegoDePistolas::GameplayManager::updateBackScoreAnimations()
 		float endValue = 0;
 		float t = (endRoundTime - scoreBack_end_time) / scoreBack_end_duration;
 		int currentWidth = lerp(startValue, endValue, t);
-		backImage->setDimensions(currentWidth, initScoreBackHeight);
+		if (backImage != nullptr)
+			backImage->setDimensions(currentWidth, initScoreBackHeight);
 	}
 	// Desde que se inicia hasta que termina
 	else if (endRoundTime >= scoreBack_init_time + scoreBack_init_duration && endRoundTime <= scoreBack_end_time)
 	{
 	}
 	// Si es antes de la animacion init o despues de la animacion end, esconderlo
-	else
-		backImage->setDimensions(0, initScoreBackHeight);
+	else {
+		if (backImage != nullptr)
+			backImage->setDimensions(0, initScoreBackHeight);
+	}
 }
 
 void JuegoDePistolas::GameplayManager::updateCrossAnimations()
@@ -576,8 +695,10 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 		float t_size = (endRoundTime - allCrosses_init_time) / allCrosses_init_duration;
 		int currentSize = lerp(startValue_size, endValue_size, t_size);
 
-		for (int i = 0; i < crosses.size(); i++)
-			crosses[i]->setDimensions(currentSize, currentSize);
+		for (int i = 0; i < crosses.size(); i++) {
+			if (crosses[i] != nullptr)
+				crosses[i]->setDimensions(currentSize, currentSize);
+		}
 	}
 
 	// Animacion de la cruz del punto decreciendo, cambiando de color y volviendo a crecer
@@ -596,7 +717,8 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 		// Si se pasa de la mitad, cambiar de color
 		if (totalT >= .5f) {
 			//winPlayerIndex
-			winCross->setImage(getMaterialFromPlayerIndex(winPlayerIndex));
+			if (winCross != nullptr)
+				winCross->setImage(getMaterialFromPlayerIndex(winPlayerIndex));
 		}
 
 		// Primera parte de la animacion
@@ -606,7 +728,9 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 			float startValue_size = initCrossSize;
 			float endValue_size = 0;
 			int currentSize = lerp(startValue_size, endValue_size, firstT);
-			crosses[crossIndex]->setDimensions(currentSize, currentSize);
+
+			if (crosses.size() > crossIndex && crosses[crossIndex] != nullptr)
+				crosses[crossIndex]->setDimensions(currentSize, currentSize);
 		}
 		// Segunda parte de la animacion
 		else {
@@ -614,7 +738,9 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 			float startValue_size = 0;
 			float endValue_size = initCrossSize;
 			int currentSize = lerp(startValue_size, endValue_size, secondT);
-			crosses[crossIndex]->setDimensions(currentSize, currentSize);
+
+			if (crosses.size() > crossIndex && crosses[crossIndex] != nullptr)
+				crosses[crossIndex]->setDimensions(currentSize, currentSize);
 		}
 
 		std::cout << "totalT = " << totalT << std::endl;
@@ -629,8 +755,10 @@ void JuegoDePistolas::GameplayManager::updateCrossAnimations()
 		float t_size = (endRoundTime - allCrosses_end_time) / allCrosses_end_duration;
 		int currentSize = lerp(startValue_size, endValue_size, t_size);
 
-		for (int i = 0; i < crosses.size(); i++)
-			crosses[i]->setDimensions(currentSize, currentSize);
+		for (int i = 0; i < crosses.size(); i++) {
+			if (crosses.size() > i && crosses[i] != nullptr)
+				crosses[i]->setDimensions(currentSize, currentSize);
+		}
 	}
 }
 
@@ -646,9 +774,11 @@ void JuegoDePistolas::GameplayManager::updateWinText() {
 		float endValue = winTextY;
 		float t = (endRoundTime - winText_init_time) / winText_init_duration;
 		int currentY = lerp(startValue, endValue, t);
-		winText->setPosition(winText->getPositionX(), currentY);
+		if (winText != nullptr)
+			winText->setPosition(winText->getPositionX(), currentY);
 
-		winTextShade->setPosition(winText->getPositionX(), currentY + 5);
+		if (winTextShade != nullptr)
+			winTextShade->setPosition(winText->getPositionX(), currentY + 5);
 	}
 }
 
@@ -681,10 +811,14 @@ float JuegoDePistolas::GameplayManager::lerp(float a, float b, float t)
 
 
 void JuegoDePistolas::GameplayManager::freeSpawnpoint(int spawnId) {
-	Spawner* weaponspawnpoints = this->_gameObject->getComponent<Spawner>();
-	if (weaponspawnpoints != nullptr) {
+
+	Spawner* weaponspawnpoints = nullptr;
+
+	if (_gameObject != nullptr)
+		weaponspawnpoints = _gameObject->getComponent<Spawner>();
+
+	if (weaponspawnpoints != nullptr)
 		weaponspawnpoints->setSpawnerAvailable(spawnId, true);
-	}
 }
 
 std::array<LMVector3, 4> JuegoDePistolas::GameplayManager::getSpawnPoints()

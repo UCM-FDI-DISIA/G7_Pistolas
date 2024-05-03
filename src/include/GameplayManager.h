@@ -44,8 +44,6 @@ namespace JuegoDePistolas {
 
 		static GameplayManager* _instance;
 
-
-
 		LocalMultiplayerManager* localMultiplayerManager;
 
 
