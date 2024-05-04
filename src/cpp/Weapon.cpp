@@ -129,7 +129,7 @@ void JuegoDePistolas::Weapon::update(float dT)
 			spawnAnimationTimer += dT / 1000;
 
 			// Actualizar posicion de sombra
-			if (shadowLineTr != nullptr)
+			if (shadowLineTr != nullptr && tr != nullptr)
 				shadowLineTr->setPosition(tr->getPosition());
 
 			if (spawnAnimationTimer > spawnAnimationDuration) {
@@ -165,7 +165,8 @@ void JuegoDePistolas::Weapon::update(float dT)
 		if (tr != nullptr)
 			tr->setRotationWithVector(LMVector3(0, currentRotation, 0));
 
-		if (LocalMultiplayerManager::GetInstance() == nullptr)return;
+		if (LocalMultiplayerManager::GetInstance() == nullptr)
+			return;
 		std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers = LocalMultiplayerManager::GetInstance()->getPlayers();
 
 		// Comprobar si algun player la recoge
@@ -196,7 +197,8 @@ void JuegoDePistolas::Weapon::update(float dT)
 			}
 		}
 	}
-	else { // El arma la lleva un jugador
+	else {
+		// El arma la lleva un jugador
 		// Mover revolver
 
 		Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
@@ -245,8 +247,8 @@ void JuegoDePistolas::Weapon::deleteShadow()
 
 				shadowLineTr = nullptr;
 				activeScene->removeGameobject(shadowLineObj->getName());
+				activeScene->removeGameobject(shadowLineObj->getName());
 			}
-			activeScene->removeGameobject(shadowLineObj->getName());
 		}
 	}
 }

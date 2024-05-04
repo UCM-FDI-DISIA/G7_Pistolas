@@ -199,7 +199,9 @@ void JuegoDePistolas::Spawner::startRound()
 
 	// Eliminar todas las armas
 	for (auto it = allWeapons.begin(); it != allWeapons.end(); ) {
-		it->second->deleteWeapon();
+
+		if (it->second != nullptr)
+			it->second->deleteWeapon();
 		it = allWeapons.begin(); // Reinicia el iterador después de borrar un elemento
 	}
 }
