@@ -26,20 +26,48 @@ JuegoDePistolas::Spawner::~Spawner()
 
 void JuegoDePistolas::Spawner::awake()
 {
-
 	Scene* scene = SceneManager::GetInstance()->getActiveScene();
 
-	// Posiciones de los spawnpoints
-	gunSpawners = {
-		{true, scene->getObjectByName("GunSpawnpoint_1")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_2")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_3")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_4")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_5")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_6")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_7")->getComponent<Transform>()->getPosition()},
-		{true, scene->getObjectByName("GunSpawnpoint_8")->getComponent<Transform>()->getPosition()}
-	};
+	if (scene != nullptr) {
+
+		GameObject* GunSpawnpoint_1 = scene->getObjectByName("GunSpawnpoint_1");
+		GameObject* GunSpawnpoint_2 = scene->getObjectByName("GunSpawnpoint_2");
+		GameObject* GunSpawnpoint_3 = scene->getObjectByName("GunSpawnpoint_3");
+		GameObject* GunSpawnpoint_4 = scene->getObjectByName("GunSpawnpoint_4");
+		GameObject* GunSpawnpoint_5 = scene->getObjectByName("GunSpawnpoint_5");
+		GameObject* GunSpawnpoint_6 = scene->getObjectByName("GunSpawnpoint_6");
+		GameObject* GunSpawnpoint_7 = scene->getObjectByName("GunSpawnpoint_7");
+		GameObject* GunSpawnpoint_8 = scene->getObjectByName("GunSpawnpoint_8");
+
+		if (GunSpawnpoint_1 != nullptr && GunSpawnpoint_2 != nullptr && GunSpawnpoint_3 != nullptr && GunSpawnpoint_4 != nullptr
+			&& GunSpawnpoint_5 != nullptr && GunSpawnpoint_6 != nullptr && GunSpawnpoint_7 != nullptr && GunSpawnpoint_8 != nullptr) {
+
+			Transform* GunSpawnpoint_1_transform = GunSpawnpoint_1->getComponent<Transform>();
+			Transform* GunSpawnpoint_2_transform = GunSpawnpoint_2->getComponent<Transform>();
+			Transform* GunSpawnpoint_3_transform = GunSpawnpoint_3->getComponent<Transform>();
+			Transform* GunSpawnpoint_4_transform = GunSpawnpoint_4->getComponent<Transform>();
+			Transform* GunSpawnpoint_5_transform = GunSpawnpoint_5->getComponent<Transform>();
+			Transform* GunSpawnpoint_6_transform = GunSpawnpoint_6->getComponent<Transform>();
+			Transform* GunSpawnpoint_7_transform = GunSpawnpoint_7->getComponent<Transform>();
+			Transform* GunSpawnpoint_8_transform = GunSpawnpoint_8->getComponent<Transform>();
+
+			if (GunSpawnpoint_1_transform != nullptr && GunSpawnpoint_2_transform != nullptr && GunSpawnpoint_3_transform != nullptr && GunSpawnpoint_4_transform != nullptr
+				&& GunSpawnpoint_5_transform != nullptr && GunSpawnpoint_6_transform != nullptr && GunSpawnpoint_7_transform != nullptr && GunSpawnpoint_8_transform != nullptr) {
+
+				// Posiciones de los spawnpoints
+				gunSpawners = {
+					{true, GunSpawnpoint_1_transform->getPosition()},
+					{true, GunSpawnpoint_2_transform->getPosition()},
+					{true, GunSpawnpoint_3_transform->getPosition()},
+					{true, GunSpawnpoint_4_transform->getPosition()},
+					{true, GunSpawnpoint_5_transform->getPosition()},
+					{true, GunSpawnpoint_6_transform->getPosition()},
+					{true, GunSpawnpoint_7_transform->getPosition()},
+					{true, GunSpawnpoint_8_transform->getPosition()}
+				};
+			}
+		}
+	}
 }
 
 void JuegoDePistolas::Spawner::start()
@@ -50,98 +78,106 @@ void JuegoDePistolas::Spawner::update(float dT)
 {
 	_currTimeTospawn += dT;
 
+	LocalMultiplayerManager* localMultiplayerManager = LocalMultiplayerManager::GetInstance();
 
-	// Numero maximo de armas que pueden existir en la escena simultaneamente segun el numero de jugadores actuales
-	int maxWeapons = LocalMultiplayerManager::GetInstance()->getNumPlayersConnected() + 1;
+	if (localMultiplayerManager != nullptr) {
 
-	// Spawnear un arma
-	if (allWeapons.size() < maxWeapons
-		&& _currTimeTospawn > _timeToSpawn) {
+		// Numero maximo de armas que pueden existir en la escena simultaneamente segun el numero de jugadores actuales
+		int maxWeapons = localMultiplayerManager->getNumPlayersConnected() + 1;
 
-		int pos = std::rand() % gunSpawners.size();
+		// Spawnear un arma
+		if (allWeapons.size() < maxWeapons
+			&& _currTimeTospawn > _timeToSpawn) {
 
-		int i = 0;
-		int maxTries = 50;
-		// Cambiarlo hasta encontrar un spawnpoint disponible
-		while (!getSpawnerAvailableState(pos) && i < 50)
-		{
-			pos = std::rand() % gunSpawners.size();
-			i++;
+			int pos = std::rand() % gunSpawners.size();
+
+			int i = 0;
+			int maxTries = 50;
+			// Cambiarlo hasta encontrar un spawnpoint disponible
+			while (!getSpawnerAvailableState(pos) && i < 50)
+			{
+				pos = std::rand() % gunSpawners.size();
+				i++;
+			}
+
+			// Si se ha encontrado un spawnpoint disponible
+			if (i < maxTries) {
+				addWeapon(_weaponID, pos);
+				_weaponID++;
+			}
+			_currTimeTospawn = 0;
 		}
-
-		// Si se ha encontrado un spawnpoint disponible
-		if (i < maxTries) {
-			addWeapon(_weaponID, pos);
-			_weaponID++;
-		}
-		_currTimeTospawn = 0;
 	}
 }
 
 void JuegoDePistolas::Spawner::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
-	//for (const auto& pair : params) {
-	//	if (pair.first == "spawnpoint1") {
-	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-	//	}
-	//	else if (pair.first == "spawnpoint2") {
-	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-	//	}
-	//	else if (pair.first == "spawnpoint3") {
-	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-	//	}
-	//	else if (pair.first == "spawnpoint4") {
-	//		gunSpawners.push_back({ true,LMVector3::stringToVector(pair.second) });
-	//	}
-	//}
 }
 
 
 void JuegoDePistolas::Spawner::setSpawnerPosition(int id, LMVector3 pos)
 {
-	gunSpawners[id].second = pos;
+	if (gunSpawners.size() > id)
+		gunSpawners[id].second = pos;
 }
 
 LMVector3 JuegoDePistolas::Spawner::getSpawnerPosition(int id)
 {
-	return gunSpawners[id].second;
+	if (gunSpawners.size() > id)
+		return gunSpawners[id].second;
 }
 
 void JuegoDePistolas::Spawner::setSpawnerAvailable(int id, bool avail)
 {
-	gunSpawners[id].first = avail;
+	if (gunSpawners.size() > id)
+		gunSpawners[id].first = avail;
 }
 
 bool JuegoDePistolas::Spawner::getSpawnerAvailableState(int id)
 {
-	return gunSpawners[id].first;
+	if (gunSpawners.size() > id)
+		return gunSpawners[id].first;
 }
 
 void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 {
-	std::string weaponName = "Weapon" + std::to_string(id);
+	Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
 
-	GameObject* nWeapon = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime(weaponName);
+	if (activeScene != nullptr) {
 
-	Transform* transfComp = (Transform*)nWeapon->addComponent("Transform");
-	MeshRenderer* meshComp = (MeshRenderer*)nWeapon->addComponent("MeshRenderer");
-	Weapon* weaponComp = (Weapon*)nWeapon->addComponent("Weapon");
+		std::string weaponName = "Weapon" + std::to_string(id);
 
-	meshComp->setMesh("Revolver.mesh");
-	meshComp->setMaterial("Revolver");
-	meshComp->setVisible(true);
-	meshComp->setEnabled(true);
+		GameObject* nWeapon = activeScene->addGameobjectRuntime(weaponName);
 
+		if (nWeapon != nullptr) {
+			MeshRenderer* meshComp = (MeshRenderer*)nWeapon->addComponent("MeshRenderer");
+			Transform* transfComp = (Transform*)nWeapon->addComponent("Transform");
+			Weapon* weaponComp = (Weapon*)nWeapon->addComponent("Weapon");
 
-	transfComp->setPosition(gunSpawners[spawnindex].second);
-	transfComp->setSize({ 1, 1, 1 });
-	weaponComp->setSpawnPoint(spawnindex);
+			if (meshComp != nullptr) {
+				meshComp->setMesh("Revolver.mesh");
+				meshComp->setMaterial("Revolver");
+				meshComp->setVisible(true);
+				meshComp->setEnabled(true);
+			}
 
-	setSpawnerAvailable(spawnindex, false);
+			if (transfComp != nullptr) {
+				if (gunSpawners.size() > spawnindex)
+					transfComp->setPosition(gunSpawners[spawnindex].second);
+				transfComp->setSize({ 1, 1, 1 });
+			}
 
-	// Añadir arma al registro de armas de la partida
-	allWeapons[weaponName] = weaponComp;
-	std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
+			if (weaponComp != nullptr)
+				weaponComp->setSpawnPoint(spawnindex);
+
+			setSpawnerAvailable(spawnindex, false);
+
+			// Añadir arma al registro de armas de la partida
+			if (allWeapons.find(weaponName) != allWeapons.end())
+				allWeapons[weaponName] = weaponComp;
+			std::cout << "Currrent weapons = " << allWeapons.size() << std::endl;
+		}
+	}
 }
 
 void JuegoDePistolas::Spawner::deleteWeapon(const std::string key)
@@ -163,8 +199,7 @@ void JuegoDePistolas::Spawner::startRound()
 
 	// Eliminar todas las armas
 	for (auto it = allWeapons.begin(); it != allWeapons.end(); ) {
-		//deleteWeapon(it->first); // Llama a deleteWeapon con la clave actual
 		it->second->deleteWeapon();
-		it = allWeapons.begin(); // Reinicia el iterador después de borrar
+		it = allWeapons.begin(); // Reinicia el iterador después de borrar un elemento
 	}
 }
