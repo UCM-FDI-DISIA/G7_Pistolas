@@ -35,35 +35,41 @@ void JuegoDePistolas::PlayerController::setPlayerId(int _playerIndex)
 {
 	playerIndex = _playerIndex;
 
-	// Al saber el id de este jugador y por lo tanto, su color podemos crear la sombra que tendra
-	GameObject* shadowLine = SceneManager::GetInstance()->getActiveScene()->addGameobjectRuntime("shadowLine_" + playerIndex);
+	Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
 
-	// Guardarse una referencia al transform de la sombra
-	shadowLineTr = (Transform*)shadowLine->addComponent("Transform");
-	shadowLineMesh = (MeshRenderer*)shadowLine->addComponent("MeshRenderer");
+	if (activeScene != nullptr) {
+		// Al saber el id de este jugador y por lo tanto, su color podemos crear la sombra que tendra
+		GameObject* shadowLine = activeScene->addGameobjectRuntime("shadowLine_" + playerIndex);
 
-	shadowLineMesh->setMesh("ShadowLine.mesh");
-	// Asignar el material adecuado
-	switch (playerIndex)
-	{
-	case 0:
-		shadowLineMesh->setMaterial("ShadowLineBlue");
-		break;
-	case 1:
-		shadowLineMesh->setMaterial("ShadowLineRed");
-		break;
-	case 2:
-		shadowLineMesh->setMaterial("ShadowLineGreen");
-		break;
-	case 3:
-		shadowLineMesh->setMaterial("ShadowLinePurple");
-		break;
-	default:
-		break;
+		if (shadowLine != nullptr) {
+			// Guardarse una referencia al transform de la sombra
+			shadowLineTr = (Transform*)shadowLine->addComponent("Transform");
+			shadowLineMesh = (MeshRenderer*)shadowLine->addComponent("MeshRenderer");
+
+			if (shadowLineMesh != nullptr) {
+
+				shadowLineMesh->setMesh("ShadowLine.mesh");
+				// Asignar el material adecuado
+				switch (playerIndex)
+				{
+				case 0:
+					shadowLineMesh->setMaterial("ShadowLineBlue");
+					break;
+				case 1:
+					shadowLineMesh->setMaterial("ShadowLineRed");
+					break;
+				case 2:
+					shadowLineMesh->setMaterial("ShadowLineGreen");
+					break;
+				case 3:
+					shadowLineMesh->setMaterial("ShadowLinePurple");
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
-
-	//shadowLineMesh->setVisible(true);
-	//shadowLineMesh->setEnabled(true);
 }
 
 void PlayerController::setControllerId(Input::InputManager::ControllerId _controllerId)
@@ -73,9 +79,11 @@ void PlayerController::setControllerId(Input::InputManager::ControllerId _contro
 
 void JuegoDePistolas::PlayerController::bulletHit()
 {
-	if (GameplayManager::GetInstance()->isPlayerAlive(playerIndex)) {
+	GameplayManager* gameplayManager = GameplayManager::GetInstance();
 
-		GameplayManager::GetInstance()->playerDied(playerIndex);
+	if (gameplayManager != nullptr && gameplayManager->isPlayerAlive(playerIndex)) {
+
+		gameplayManager->playerDied(playerIndex);
 		setPlayerActive(false);
 
 		// Eliminar el arma actual si existe
@@ -92,7 +100,10 @@ void JuegoDePistolas::PlayerController::pickWeapon(std::string name, int spawnId
 {
 	weaponName = name;
 	hasWeapon = true;
-	GameplayManager::GetInstance()->freeSpawnpoint(spawnId);
+
+	GameplayManager* gameplayManager = GameplayManager::GetInstance();
+	if (gameplayManager != nullptr)
+		gameplayManager->freeSpawnpoint(spawnId);
 }
 
 void JuegoDePistolas::PlayerController::dropWeapon()
@@ -100,12 +111,17 @@ void JuegoDePistolas::PlayerController::dropWeapon()
 	// Si este personaje tiene un arma
 	if (hasWeapon) {
 
-		// Eliminar el objeto arma
-		GameObject* weaponGO = SceneManager::GetInstance()->getActiveScene()->getObjectByName(weaponName);
-		if (weaponGO != nullptr) {
-			Weapon* weaponComp = weaponGO->getComponent<Weapon>();
-			if (weaponComp != nullptr)
-				weaponComp->deleteWeapon();
+		Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
+
+		if (activeScene != nullptr) {
+
+			// Eliminar el objeto arma
+			GameObject* weaponGO = activeScene->getObjectByName(weaponName);
+			if (weaponGO != nullptr) {
+				Weapon* weaponComp = weaponGO->getComponent<Weapon>();
+				if (weaponComp != nullptr)
+					weaponComp->deleteWeapon();
+			}
 		}
 
 		// Actualizar variables
@@ -129,58 +145,73 @@ void JuegoDePistolas::PlayerController::setPlayerActive(bool active)
 	playerActive = active;
 
 	// Desactivar el objeto
-	//playerData.gameObject->setActive(active);
-	if (mesh == nullptr)
+	if (mesh == nullptr && _gameObject != nullptr)
 		mesh = _gameObject->getComponent<MeshRenderer>();
-	mesh->setVisible(active);
-	mesh->setEnabled(active);
 
-	if (tr == nullptr)
+	if (mesh != nullptr) {
+		mesh->setVisible(active);
+		mesh->setEnabled(active);
+	}
+
+	if (tr == nullptr && _gameObject != nullptr)
 		tr = _gameObject->getComponent<Transform>();
 
-	if (!active)
+	if (tr != nullptr && !active)
 		tr->setPosition(LMVector3(0, -500, 0));
 
-	shadowLineMesh->setVisible(active);
-	shadowLineMesh->setEnabled(active);
+	if (shadowLineMesh != nullptr) {
+		shadowLineMesh->setVisible(active);
+		shadowLineMesh->setEnabled(active);
+	}
 }
 
 void JuegoDePistolas::PlayerController::OnCollisionEnter(GameObject* other)
 {
-	std::string otherName = other->getName();
-	if (otherName.find("Bullet") != std::string::npos) {
-		bulletHit();
+	if (other != nullptr) {
+		std::string otherName = other->getName();
+		if (otherName.find("Bullet") != std::string::npos) {
+			bulletHit();
+		}
 	}
 }
 
 void JuegoDePistolas::PlayerController::OnCollisionStay(GameObject* other)
 {
-	std::string otherName = other->getName();
-	if (otherName.find("platform") != std::string::npos) {
-		isOnFloor = true;
+	if (other != nullptr) {
+		std::string otherName = other->getName();
+		if (otherName.find("platform") != std::string::npos) {
+			isOnFloor = true;
+		}
 	}
 }
 
 void JuegoDePistolas::PlayerController::OnCollisionExit(GameObject* other)
 {
-	std::string otherName = other->getName();
-	if (otherName.find("platform") != std::string::npos) {
-		isOnFloor = false;
+	if (other != nullptr) {
+		std::string otherName = other->getName();
+		if (otherName.find("platform") != std::string::npos) {
+			isOnFloor = false;
+		}
 	}
 }
 
 void PlayerController::start()
 {
-	rb = _gameObject->getComponent<RigidBody>();
-	rb->FreezeRotation({ 0,0,0 });
-	rb->UseGravity(LMVector3(0, -gravity, 0));
-	rb->SetLinearDamping(linearDrag);
-	rb->SetAngularDamping(0);
+	if (_gameObject != nullptr) {
+		rb = _gameObject->getComponent<RigidBody>();
+		if (rb != nullptr) {
+			rb->FreezeRotation({ 0,0,0 });
+			rb->UseGravity(LMVector3(0, -gravity, 0));
+			rb->SetLinearDamping(linearDrag);
+			rb->SetAngularDamping(0);
+		}
 
-	tr = _gameObject->getComponent<Transform>();
-	tr->setSize(LMVector3(1.5f, 1.5f, 1.5f));
+		tr = _gameObject->getComponent<Transform>();
+		if (tr != nullptr)
+			tr->setSize(LMVector3(1.5f, 1.5f, 1.5f));
 
-	mesh = _gameObject->getComponent<MeshRenderer>();
+		mesh = _gameObject->getComponent<MeshRenderer>();
+	}
 }
 
 void PlayerController::update(float dT)
@@ -189,12 +220,9 @@ void PlayerController::update(float dT)
 	if (!playerActive)
 		return;
 
-	//std::cout << "PlayerControllerUpdate" << std::endl;
-
-
 	// Mover la sombra debajo del jugador cada frame
-	shadowLineTr->setPosition(tr->getPosition());
-
+	if (shadowLineTr != nullptr && tr != nullptr)
+		shadowLineTr->setPosition(tr->getPosition());
 
 
 	// Si hay un controllerId asignado
@@ -203,127 +231,117 @@ void PlayerController::update(float dT)
 		float joystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 0, Input::InputManager::Axis::Horizontal);
 		float joystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 0, Input::InputManager::Axis::Vertical);
 
-		// Movimiento horizontal
+		if (rb != nullptr && _gameObject != nullptr) {
 
-		LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
-		rb->AddForce(currentDirection * velocity * dT / 1000);
+			// Movimiento horizontal
+			LMVector3 currentDirection = LMVector3(joystickValue_x, 0, joystickValue_y);
+			rb->AddForce(currentDirection * velocity * dT / 1000);
 
-		// Limitar la velocidad maxima horizontal a la que puede moverse el personaje
-		LMVector3 currentVelocity = rb->GetLinearVelocity();
-		float velocityY = currentVelocity.getY();
-		currentVelocity = LMVector3(currentVelocity.getX(), 0, currentVelocity.getZ());
-		float linearVelocity = currentVelocity.magnitude();
+			// Limitar la velocidad maxima horizontal a la que puede moverse el personaje
+			LMVector3 currentVelocity = rb->GetLinearVelocity();
+			float velocityY = currentVelocity.getY();
+			currentVelocity = LMVector3(currentVelocity.getX(), 0, currentVelocity.getZ());
+			float linearVelocity = currentVelocity.magnitude();
 
-		float maxVelocity;
-		if (isOnFloor)
-			maxVelocity = floorMaxHorizontalVelocity;
-		else
-			maxVelocity = airMaxHorizontalVelocity;
+			float maxVelocity;
+			if (isOnFloor)
+				maxVelocity = floorMaxHorizontalVelocity;
+			else
+				maxVelocity = airMaxHorizontalVelocity;
 
-		if (linearVelocity > maxVelocity)
-		{
-			// Calcular velocidad maxima en la direccion actual
-			currentVelocity.normalize();
-			LMVector3 maxHorVelocity = currentVelocity * maxVelocity;
-			maxHorVelocity = LMVector3(maxHorVelocity.getX(), velocityY, maxHorVelocity.getZ());
-			rb->SetLinearVelocity(maxHorVelocity);
-		}
+			if (linearVelocity > maxVelocity)
+			{
+				// Calcular velocidad maxima en la direccion actual
+				currentVelocity.normalize();
+				LMVector3 maxHorVelocity = currentVelocity * maxVelocity;
+				maxHorVelocity = LMVector3(maxHorVelocity.getX(), velocityY, maxHorVelocity.getZ());
+				rb->SetLinearVelocity(maxHorVelocity);
+			}
 
-		if (joystickValue_x > 0.1f || joystickValue_x < -0.1f || joystickValue_y > 0.1f || joystickValue_y < -0.1f)
-			_gameObject->getComponent<ParticleSystem>()->play();
-		else
-			_gameObject->getComponent<ParticleSystem>()->stop();
+			if (joystickValue_x > 0.1f || joystickValue_x < -0.1f || joystickValue_y > 0.1f || joystickValue_y < -0.1f) {
+				if (_gameObject->getComponent<ParticleSystem>() != nullptr)
+					_gameObject->getComponent<ParticleSystem>()->play();
+			}
+			else {
+				if (_gameObject->getComponent<ParticleSystem>() != nullptr)
+					_gameObject->getComponent<ParticleSystem>()->stop();
+			}
 
-		float lookJoystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Horizontal);
-		float lookJoystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Vertical);
+			float lookJoystickValue_x = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Horizontal);
+			float lookJoystickValue_y = Input::InputManager::GetInstance()->GetJoystickValue(controllerId, 1, Input::InputManager::Axis::Vertical);
 
-		LMVector3 lookDirection = LMVector3(lookJoystickValue_x, 0, lookJoystickValue_y);
+			LMVector3 lookDirection = LMVector3(lookJoystickValue_x, 0, lookJoystickValue_y);
 
-		if (lookDirection.magnitude() > .1f) {
-			direction = lookDirection;
-			direction.normalize();
-		}
-		lookDirection.rotate(LMVector3(0, 1, 0), 180);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
-		tr->setForward(lookDirection);
+			if (lookDirection.magnitude() > .1f) {
+				direction = lookDirection;
+				direction.normalize();
+			}
+			lookDirection.rotate(LMVector3(0, 1, 0), 180);
+
+			if (tr != nullptr) {
+				tr->setForward(lookDirection);
+				// Pruebas debug
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+				//tr->setForward(lookDirection);
+			}
+
+			if (mesh != nullptr) {
+				// Cambiar la animacion si es necesario
+				if (joystickValue_x != 0 || joystickValue_y != 0)
+					mesh->playAnimation("Run", true);
+				else
+					mesh->playAnimation("Idle", true);
+			}
 
 
-		// Cambiar la animacion si es necesario
-		if (joystickValue_x != 0 || joystickValue_y != 0)
-			mesh->playAnimation("Run", true);
-		else
-			mesh->playAnimation("Idle", true);
+			// Disparo
 
+			if (hasWeapon && Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
 
+				Scene* activeScene = SceneManager::GetInstance()->getActiveScene();
 
-		// Disparo
-
-		if (hasWeapon && Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_RIGHTSHOULDER)) {
-			//createBullet(_bulletID, tr->getPosition() + direction * 200, tr->getRotation());
-			GameObject* weaponGO = SceneManager::GetInstance()->getActiveScene()->getObjectByName(weaponName);
-			if (weaponGO != nullptr) {
-				Weapon* weaponComp = weaponGO->getComponent<Weapon>();
-				if (weaponComp != nullptr) {
-					weaponComp->shoot(playerIndex, bulletID);
-					bulletID++;
+				if (activeScene != nullptr) {
+					GameObject* weaponGO = activeScene->getObjectByName(weaponName);
+					if (weaponGO != nullptr) {
+						Weapon* weaponComp = weaponGO->getComponent<Weapon>();
+						if (weaponComp != nullptr) {
+							weaponComp->shoot(playerIndex, bulletID);
+							bulletID++;
+						}
+					}
 				}
 			}
-		}
 
-		// Salto
-		bool jumpPressed = (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_LEFTSHOULDER)
-			|| Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A));
+			// Salto
+			bool jumpPressed = (Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_LEFTSHOULDER)
+				|| Input::InputManager::GetInstance()->GetButtonDown(controllerId, Input::LMC_A));
 
-		if (jumpPressed && isOnFloor) {
-			if (rb != nullptr) {
-				if (rb->GetLinearVelocity().getY() < 5)
-					rb->ApplyCentralImpulse({ 0,jumpForce,0 });
-				//_gameObject->getComponent<RigidBody>()->UseGravity({ 0,0,0 });
+			if (jumpPressed && isOnFloor) {
+				if (rb != nullptr) {
+					if (rb->GetLinearVelocity().getY() < 5)
+						rb->ApplyCentralImpulse({ 0,jumpForce,0 });
+				}
+				if (_gameObject != nullptr && _gameObject->getComponent<EventEmitter>() != nullptr) {
+					_gameObject->getComponent<EventEmitter>()->play();
+				}
+
 			}
-			if (_gameObject->getComponent<EventEmitter>() != nullptr) {
-				_gameObject->getComponent<EventEmitter>()->play();
-			}
-
 		}
 	}
 
 	// Actualizar animacion de este mesh
-	mesh->updateAnimation(dT / 1000);
-
-
-
-	//_gameObject->getComponent<MeshRenderer>()->updateAnimation(dT / 1000);
-	//_gameObject->getComponent<MeshRenderer>()->playAnimation("Idle", true);
-
-
-	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_9)) {
-	//	SceneManager::GetInstance()->loadScene("Assets/Scenes/Game.lua", "Game");
-	//	SceneManager::GetInstance()->changeScene("Game");d
-	//}
-
-	//if (Input::InputManager::GetInstance()->GetKeyDown(Input::LMKS_8)) {
-	//	if (_gameObject->getComponent<ParticleSystem>() != nullptr)
-	//		//_gameObject->getComponent<ParticleSystem>()->play();
-	//	{
-	//		SceneManager::GetInstance()->loadScene("Assets/Scenes/Menu.lua", "Menu");
-	//		SceneManager::GetInstance()->changeScene("Menu");
-	//	}
-	//}
-
-
+	if (mesh != nullptr)
+		mesh->updateAnimation(dT / 1000);
 }
 
 void JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
 }
-
-
