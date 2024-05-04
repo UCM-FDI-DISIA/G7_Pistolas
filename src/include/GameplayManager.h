@@ -26,6 +26,8 @@ namespace JuegoDePistolas {
 		void freeSpawnpoint(int spawnId);
 		std::array<LMVector3, 4> getSpawnPoints();
 
+		bool duringStartRoundAnimation();
+
 	protected:
 		void start() override;
 		void update(float dT) override;

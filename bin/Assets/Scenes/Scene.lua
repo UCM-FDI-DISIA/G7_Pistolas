@@ -3,7 +3,7 @@ Scene = {
     -- CAMERA --
     MainCamera = {
         Camera = {
-            background = "0.9 0.7 0.5"
+            background = "0.6862 0.8784 1",
         },
         AudioListener = {},
         Transform = {

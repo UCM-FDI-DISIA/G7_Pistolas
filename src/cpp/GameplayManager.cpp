@@ -825,3 +825,8 @@ std::array<LMVector3, 4> JuegoDePistolas::GameplayManager::getSpawnPoints()
 {
 	return spawnPoints;
 }
+
+bool JuegoDePistolas::GameplayManager::duringStartRoundAnimation()
+{
+	return startRoundActive;
+}

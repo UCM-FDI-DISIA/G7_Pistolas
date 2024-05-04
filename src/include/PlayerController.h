@@ -19,7 +19,7 @@ namespace JuegoDePistolas {
 		void setControllerId(Input::InputManager::ControllerId controllerId);
 
 		// Se llama desde una bala cuando esta colisiona con este personaje
-		void bulletHit();
+		void playerDie();
 		bool getHasWeapon();
 		void pickWeapon(std::string name,int spawnId);
 		// Elimina el arma que tiene este jugador ahora mismo, si no tiene arma, no tiene ningun efecto
@@ -75,5 +75,7 @@ namespace JuegoDePistolas {
 		float linearDrag = .9f;
 
 		bool playerActive;
+
+		float deadZone = -25;
 	};
 }

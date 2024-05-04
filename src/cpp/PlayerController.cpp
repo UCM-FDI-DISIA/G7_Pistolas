@@ -77,7 +77,7 @@ void PlayerController::setControllerId(Input::InputManager::ControllerId _contro
 	controllerId = _controllerId;
 }
 
-void JuegoDePistolas::PlayerController::bulletHit()
+void JuegoDePistolas::PlayerController::playerDie()
 {
 	GameplayManager* gameplayManager = GameplayManager::GetInstance();
 
@@ -170,7 +170,7 @@ void JuegoDePistolas::PlayerController::OnCollisionEnter(GameObject* other)
 	if (other != nullptr) {
 		std::string otherName = other->getName();
 		if (otherName.find("Bullet") != std::string::npos) {
-			bulletHit();
+			playerDie();
 		}
 	}
 }
@@ -340,6 +340,19 @@ void PlayerController::update(float dT)
 	// Actualizar animacion de este mesh
 	if (mesh != nullptr)
 		mesh->updateAnimation(dT / 1000);
+
+
+	// Comprobar si este jugador esta por debajo de la deadzone
+	if (tr != nullptr) {
+		if (tr->getPosition().getY() < deadZone) {
+
+			// Comprobar que el personaje no pueda morir en la animacion de inicio de ronda
+			GameplayManager* gameplayManager = GameplayManager::GetInstance();
+			if (gameplayManager != nullptr && !gameplayManager->duringStartRoundAnimation()) {
+				playerDie();
+			}
+		}
+	}
 }
 
 void JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std::string, std::string>>& params)
