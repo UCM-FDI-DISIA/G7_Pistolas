@@ -66,8 +66,9 @@ void Bullet::update(float dT)
 	}
 }
 
-void JuegoDePistolas::Bullet::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool JuegoDePistolas::Bullet::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+	return true;
 }
 
 void JuegoDePistolas::Bullet::awake()

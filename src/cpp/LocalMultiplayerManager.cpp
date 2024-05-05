@@ -243,7 +243,8 @@ void LocalMultiplayerManager::update(float dT)
 	}
 }
 
-void LocalMultiplayerManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool LocalMultiplayerManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+	return true;
 }
 

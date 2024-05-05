@@ -166,6 +166,7 @@ void JuegoDePistolas::MainMenuManager::update(float dT)
 	}
 }
 
-void JuegoDePistolas::MainMenuManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool JuegoDePistolas::MainMenuManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+	return true;
 }

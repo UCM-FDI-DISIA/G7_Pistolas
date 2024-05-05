@@ -226,8 +226,9 @@ void JuegoDePistolas::Weapon::update(float dT)
 	}
 }
 
-void JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+	return true;
 }
 
 float JuegoDePistolas::Weapon::lerp(float a, float b, float t)

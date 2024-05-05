@@ -580,8 +580,9 @@ void GameplayManager::update(float dT)
 	}
 }
 
-void JuegoDePistolas::GameplayManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool JuegoDePistolas::GameplayManager::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
+	return true;
 }
 
 void JuegoDePistolas::GameplayManager::updateCameraAnimations(float dT)
