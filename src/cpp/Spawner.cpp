@@ -110,7 +110,7 @@ void JuegoDePistolas::Spawner::update(float dT)
 	}
 }
 
-void JuegoDePistolas::Spawner::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool JuegoDePistolas::Spawner::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
 	return true;
 }

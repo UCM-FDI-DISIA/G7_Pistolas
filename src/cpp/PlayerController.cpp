@@ -355,7 +355,7 @@ void PlayerController::update(float dT)
 	}
 }
 
-void JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std::string, std::string>>& params)
+bool JuegoDePistolas::PlayerController::setParameters(std::vector<std::pair<std::string, std::string>>& params)
 {
 	return true;
 }

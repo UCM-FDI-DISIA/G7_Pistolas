@@ -23,7 +23,7 @@ namespace JuegoDePistolas {
 	protected:
 		void start() override;
 		void update(float dT) override;
-		void setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
+		bool setParameters(std::vector<std::pair<std::string, std::string>>& params) override;
 		void awake()override;
 
 	private:
