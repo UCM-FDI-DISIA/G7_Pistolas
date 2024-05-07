@@ -67,10 +67,10 @@ namespace JuegoDePistolas {
 		std::array<std::string, 4> playerColorsName;
 
 		// Referencia a los textos de win y su sombra
-		UIText* winText;
-		UIText* winTextShade;
-		float winTextY;
-		float winTextX;
+		UIText* winText=nullptr;
+		UIText* winTextShade=nullptr;
+		float winTextY=0;
+		float winTextX=0;
 
 		int winPlayerIndex = 0;
 		// Se cambiara a true solo cuando un jugador haya ganado la partida, es decir, al ganar X rondas
@@ -88,7 +88,7 @@ namespace JuegoDePistolas {
 		// Spawneando
 		float spawnCharactersProgress = 0;
 		// Escala inicial de los personajes
-		int initCharacterScale;
+		int initCharacterScale=0;
 
 		bool startRoundActive = false;
 		float startRoundTime = 0;
@@ -103,19 +103,19 @@ namespace JuegoDePistolas {
 		// Referencia al componente Transform de la camara de la escena
 		Transform* camera;
 		// Posicion inicial de la camara
-		LMVector3 initCameraPos;
+		LMVector3 initCameraPos = LMVector3();
 
 
-		UIImage* backImage;
+		UIImage* backImage = nullptr;
 		std::array<UIImage*, 3> crosses;
 
-		int initScoreBackWidth;
-		int initScoreBackHeight;
+		int initScoreBackWidth=0;
+		int initScoreBackHeight=0;
 
-		int initCrossSize;
+		int initCrossSize=0;
 
-		UIText* countdownText;
-		UIText* countdownTextShadow;
+		UIText* countdownText = nullptr;
+		UIText* countdownTextShadow = nullptr;
 
 	};
 }

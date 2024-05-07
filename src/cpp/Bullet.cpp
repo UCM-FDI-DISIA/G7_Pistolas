@@ -21,6 +21,7 @@ using namespace LocoMotor;
 
 Bullet::Bullet()
 {
+	direction = LMVector3();
 }
 
 Bullet::~Bullet()

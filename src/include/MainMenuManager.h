@@ -24,7 +24,7 @@ namespace JuegoDePistolas {
 		};
 		std::array<PlayerData, 4> players;
 
-		UIText* playText;
+		UIText* playText = nullptr;
 		float playTextTimer = 0;
 		std::string playTextString = "Press any button to start round";
 	};

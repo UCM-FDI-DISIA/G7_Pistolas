@@ -42,14 +42,14 @@ namespace JuegoDePistolas {
 	private:
 
 		// Id del jugador al que representa este personaje, es decir, al cubo, triangulo, ...
-		int playerIndex;
+		int playerIndex=0;
 
 		// Define si este jugador puede ser controlado por el usurio o no
 		bool canMove = false;
 
 		Input::InputManager::ControllerId controllerId;
 
-		LMVector3 direction;
+		LMVector3 direction=LMVector3();
 
 		float debugParameter = 0;
 		int bulletID = 0;
@@ -59,12 +59,12 @@ namespace JuegoDePistolas {
 		std::string weaponName = "";
 
 		// Referencia al transform de la sombra de este personaje
-		Transform* shadowLineTr;
-		MeshRenderer* shadowLineMesh;
+		Transform* shadowLineTr = nullptr;
+		MeshRenderer* shadowLineMesh = nullptr;
 
-		MeshRenderer* mesh;
-		Transform* tr;
-		RigidBody* rb;
+		MeshRenderer* mesh = nullptr;
+		Transform* tr = nullptr;
+		RigidBody* rb = nullptr;
 
 		float jumpForce = 50;
 		float gravity = 100;
@@ -74,7 +74,7 @@ namespace JuegoDePistolas {
 		float airMaxHorizontalVelocity = 25;
 		float linearDrag = .9f;
 
-		bool playerActive;
+		bool playerActive=true;
 
 		float deadZone = -25;
 	};

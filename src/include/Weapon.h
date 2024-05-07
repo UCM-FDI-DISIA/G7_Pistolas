@@ -36,15 +36,15 @@ namespace JuegoDePistolas {
 		float spawnHeight = 25;
 
 		// Guarda la posicion Y inicial del arma para ejecutar la animacion correctamente
-		float initialPosY;
+		float initialPosY=0;
 
-		Transform* tr;
-		Transform* shadowLineTr;
+		Transform* tr = nullptr;
+		Transform* shadowLineTr = nullptr;
 
-		float rotationSpeed;
+		float rotationSpeed=0;
 		float rotationSpeedSpawning = 400;
 		float rotationSpeedIdle = 100;
-		float currentRotation;
+		float currentRotation=0;
 	};
 }
 
