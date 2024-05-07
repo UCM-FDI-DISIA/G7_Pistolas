@@ -169,8 +169,8 @@ Scene = {
         },
         RigidBody = {
             mass = "1",
-            group = "1",
-            ignoreGroup = "1",
+            group = "player",
+            ignoreGroup = "player",
             size = "2 2 2"
         },
         EventEmitter = {
@@ -200,8 +200,8 @@ Scene = {
         },
         RigidBody = {
             mass = "1",
-            group = "1",
-            ignoreGroup = "1",
+            group = "player",
+            ignoreGroup = "player",
             size = "2 2 2"
         },
         EventEmitter = {
@@ -231,8 +231,8 @@ Scene = {
         },
         RigidBody = {
             mass = "1",
-            group = "1",
-            ignoreGroup = "1",
+            group = "player",
+            ignoreGroup = "player",
             size = "2 2 2"
         },
         EventEmitter = {
@@ -262,8 +262,8 @@ Scene = {
         },
         RigidBody = {
             mass = "1",
-            group = "1",
-            ignoreGroup = "1",
+            group = "player",
+            ignoreGroup = "player",
             size = "2 2 2"
         },
         EventEmitter = {
