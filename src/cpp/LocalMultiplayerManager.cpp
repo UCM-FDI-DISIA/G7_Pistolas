@@ -5,6 +5,7 @@
 #include "MeshRenderer.h"
 #include "ParticleSystem.h"
 #include "GameplayManager.h"
+#include "Engine.h"
 
 #include <iostream>
 #include <SceneManager.h>
@@ -61,6 +62,14 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 		allPlayers[1].gameObject = activeScene->getObjectByName("Player_2");
 		allPlayers[2].gameObject = activeScene->getObjectByName("Player_3");
 		allPlayers[3].gameObject = activeScene->getObjectByName("Player_4");
+	}
+
+	
+	for (int i = 0; i < allPlayers.size(); i++) {
+		if (allPlayers[i].gameObject == nullptr) {
+			Engine::GetInstance()->showWindow(2, "Player not found"+i);
+			Engine::GetInstance()->quit();
+		}
 	}
 
 	int currentPlayer = 0;
@@ -120,8 +129,11 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 		if (it > 4 || allPlayers.size() <= it)
 			break;
 
-		allPlayers[it].controllerId = contrID;
+		if (allPlayers[it].gameObject == nullptr)
+			return;
 
+		allPlayers[it].controllerId = contrID;
+		
 		if (allPlayers[it].playerController != nullptr) {
 			// Activar el objeto jugador dependiendo del index del jugador
 			allPlayers[it].playerController->setPlayerActive(true);
