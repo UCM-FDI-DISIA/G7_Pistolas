@@ -31,40 +31,29 @@ void JuegoDePistolas::Spawner::awake()
 	if (scene != nullptr) {
 
 		GameObject* GunSpawnpoint_1 = scene->getObjectByName("GunSpawnpoint_1");
+		_spawnPoints.push_back(GunSpawnpoint_1);
 		GameObject* GunSpawnpoint_2 = scene->getObjectByName("GunSpawnpoint_2");
+		_spawnPoints.push_back(GunSpawnpoint_2);
 		GameObject* GunSpawnpoint_3 = scene->getObjectByName("GunSpawnpoint_3");
+		_spawnPoints.push_back(GunSpawnpoint_3);
 		GameObject* GunSpawnpoint_4 = scene->getObjectByName("GunSpawnpoint_4");
+		_spawnPoints.push_back(GunSpawnpoint_4);
 		GameObject* GunSpawnpoint_5 = scene->getObjectByName("GunSpawnpoint_5");
+		_spawnPoints.push_back(GunSpawnpoint_5);
 		GameObject* GunSpawnpoint_6 = scene->getObjectByName("GunSpawnpoint_6");
+		_spawnPoints.push_back(GunSpawnpoint_6);
 		GameObject* GunSpawnpoint_7 = scene->getObjectByName("GunSpawnpoint_7");
+		_spawnPoints.push_back(GunSpawnpoint_7);
 		GameObject* GunSpawnpoint_8 = scene->getObjectByName("GunSpawnpoint_8");
+		_spawnPoints.push_back(GunSpawnpoint_8);
 
-		if (GunSpawnpoint_1 != nullptr && GunSpawnpoint_2 != nullptr && GunSpawnpoint_3 != nullptr && GunSpawnpoint_4 != nullptr
-			&& GunSpawnpoint_5 != nullptr && GunSpawnpoint_6 != nullptr && GunSpawnpoint_7 != nullptr && GunSpawnpoint_8 != nullptr) {
-
-			Transform* GunSpawnpoint_1_transform = GunSpawnpoint_1->getComponent<Transform>();
-			Transform* GunSpawnpoint_2_transform = GunSpawnpoint_2->getComponent<Transform>();
-			Transform* GunSpawnpoint_3_transform = GunSpawnpoint_3->getComponent<Transform>();
-			Transform* GunSpawnpoint_4_transform = GunSpawnpoint_4->getComponent<Transform>();
-			Transform* GunSpawnpoint_5_transform = GunSpawnpoint_5->getComponent<Transform>();
-			Transform* GunSpawnpoint_6_transform = GunSpawnpoint_6->getComponent<Transform>();
-			Transform* GunSpawnpoint_7_transform = GunSpawnpoint_7->getComponent<Transform>();
-			Transform* GunSpawnpoint_8_transform = GunSpawnpoint_8->getComponent<Transform>();
-
-			if (GunSpawnpoint_1_transform != nullptr && GunSpawnpoint_2_transform != nullptr && GunSpawnpoint_3_transform != nullptr && GunSpawnpoint_4_transform != nullptr
-				&& GunSpawnpoint_5_transform != nullptr && GunSpawnpoint_6_transform != nullptr && GunSpawnpoint_7_transform != nullptr && GunSpawnpoint_8_transform != nullptr) {
-
-				// Posiciones de los spawnpoints
-				gunSpawners = {
-					{true, GunSpawnpoint_1_transform->getPosition()},
-					{true, GunSpawnpoint_2_transform->getPosition()},
-					{true, GunSpawnpoint_3_transform->getPosition()},
-					{true, GunSpawnpoint_4_transform->getPosition()},
-					{true, GunSpawnpoint_5_transform->getPosition()},
-					{true, GunSpawnpoint_6_transform->getPosition()},
-					{true, GunSpawnpoint_7_transform->getPosition()},
-					{true, GunSpawnpoint_8_transform->getPosition()}
-				};
+		for (int i = 0; i < _spawnPoints.size(); i++)
+		{
+			if (_spawnPoints[i] != nullptr) {
+				Transform* gunSpawnpoint_transform = _spawnPoints[i]->getComponent<Transform>();
+				if (gunSpawnpoint_transform != nullptr) {
+					gunSpawners.push_back({ true,gunSpawnpoint_transform->getPosition() });
+				}
 			}
 		}
 	}

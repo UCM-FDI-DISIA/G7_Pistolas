@@ -38,6 +38,7 @@ namespace JuegoDePistolas {
 
 		std::vector<std::pair<bool, LMVector3>> gunSpawners;
 
+		std::vector<GameObject*> _spawnPoints;
 		// Mantiene un registro de todas las armas que hay actualmente en el escenario
 		std::unordered_map<std::string, Weapon*> allWeapons;
 		
