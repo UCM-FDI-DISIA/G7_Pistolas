@@ -87,7 +87,7 @@ void JuegoDePistolas::Spawner::update(float dT)
 
 		// Spawnear un arma
 		if (allWeapons.size() < maxWeapons
-			&& _currTimeTospawn > _timeToSpawn) {
+			&& _currTimeTospawn > _timeToSpawn && gunSpawners.size() > 0) {
 
 			int pos = std::rand() % gunSpawners.size();
 

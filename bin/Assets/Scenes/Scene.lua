@@ -147,7 +147,7 @@ Scene = {
     
 
         -- CHARACTERS --
-    cube = {
+    Player_1 = {
         Transform = {
             position = "0 0 0",
             size = "1 1 1",
@@ -417,10 +417,6 @@ Scene = {
         GameplayManager = {
         },
         Spawner = {
-            spawnpoint1 ="-15 10 0",
-            spawnpoint2 ="15 10 0",
-            spawnpoint3 ="5 10 10",
-            spawnpoint4 ="5 10 -10"
         }
     },
     LocalMultiplayerManager = {

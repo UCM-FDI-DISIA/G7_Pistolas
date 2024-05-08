@@ -58,7 +58,7 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 	// Asignar referencias de jugadores
 
 	if (allPlayers.size() > 3) {
-		allPlayers[0].gameObject = activeScene->getObjectByName("cube");
+		allPlayers[0].gameObject = activeScene->getObjectByName("Player_1");
 		allPlayers[1].gameObject = activeScene->getObjectByName("Player_2");
 		allPlayers[2].gameObject = activeScene->getObjectByName("Player_3");
 		allPlayers[3].gameObject = activeScene->getObjectByName("Player_4");
@@ -67,8 +67,9 @@ void JuegoDePistolas::LocalMultiplayerManager::awake()
 	
 	for (int i = 0; i < allPlayers.size(); i++) {
 		if (allPlayers[i].gameObject == nullptr) {
-			Engine::GetInstance()->showWindow(2, "Player not found"+i);
+			Engine::GetInstance()->showWindow(2, "Player not found");
 			Engine::GetInstance()->quit();
+			break;
 		}
 	}
 
