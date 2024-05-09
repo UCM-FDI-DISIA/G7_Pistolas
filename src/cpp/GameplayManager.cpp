@@ -15,6 +15,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Spawner.h"
+#include "Engine.h"
 
 using namespace JuegoDePistolas;
 using namespace LocoMotor;
@@ -105,10 +106,10 @@ void JuegoDePistolas::GameplayManager::playerDied(int playerIndex)
 			else
 				crosses[i]->setImage("CrossMaterial");
 
-			if (bgMusic->getComponent<EventEmitter>() != nullptr)
+			if (bgMusic != nullptr && bgMusic->getComponent<EventEmitter>() != nullptr)
 				bgMusic->getComponent<EventEmitter>()->stop();
 
-			if (winSound->getComponent<EventEmitter>() != nullptr)
+			if (winSound != nullptr && winSound->getComponent<EventEmitter>() != nullptr)
 				winSound->getComponent<EventEmitter>()->play();
 		}
 
@@ -187,6 +188,11 @@ void GameplayManager::startRound()
 	std::array<LocalMultiplayerManager::PlayerData, 4> allPlayers;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int size = allPlayers.size();
+	if (localMultiplayerManager == nullptr) {
+		Engine::GetInstance()->showWindow(2, "Missing LocalMultiplayerManager component");
+		Engine::GetInstance()->quit();
+		return;
+	}
 	if (localMultiplayerManager != nullptr) {
 		allPlayers = localMultiplayerManager->getPlayers();
 	}
