@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "MeshRenderer.h"
 #include "EventEmitter.h"
+#include "ParticleSystem.h"
 #include <string>
 #include <Spawner.h>
 
@@ -77,6 +78,10 @@ void JuegoDePistolas::Weapon::shoot(int playerId, int bulletId)
 				emitComp->play();
 			}
 
+			if (particles != nullptr) {
+				particles->play();
+				//particleTimer = 0.7;
+			}
 			ammo--;
 		}
 	}
@@ -115,6 +120,8 @@ void JuegoDePistolas::Weapon::start()
 				}
 			}
 		}
+
+		particles = _gameObject->getComponent<LocoMotor::ParticleSystem>();
 	}
 }
 
@@ -224,6 +231,8 @@ void JuegoDePistolas::Weapon::update(float dT)
 			}
 		}
 	}
+
+	
 }
 
 bool JuegoDePistolas::Weapon::setParameters(std::vector<std::pair<std::string, std::string>>& params)

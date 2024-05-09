@@ -12,6 +12,7 @@
 #include "Scene.h"
 #include "GameplayManager.h"
 #include "Weapon.h"
+#include "ParticleSystem.h"
 #include <LocalMultiplayerManager.h>
 
 JuegoDePistolas::Spawner::Spawner()
@@ -143,7 +144,7 @@ void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 			MeshRenderer* meshComp = (MeshRenderer*)nWeapon->addComponent("MeshRenderer");
 			Transform* transfComp = (Transform*)nWeapon->addComponent("Transform");
 			Weapon* weaponComp = (Weapon*)nWeapon->addComponent("Weapon");
-
+			ParticleSystem* particleComp = (ParticleSystem*)nWeapon->addComponent("ParticleSystem");
 			if (meshComp != nullptr) {
 				meshComp->setMesh("Revolver.mesh");
 				meshComp->setMaterial("Revolver");
@@ -159,6 +160,10 @@ void JuegoDePistolas::Spawner::addWeapon(int id, int spawnindex)
 
 			if (weaponComp != nullptr)
 				weaponComp->setSpawnPoint(spawnindex);
+
+			if (particleComp != nullptr) {
+				particleComp->setParticle("GunShot");
+			}
 
 			setSpawnerAvailable(spawnindex, false);
 

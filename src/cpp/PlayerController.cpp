@@ -332,7 +332,12 @@ void PlayerController::update(float dT)
 				if (_gameObject != nullptr && _gameObject->getComponent<EventEmitter>() != nullptr) {
 					_gameObject->getComponent<EventEmitter>()->play();
 				}
-
+				if (_gameObject != nullptr) {
+					ParticleSystem* _pSystem = _gameObject->getComponent<ParticleSystem>();
+					if (_pSystem != nullptr) {
+						_pSystem->play();
+					}
+				}
 			}
 		}
 	}

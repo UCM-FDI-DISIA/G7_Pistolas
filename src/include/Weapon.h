@@ -3,7 +3,9 @@
 #include "Transform.h"
 
 using namespace LocoMotor;
-
+namespace LocoMotor {
+	class ParticleSystem;
+}
 namespace JuegoDePistolas {
 	class Weapon:public LocoMotor::Component
 	{
@@ -40,11 +42,13 @@ namespace JuegoDePistolas {
 
 		Transform* tr = nullptr;
 		Transform* shadowLineTr = nullptr;
+		ParticleSystem* particles = nullptr;
 
 		float rotationSpeed=0;
 		float rotationSpeedSpawning = 400;
 		float rotationSpeedIdle = 100;
 		float currentRotation=0;
+		float particleTimer=0;
 	};
 }
 
