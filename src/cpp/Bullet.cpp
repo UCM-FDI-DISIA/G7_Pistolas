@@ -56,7 +56,7 @@ void Bullet::update(float dT)
 			rb->BeATrigger();
 
 			if (direction.magnitude() > .1f)
-				rb->SetLinearVelocity(direction * velocity * dT);
+				rb->SetLinearVelocity(direction * velocity);
 		}
 
 		timeAlive += dT;
